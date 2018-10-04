@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CommonModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <Function Name="sp_Common_GetDepartmentCombo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProdDate" Type="date" Mode="In" />
+    <Parameter Name="ProdDateFrom" Type="date" Mode="In" />
+    <Parameter Name="ProdDateTo" Type="date" Mode="In" />
+    <Parameter Name="DivCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="DeptCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+    <Parameter Name="IsActiveOnly" Type="bit" Mode="In" />
+  </Function>
+  <Function Name="sp_Common_GetDivisionCombo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProdDate" Type="date" Mode="In" />
+    <Parameter Name="ProdDateFrom" Type="date" Mode="In" />
+    <Parameter Name="ProdDateTo" Type="date" Mode="In" />
+    <Parameter Name="DivCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+    <Parameter Name="IsActiveOnly" Type="bit" Mode="In" />
+  </Function>
+  <Function Name="sp_Common_GetEmpCombo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProdDateFrom" Type="date" Mode="In" />
+    <Parameter Name="ProdDateTo" Type="date" Mode="In" />
+    <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+    <Parameter Name="IsActiveOnly" Type="bit" Mode="In" />
+  </Function>
+  <Function Name="sp_Common_GetMiscCombo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="FieldName" Type="varchar" Mode="In" />
+    <Parameter Name="IsActive" Type="bit" Mode="In" />
+  </Function>
+  <Function Name="sp_Common_GetProductionDate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProdDate" Type="datetime" Mode="In" />
+  </Function>
+  <Function Name="sp_Common_GetSectionCombo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProdDate" Type="date" Mode="In" />
+    <Parameter Name="ProdDateFrom" Type="date" Mode="In" />
+    <Parameter Name="ProdDateTo" Type="date" Mode="In" />
+    <Parameter Name="DeptCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="SecCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+    <Parameter Name="IsActiveOnly" Type="bit" Mode="In" />
+  </Function>
+  <EntityContainer Name="CommonModelStoreContainer" />
+</Schema>

@@ -1,0 +1,20 @@
+﻿<!-- HEADER -->
+<header id="header" class="top">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div id="page-title-info" class="pull-left" style="padding-left:10px;">
+            @{ Html.RenderPartial("_PageTitle"); }
+        </div>
+        <div id="account-info" class="pull-right">
+            <span class="fa-stack ">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-user fa-stack-1x fa-inverse"></i>
+            </span>
+            <a href="#" class="account-name"> @User.Identity.Name</a>
+            <span>|</span>
+            <a href="@Url.Action("LogIn", "Account")" class="log-out"><i class="fa fa-sign-out-alt"></i> Log Out</a>
+        </div>
+    }
+</header>
+@Html.MvcSiteMap().Menu("BootstrapMenuHelperModel")
+<!-- END HEADER -->

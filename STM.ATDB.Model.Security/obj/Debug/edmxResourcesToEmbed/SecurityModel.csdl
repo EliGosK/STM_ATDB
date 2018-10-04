@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="SecurityModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="SecurityEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Users" EntityType="SecurityModel.User" />
+    <EntitySet Name="Screens" EntityType="SecurityModel.Screen" />
+    <EntitySet Name="ScreenPermissions" EntityType="SecurityModel.ScreenPermission" />
+    <EntitySet Name="ScreenPermissionMappings" EntityType="SecurityModel.ScreenPermissionMapping" />
+    <EntitySet Name="SecurityMappings" EntityType="SecurityModel.SecurityMapping" />
+    <FunctionImport Name="GetScreenPermissionList" ReturnType="Collection(SecurityModel.ScreenPermissionListResult)">
+      <Parameter Name="UserID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="GetUserAndRoleList" ReturnType="Collection(SecurityModel.UserAndRoleListResult)">
+      <Parameter Name="UserID" Mode="In" Type="String" />
+      <Parameter Name="UserRole" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="GetScreenPermissionListTree" ReturnType="Collection(SecurityModel.ScreenPermissionListTreeResult)">
+      <Parameter Name="UserID" Mode="In" Type="String" />
+      <Parameter Name="UserRole" Mode="In" Type="String" />
+    </FunctionImport>
+  </EntityContainer>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserCode" />
+    </Key>
+    <Property Name="UserCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="Password" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CreateBy" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UpdateBy" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="UpdateDate" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="Screen">
+    <Key>
+      <PropertyRef Name="ScreenCode" />
+    </Key>
+    <Property Name="ScreenCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="ScreenName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="ScreenClass" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Seq" Type="Int32" />
+  </EntityType>
+  <EntityType Name="ScreenPermission">
+    <Key>
+      <PropertyRef Name="PermissionCode" />
+    </Key>
+    <Property Name="PermissionCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PermissionName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Seq" Type="Int32" />
+  </EntityType>
+  <EntityType Name="ScreenPermissionMapping">
+    <Key>
+      <PropertyRef Name="ScreenCode" />
+      <PropertyRef Name="PermissionCode" />
+    </Key>
+    <Property Name="ScreenCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PermissionCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="SecurityMapping">
+    <Key>
+      <PropertyRef Name="UserCode" />
+      <PropertyRef Name="Role" />
+      <PropertyRef Name="ScreenCode" />
+      <PropertyRef Name="PermissionCode" />
+    </Key>
+    <Property Name="UserCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="Role" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ScreenCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PermissionCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PermissionType" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="CreateBy" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="CreateDate" Type="DateTime" Precision="3" />
+    <Property Name="UpdateBy" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+  </EntityType>
+  <ComplexType Name="ScreenPermissionListResult">
+    <Property Type="String" Name="ScreenCode" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="ScreenName" Nullable="true" MaxLength="100" />
+    <Property Type="Int32" Name="ScreenSeq" Nullable="true" />
+    <Property Type="String" Name="PermissionCode" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="PermissionName" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="PermissionSeq" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="UserAndRoleListResult">
+    <Property Type="String" Name="UserCode" Nullable="false" MaxLength="15" />
+    <Property Type="String" Name="UserDisplay" Nullable="true" MaxLength="220" />
+  </ComplexType>
+  <ComplexType Name="ScreenPermissionListTreeResult">
+    <Property Type="String" Name="ScreenCode" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="ScreenName" Nullable="true" MaxLength="100" />
+    <Property Type="Int32" Name="ScreenSeq" Nullable="true" />
+    <Property Type="String" Name="PermissionCode" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="PermissionName" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="PermissionSeq" Nullable="true" />
+    <Property Type="Boolean" Name="IsHavePermission" Nullable="true" />
+  </ComplexType>
+</Schema>

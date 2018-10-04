@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=10">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Attendance Dashboard</title>
+    <link rel="icon" type="image/png" href="~/Content/images/stm-logo.png" />
+    <!--[if IE]>
+    <link rel="shortcut icon" href="~/Content/images/stm_logo.ico" type="image/vnd.microsoft.icon" />
+    <![endif]-->
+
+    @*<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />*@
+
+    @Styles.Render("~/Content/bundle")
+    @Styles.Render("~/Content/DevExtremeBundle")
+    @Scripts.Render("~/Scripts/bundle")
+    @Scripts.Render("~/Scripts/DevExtremeBundle")
+</head>
+
+<body class="sec-imp-background">
+    @{ Html.RenderPartial("_Header"); }
+    <div id="main" role="main">
+        <div id="content" class="container-fluid no-gutter">
+            
+            @RenderBody()
+        </div>
+    </div>
+    @{ Html.RenderPartial("_UIResponse"); }
+
+    <div id="notifications" style="display:none"></div>
+    <div id="ajax-notifications" style="display:none"></div>
+
+    @{ Html.RenderPartial("_Scripts", RenderSection("script", false)); }
+</body>
+
+</html>

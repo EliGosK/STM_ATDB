@@ -1,0 +1,41 @@
+﻿@using STM.ATDB.MvcWeb.App_Helpers
+
+@(Html.DevExtreme().LoadPanel()
+        .ID("load-panel-global")
+        .ShadingColor("rgba(0,0,0,0.3)")
+        .Position(p => p.Of(new JS("window"))
+                        .My(HorizontalAlignment.Center, VerticalAlignment.Center)
+                        .At(HorizontalAlignment.Center, VerticalAlignment.Center)
+                        )
+        .Visible(false)
+        .ShowIndicator(true)
+        .ShowPane(true)
+        .Shading(true)
+        .CloseOnOutsideClick(false)
+        .IndicatorSrc("/Content/images/rolling.svg")  
+)
+
+@(Html.DevExtreme().Toast()
+        .ID("toastmessage_success")
+        .Type(ToastType.Success)
+        .DisplayTime(@ConstantValues.DisplayDurationSuccess)
+)
+
+@(Html.DevExtreme().Toast()
+        .ID("toastmessage_warning")
+        .Type(ToastType.Warning)
+        .DisplayTime(@ConstantValues.DisplayDurationWarning)
+)
+
+@(Html.DevExtreme().Toast()
+        .ID("toastmessage_error")
+        .Type(ToastType.Error)
+        .DisplayTime(@ConstantValues.DisplayDurationError)
+)
+
+@(Html.DevExtreme().Toast()
+        .ID("toastmessage_info")
+        .Type(ToastType.Info)
+        .DisplayTime(@ConstantValues.DisplayDurationInfo)
+)
+

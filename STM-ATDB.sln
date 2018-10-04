@@ -1,0 +1,116 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STM.ATDB.MvcWeb", "STM-ATDB\STM.ATDB.MvcWeb.csproj", "{9B8969A2-5918-44A3-82FC-D90C610ECCFD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{9D30B06D-BD9F-4E56-B3CA-0A62EF1908B7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C1F6D5FF-D578-4ED7-8D2E-0E4E9D587EC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STM.ATDB.Services", "ATDB.Services\STM.ATDB.Services.csproj", "{1F65AAC4-739A-44C4-B4E3-BE3E6C9A3E44}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{E7D4A336-5915-4161-8836-40A63FA98364}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STM.ATDB.Framework", "STM.ATDB.Framework\STM.ATDB.Framework.csproj", "{0F4492B3-F33C-4F08-B806-AC83791AC742}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STM.ATDB.Model.Security", "STM.ATDB.Model.Security\STM.ATDB.Model.Security.csproj", "{AFED36C4-AF4E-4143-9FC6-3F82657AF336}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STM.ATDB.Core", "STM.ATDB.Core\STM.ATDB.Core.csproj", "{0591A2B6-0EB8-4CAA-BC3D-210BA2B7A4A0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSI Framework", "CSI Framework", "{20E89CED-F048-4AD4-927F-7D0324AEFA14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSI.Web.Mvc", "CSI.Web.Mvc\CSI.Web.Mvc.csproj", "{910C284E-9C31-46BC-AFE7-1185253A1E4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STM.ATDB.Model.Common", "STM.ATDB.Model.Common\STM.ATDB.Model.Common.csproj", "{5E824C50-7F89-4720-8815-9367CF28155B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STM.ATDB.Model.Transaction", "STM.ATDB.Model.Transaction\STM.ATDB.Model.Transaction.csproj", "{6693A284-6F15-48E2-890E-0F3A981AB79F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B8969A2-5918-44A3-82FC-D90C610ECCFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B8969A2-5918-44A3-82FC-D90C610ECCFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B8969A2-5918-44A3-82FC-D90C610ECCFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B8969A2-5918-44A3-82FC-D90C610ECCFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F65AAC4-739A-44C4-B4E3-BE3E6C9A3E44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F65AAC4-739A-44C4-B4E3-BE3E6C9A3E44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F65AAC4-739A-44C4-B4E3-BE3E6C9A3E44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F65AAC4-739A-44C4-B4E3-BE3E6C9A3E44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F4492B3-F33C-4F08-B806-AC83791AC742}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F4492B3-F33C-4F08-B806-AC83791AC742}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F4492B3-F33C-4F08-B806-AC83791AC742}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F4492B3-F33C-4F08-B806-AC83791AC742}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFED36C4-AF4E-4143-9FC6-3F82657AF336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFED36C4-AF4E-4143-9FC6-3F82657AF336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFED36C4-AF4E-4143-9FC6-3F82657AF336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFED36C4-AF4E-4143-9FC6-3F82657AF336}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0591A2B6-0EB8-4CAA-BC3D-210BA2B7A4A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0591A2B6-0EB8-4CAA-BC3D-210BA2B7A4A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0591A2B6-0EB8-4CAA-BC3D-210BA2B7A4A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0591A2B6-0EB8-4CAA-BC3D-210BA2B7A4A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{910C284E-9C31-46BC-AFE7-1185253A1E4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{910C284E-9C31-46BC-AFE7-1185253A1E4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{910C284E-9C31-46BC-AFE7-1185253A1E4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{910C284E-9C31-46BC-AFE7-1185253A1E4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E824C50-7F89-4720-8815-9367CF28155B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E824C50-7F89-4720-8815-9367CF28155B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E824C50-7F89-4720-8815-9367CF28155B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E824C50-7F89-4720-8815-9367CF28155B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6693A284-6F15-48E2-890E-0F3A981AB79F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6693A284-6F15-48E2-890E-0F3A981AB79F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6693A284-6F15-48E2-890E-0F3A981AB79F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6693A284-6F15-48E2-890E-0F3A981AB79F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1F65AAC4-739A-44C4-B4E3-BE3E6C9A3E44} = {C1F6D5FF-D578-4ED7-8D2E-0E4E9D587EC6}
+		{0F4492B3-F33C-4F08-B806-AC83791AC742} = {E7D4A336-5915-4161-8836-40A63FA98364}
+		{AFED36C4-AF4E-4143-9FC6-3F82657AF336} = {9D30B06D-BD9F-4E56-B3CA-0A62EF1908B7}
+		{0591A2B6-0EB8-4CAA-BC3D-210BA2B7A4A0} = {E7D4A336-5915-4161-8836-40A63FA98364}
+		{910C284E-9C31-46BC-AFE7-1185253A1E4C} = {20E89CED-F048-4AD4-927F-7D0324AEFA14}
+		{5E824C50-7F89-4720-8815-9367CF28155B} = {9D30B06D-BD9F-4E56-B3CA-0A62EF1908B7}
+		{6693A284-6F15-48E2-890E-0F3A981AB79F} = {9D30B06D-BD9F-4E56-B3CA-0A62EF1908B7}
+	EndGlobalSection
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 9
+		SccProjectUniqueName0 = STM.ATDB.Model.Transaction\\STM.ATDB.Model.Transaction.csproj
+		SccProjectTopLevelParentUniqueName0 = STM-ATDB.sln
+		SccLocalPath0 = .
+		SccProjectFilePathRelativizedFromConnection0 = STM.ATDB.Model.Transaction\\
+		SccProjectUniqueName1 = STM.ATDB.Model.Common\\STM.ATDB.Model.Common.csproj
+		SccProjectTopLevelParentUniqueName1 = STM-ATDB.sln
+		SccLocalPath1 = .
+		SccProjectFilePathRelativizedFromConnection1 = STM.ATDB.Model.Common\\
+		SccProjectUniqueName2 = CSI.Web.Mvc\\CSI.Web.Mvc.csproj
+		SccProjectTopLevelParentUniqueName2 = STM-ATDB.sln
+		SccLocalPath2 = .
+		SccProjectFilePathRelativizedFromConnection2 = CSI.Web.Mvc\\
+		SccProjectUniqueName3 = STM.ATDB.Core\\STM.ATDB.Core.csproj
+		SccProjectTopLevelParentUniqueName3 = STM-ATDB.sln
+		SccLocalPath3 = .
+		SccProjectFilePathRelativizedFromConnection3 = STM.ATDB.Core\\
+		SccProjectUniqueName4 = STM.ATDB.Model.Security\\STM.ATDB.Model.Security.csproj
+		SccProjectTopLevelParentUniqueName4 = STM-ATDB.sln
+		SccLocalPath4 = .
+		SccProjectFilePathRelativizedFromConnection4 = STM.ATDB.Model.Security\\
+		SccProjectUniqueName5 = STM.ATDB.Framework\\STM.ATDB.Framework.csproj
+		SccProjectTopLevelParentUniqueName5 = STM-ATDB.sln
+		SccLocalPath5 = .
+		SccProjectFilePathRelativizedFromConnection5 = STM.ATDB.Framework\\
+		SccProjectUniqueName6 = ATDB.Services\\STM.ATDB.Services.csproj
+		SccProjectTopLevelParentUniqueName6 = STM-ATDB.sln
+		SccLocalPath6 = .
+		SccProjectFilePathRelativizedFromConnection6 = ATDB.Services\\
+		SccProjectUniqueName7 = STM-ATDB\\STM.ATDB.MvcWeb.csproj
+		SccLocalPath7 = .
+		SccProjectFilePathRelativizedFromConnection7 = STM-ATDB\\
+		SccLocalPath8 = .
+	EndGlobalSection
+EndGlobal

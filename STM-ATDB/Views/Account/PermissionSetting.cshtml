@@ -1,0 +1,321 @@
+﻿@using STM.ATDB.MvcWeb.Models
+@using STM.ATDB.MvcWeb.Properties
+@using STM.ATDB.MvcWeb.App_Helpers
+@using STM.ATDB.Core
+
+@model IEnumerable<UserMaintenanceViewModel>
+
+@{
+    ViewBag.Title = "PermissionSetting";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var redioData = new[] { "User", "Role" };
+
+}
+
+<div id="form-container" class="panel-group col-md-12 no-gutter">
+    <form id="search-container" class="col-md-12">
+        <div class="panel-group col-md-12 well well-sm animated fadeIn">
+            <div class="panel-group" style="margin:0px !important;">
+                <div>
+                    <div class="col-md-4">
+                        @Html.AntiForgeryToken()
+                    </div>
+                    <div class="col-md-8"></div>
+                </div>
+                <div class="row dx-field" style="padding-left: 5px !important;">
+                    <div class="col-md-4" style="padding: 0px !important;">
+                        <h5><i class="fa fa-fw fa-th-list"></i> User/Role List</h5>
+                        <div style="border:2px solid #B5B5B5; border-radius:4px 4px; padding:8px; margin-bottom:5px;">
+                            <div class="row dx-field clearfix" style="margin:0px !important;">
+                                <div class="col-xs-10">
+                                    <div class="col-2 dx-field-label text-right" style="padding-right:15px !important;color:black !important;">User/Role</div>
+                                    <div class="col-10 dx-field-value">
+                                        @(Html.DevExtreme().TextBox()
+                                    .ID("UserIDText")
+                                    .MaxLength(40)
+                                        )
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row dx-field clearfix" style="margin:0px !important;">
+                                <div class="col-xs-10">
+                                    <div class="col-2 dx-field-label text-right" style="padding-right:15px !important;color:black !important;"></div>
+                                    <div class="col-10 dx-field-value">
+                                        @(Html.DevExtreme().RadioGroup()
+                                            .ID("UserTypeRadio")
+                                            .Items(redioData)
+                                            .Value("User")
+                                            .OnValueChanged("radioGroup_valueChanged")
+                                            .Layout(Orientation.Horizontal)
+                                        )
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row dx-field clearfix">
+                                <div class="col-xs-10">
+                                    <div class="col-2"></div>
+                                    <div class="col-10 dx-field-value">
+                                        <span>
+                                            @(Html.DevExtreme().Button()
+                                            .ID("btnSearch")
+                                            .Text("Search")
+                                            .OnClick("onbtnSearchClick")
+                                            .Type(ButtonType.Success)
+                                            .Icon("fa fa-search")
+                                            )
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="background-color-white border-round-10">
+                            @(Html.DevExtreme().List()
+                                .ID("UserList")
+                                .SelectionMode(ListSelectionMode.Single)
+                                .ShowSelectionControls(true)
+                                .KeyExpr("UserCode")
+                                .DataSource(d => d.Mvc().Controller("Account").LoadAction("GetUserAndRoleList")
+                                                                            .LoadParams(new
+                                                                            {
+                                                                                UserID = new JS("getSearchUserID")
+                                                                                ,UserType = new JS("getSelectedUserType")
+                                                                            }))
+                                .Height(285)                     
+                                .SearchEnabled(false)
+                                .ItemTemplate("<div><span style='font-weight: 800; '><%= UserCode %></span> <%= UserDisplay %></div>")
+                                .OnSelectionChanged("UserListOnSelectionChanged")
+                            )
+                        </div>
+                    </div>
+                    <div class="col-md-8" style="padding-left: 10px !important;">
+                        <h5><i class="fa fa-fw fa-th-list"></i> Screen List</h5>
+
+                        <div style="border:2px solid #B5B5B5; border-radius:4px 4px; padding:5px !important; ">
+
+                            @(Html.DevExtreme().Button()
+                            .ID("ExpandAllButton")
+                            .Text("Expand All")
+                            .OnClick("ExpandAllClick")
+                            .Type(ButtonType.Default)
+                            .Icon("fa fa-angle-double-down")
+                            )
+                            @(Html.DevExtreme().Button()
+                            .ID("CollapseAllButton")
+                            .Text("Collapse All")
+                            .OnClick("CollapseAllClick")
+                            .Type(ButtonType.Default)
+                            .Icon("fa fa-angle-double-up")
+                            )
+                            @(Html.DevExtreme().Button()
+                            .ID("CheckedAllButton")
+                            .Text("Checked All")
+                            .OnClick("CheckedAllClick")
+                            .Type(ButtonType.Default)
+                            .Icon("fa fa-check-square")
+                            )
+                            @(Html.DevExtreme().Button()
+                            .ID("UnCheckedAllButton")
+                            .Text("Un-Checked All")
+                            .OnClick("UnCheckedAllClick")
+                            .Type(ButtonType.Default)
+                            .Icon("fa fa-square")
+                            )
+
+                            <div class="background-color-white border-round-10" style="margin-top: 5px !important;">
+                                @(Html.DevExtreme().TreeView()
+                            .ID("PermissionTreeView")
+                            .DataSource(d => d.Mvc().Controller("Account").LoadAction("GetScreenPermissionTree")
+                                                                            .LoadParams(new
+                                                                            {
+                                                                                UserID = new JS("getSelectedUserID")
+                                                                                ,
+                                                                                UserType = new JS("getSelectedUserType")
+                                                                            }))
+                            .Height(370)
+                            .DisplayExpr("Text")
+                            .SelectedExpr("IsHavePermission")
+                            .ItemsExpr("Items")
+                            .ExpandedExpr("Expanded")
+                            .KeyExpr("ItemKey")
+                            .SearchEnabled(false)
+                            .SearchExpr(new[] { "SearchText" })
+                            .ShowCheckBoxesMode(TreeViewCheckBoxMode.Normal)
+                            .DataSourceOptions(ds => ds.OnLoadingChanged("dsOnLoadingChanged"))
+                                )
+                            </div>
+
+                            <div style="padding: 0px !important; margin-top: 10px !important; margin-bottom: 5px !important;">
+                                
+                                @if (ViewContext.Controller.HasPermission("AMS020", PermissionName.Edit.Value))
+                                {
+                                    @(Html.DevExtreme().Button()
+                                .ID("SaveButton")
+                                .Text("Save")
+                                .Type(ButtonType.Success)
+                                .OnClick("OnSaveClick")
+                                .Icon("fa fa-save")
+                                    )
+                                }
+                                @(Html.DevExtreme().Button()
+                                .ID("CancelButton")
+                                .Text("Cancel")
+                                .Type(ButtonType.Danger)
+                                .OnClick("OnCalcelClick")
+                                .Icon("fa fa-ban")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function ExpandAllClick(e) {
+        $.each($('#PermissionTreeView').dxTreeView("getNodes"), function (index) {
+            $('#PermissionTreeView').dxTreeView("expandItem", this.key);
+        });
+    }
+
+    function CollapseAllClick(e) {
+        $.each($('#PermissionTreeView').dxTreeView("getNodes"), function (index) {
+            $('#PermissionTreeView').dxTreeView("collapseItem", this.key);
+        });
+    }
+
+    function CheckedAllClick(e) {
+        $('#PermissionTreeView').dxTreeView("selectAll");
+    }
+
+    function UnCheckedAllClick(e) {
+        $('#PermissionTreeView').dxTreeView("unselectAll");
+    }
+
+    function getSelectedUserID() {
+        var selectedUserKey = '';
+        if ($('#UserList').dxList('instance')._selection.options.selectedItemKeys.length > 0) {
+            return $('#UserList').dxList('instance')._selection.options.selectedItemKeys[0];
+        }
+        else {
+            return '';
+        }
+    }
+
+    function getSearchUserID() {
+        var selectedValue = $("#UserIDText").dxTextBox("instance").option("value");
+        return selectedValue;
+    }
+
+    var isFrist = true;
+
+    function getSelectedUserType() {
+        if (isFrist) {
+            isFrist = false;
+            return null;
+        }
+        
+        var selectedValue = $("#UserTypeRadio").dxRadioGroup("instance").option("value");
+        return selectedValue;
+    }
+
+    function OnCalcelClick(e) {
+        app.ui.getLoadPanelInstance().show();
+        $("#PermissionTreeView").data("dxTreeView")._dataSource.load();
+    }
+
+    function UserListOnSelectionChanged(data) {
+        app.ui.getLoadPanelInstance().show();
+        $("#PermissionTreeView").data("dxTreeView")._dataSource.load();
+    }
+
+    function dsOnLoadingChanged(e) {
+        setTimeout(function () {
+            app.ui.getLoadPanelInstance().hide();
+        }, 500);
+    }
+
+    function OnSaveClick() {
+        app.ui.hideMessagePanel();
+        app.ui.getLoadPanelInstance().show();
+        var User = getSelectedUserID();
+        if (User != '') {
+            var data = {
+                UserID: User,
+                PermissionList: $("#PermissionTreeView").data("dxTreeView")._dataSource._items
+            }
+
+            var uType = getSelectedUserType();
+
+            $.ajax({
+                url: "/Account/SavePermission",
+                type: "POST",
+                dataType: "json",
+                data: app.addAntiForgeryToken({ dataText: JSON.stringify(data), UserType: uType }),
+                success: function (data, status, xhr) {
+                    app.ui.getLoadPanelInstance().hide();
+                    if (data.IsError == 1) {
+                        app.ui.showNotifyMessage('@ToastType.Error', data.Message);
+                    }
+                    else {
+                        //app.ui.showSuccessMessagePanel(data.Message);
+                        app.ui.showNotifyMessage('@ToastType.Success', data.Message);
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    app.ui.getLoadPanelInstance().hide();
+                    var message = app.ui.handleAjaxError(xhr, status, error);
+                    app.ui.showNotifyMessage('@ToastType.Error', message);
+
+                }
+            });
+        }
+        else {
+            app.ui.getLoadPanelInstance().hide();
+            app.ui.showNotifyMessage('@ToastType.Error', '@ValidateViewModelResource.RequireUserIDForSavePermission');
+        }
+        return false;
+    }
+
+    function radioGroup_valueChanged(e) {
+        //$("#list").children().remove();
+        //var priorities = e.component.option("items");
+
+        //alert(e.value);
+        //$.each([{
+        //    subject: "Choose between PPO and HMO Health Plan",
+        //    priority: "High"
+        //}, {
+        //    subject: "Non-Compete Agreements",
+        //    priority: "Low"
+        //}, {
+        //    subject: "Comment on Revenue Projections",
+        //    priority: "Normal"
+        //}, {
+        //    subject: "Sign Updated NDA",
+        //    priority: "Urgent"
+        //}, {
+        //    subject: "Submit Questions Regarding New NDA",
+        //    priority: "High"
+        //}, {
+        //    subject: "Rollout of New Website and Marketing Brochures",
+        //    priority: "High"
+        //}], function (_, item) {
+        //    if (item.priority === e.value) {
+        //        $("#list").append($("<li/>").text(item.subject));
+        //    }
+        //});
+    }
+
+    function onbtnSearchClick(e) {
+
+        //$('#UserList').dxList('instance').update();
+        var listDataSource = $("#UserList").dxList("getDataSource");
+        listDataSource.load();
+
+
+    }
+</script>

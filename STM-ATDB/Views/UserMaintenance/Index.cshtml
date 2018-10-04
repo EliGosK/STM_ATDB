@@ -1,0 +1,1162 @@
+﻿@using STM.ATDB.MvcWeb.Models
+@using STM.ATDB.MvcWeb.App_Helpers
+@using STM.ATDB.Core
+@model STM.ATDB.MvcWeb.Models.UserMaintenanceViewModel
+
+@{
+    ViewBag.Title = "Location Master";
+}
+<style>
+    .dialog-pop {
+        margin-bottom: 5px;
+    }
+
+
+</style>
+<div id="form-container" class="panel-group col-md-12 no-gutter">
+    <form id="search-container" class="col-md-12">
+        <div class="panel-group col-md-12 well well-sm animated fadeIn">
+            <h3><i class="fa fa-fw fa-th-list"></i> Criteria</h3>
+            <div class="panel-group">
+                <div class="row padding-bottom-10">
+                    <div class="col-md-4">
+                        <div class="row clearfix dx-field">
+                            <div class="col-md-4 dx-field-label text-right">User ID</div>
+                            <div class="col-md-8 dx-field-value text-left">
+                                @(Html.DevExtreme().TextBox()
+                                .ShowClearButton(true)
+                                .ID("TextBoxUserID")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row dx-field">
+                            <div class="col-md-2 dx-field-label text-right">Name-Surname</div>
+                            <div class="col-md-10 dx-field-value text-left">
+                                @(Html.DevExtreme().TextBox()
+                                .ShowClearButton(true)
+                                .ID("TextBoxName")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row dx-field">
+                            <div class="col-md-2 dx-field-label text-right">Status</div>
+                            <div class="col-md-10 dx-field-value text-left">
+                                @(Html.DevExtreme().SelectBox()
+                                .ID("SelectBoxStatus")
+                                .ValueExpr("ValueCode")
+                                .DisplayExpr("ValueDisplay")
+                                .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetAllStatus").LoadParams(new { includeAll = true }).Key("ValueCode"))
+                                .Value(ConstantValues.AllValue)
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="row dx-field">
+                            <div class="col-md-2 dx-field-label text-right">Type</div>
+                            <div class="col-md-10 dx-field-value text-left">
+                                @(Html.DevExtreme().SelectBox()
+                                .ID("SelectBoxType")
+                                .ValueExpr("ValueCode")
+                                .DisplayExpr("ValueDisplay")
+                                .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetUserType").LoadParams(new { includeAll = true }).Key("ValueCode"))
+                                .Value(ConstantValues.AllValue)
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row dx-field">
+                            <div class="col-md-2 dx-field-label text-right"></div>
+                            <div class="col-md-10 dx-field-value text-left">
+                                <div class="pull-right">
+
+                                        @(Html.DevExtreme().Button()
+                                            .Text("Search")
+                                            .OnClick("onSearchClick")
+                                            .Type(ButtonType.Success)
+                                            .Icon("fa fa-search")
+                                            )
+
+                                            @(Html.DevExtreme().Button()
+                                                .Text("Clear")
+                                                .OnClick("onClearClick")
+                                                .Type(ButtonType.Danger)
+                                                .Icon("fa fa-eraser")
+                                            )
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </div>
+    </form>
+    
+    <form id="grid-container" class="panel-group col-md-12">
+        <div class="well well-sm animated fadeIn">
+            <h3><i class="fa fa-fw fa-th-list"></i>Result List</h3>
+            <div class="text-align-right padding-bottom-10">
+                @(Html.DevExtreme().Button()
+                                .ID("ButtonAdd")
+                                .Text("Add")
+                                .OnClick("onAddUser")
+                                .Type(ButtonType.Default)
+                                .Disabled(!ViewContext.Controller.HasPermission("ADS010", PermissionName.Add.Value))
+                                .Icon("fa fa-plus-circle")
+
+                )
+            </div>
+            @(Html.DevExtreme().DataGrid<UserMaintenanceViewModel>()
+       .ID("DataGridUserMaintenance")
+       .ShowBorders(true)
+       .DataSource(d => d.Mvc().Controller("UserMaintenance").LoadAction("SearchUserMaintenance").Key("UserID")
+       .UpdateAction("UpdateUserMaintenance")
+       .InsertAction("InsertUserMaintenance")
+       .DeleteAction("DeleteUserMaintenance")
+       .LoadParams(new { UserID = new JS("getUserIDValue"), Name = new JS("getNameValue"), StatusCri = new JS("getStatusValue"), Type = new JS("getTypeValue") })
+       )
+       .AllowColumnResizing(true)
+       .ColumnMinWidth(40)
+       .ColumnAutoWidth(true)
+       .ShowBorders(true)
+       .ShowRowLines(true)
+       .Editing(e => e.Mode(GridEditMode.Popup)
+               .AllowUpdating(true)
+               .AllowAdding(false)
+               .AllowDeleting(false)
+               .Popup(p => p
+                   .Title("Add/Edit Location")
+                   .ShowTitle(true)
+                   .Width(800)
+                   .Height(500)
+                   .OnShowing("onShowing")
+                   .Position(pos => pos
+                       .My(HorizontalAlignment.Center, VerticalAlignment.Center)
+                       .At(HorizontalAlignment.Center, VerticalAlignment.Center)
+                       .Of(new JS("window"))
+                   )
+               )
+           )
+       .Columns(columns =>
+       {
+       columns.AddFor(m => m.UserID)
+                .Caption("No.")
+                .AllowEditing(false)
+                .CellTemplate(new JS("onCreateRowNum"))
+                .FormItem(x => x.Visible(false))
+                .AllowFiltering(false)
+                .Width(40)
+            ;
+       columns.AddFor(m => m.UserID)
+            ;
+       columns.AddFor(m => m.TitleCode)
+           .Visible(false)
+          ;
+       columns.AddFor(m => m.Name)
+          .Visible(false)
+         ;
+       columns.AddFor(m => m.Surname)
+          .Visible(false)
+         ;
+       columns.AddFor(m => m.FullName)
+        ;
+       columns.AddFor(m => m.Password)
+         .Visible(false)
+         ;
+       columns.AddFor(m => m.Tel)
+            ;
+       columns.AddFor(m => m.Mobile)
+           .Visible(false)
+            ;
+       columns.AddFor(m => m.UserTypeCode)
+           .Lookup(lookup => lookup
+                             .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetUserType").Key("ValueCode"))
+                             .DisplayExpr("ValueDisplay")
+                             .ValueExpr("ValueCode")
+                             )
+           ;
+       columns.AddFor(m => m.Email)
+            .Visible(false)
+            ;
+       columns.AddFor(m => m.CompanyCodeList)
+                .Visible(false)
+                .FormItem(x => x.Visible(true))
+           ;
+       columns.AddFor(m => m.PlantCodeList)
+               .Visible(false)
+               .FormItem(x => x.Visible(true))
+          ;
+       columns.AddFor(m => m.Status)
+            .Visible(true)
+            .FormItem(x => x.Visible(true))
+            .Lookup(lookup => lookup
+                              .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetStatusBoolean").Key("ValueBoolean"))
+                              .DisplayExpr("ValueDisplay")
+                              .ValueExpr("ValueBoolean")
+                              )
+        ;
+       columns.AddFor(m => m.CreatedBy)
+            .Visible(false)
+            .FormItem(x => x.Visible(false))
+       ;
+       columns.AddFor(m => m.CreatedDate)
+                .Visible(false)
+                .FormItem(x => x.Visible(false))
+           ;
+       columns.AddFor(m => m.UpdatedBy)
+                .FormItem(x => x.Visible(false))
+            ;
+       columns.AddFor(m => m.UpdatedDate)
+                .Format(ConstantValues.TimeStampFormat)
+                .FormItem(x => x.Visible(false))
+            ;
+
+        @*columns.Add().Width(120).Alignment(HorizontalAlignment.Center)
+            .CellTemplate(@<text>
+                    @Html.DevExtreme().Button().Text("Edit").OnClick("function (e) { editButtonClick(data) }")
+                    @Html.DevExtreme().Button().Text("Delete").OnClick("function (e) { deleteButtonClick(data) }")
+                    </text>)
+         ;*@
+       }
+        )
+                .Paging(p => p.PageSize(ConstantValues.GRID_PAGE_SIZE))
+                .FilterRow(f => f.Visible(true))
+                .HeaderFilter(f => f.Visible(true))
+                .GroupPanel(p => p.Visible(true))
+                .Grouping(g => g.AutoExpandAll(false))
+                .RemoteOperations(true)
+                .OnCellPrepared("onCellPrepared")
+            )
+
+            @(Html.DevExtreme().Popup().ID("customPopup").Title("Add/Edit User Info").Width(1000).Height(430).Visible(false).ContentTemplate(@<text>
+            @Html.AntiForgeryToken()
+             @using(Html.DevExtreme().ValidationGroup("UserValidationGroup")) {
+                <div id="DivPopup">
+                  <div class="row dialog-pop">
+                      <div class="col-md-4">
+                          <div class="row clearfix dx-field">
+                              <div class="col-md-4 dx-field-label text-left">User ID</div>
+                              <div class="col-md-8 dx-field-value text-left">
+                                  @(Html.DevExtreme().TextBoxFor(m=>m.UserID)
+                                //.ShowClearButton(true)
+                                .ID("PopTextBoxUserID")
+                                  )
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="row clearfix dx-field">
+                              <div class="col-md-4 dx-field-label text-left">Password</div>
+                              <div class="col-md-8 dx-field-value text-left">
+                                  @(Html.DevExtreme().TextBoxFor(m => m.Password)
+                                //.ShowClearButton(true)
+                                .ID("PopTextBoxPassword")
+                                .Mode(TextBoxMode.Password)
+                                  )
+                              </div>
+                          </div>
+                      </div>
+                      <div id="DivChangePassword" class="col-md-2" style="margin-left: -90px">
+                          <div class="dx-field-value text-left">
+                              @(Html.DevExtreme().CheckBox()
+                                    .ID("PopCheckEditPassword")
+                                    .Value(false)
+                                    .Width(80)
+                                    .Text("Edit")
+                                    .OnValueChanged("OnCheckChangePassword")
+                              )
+                          </div>
+
+                      </div>
+                  </div>
+                  <div class="row dialog-pop">
+                      <div class="col-md-4">
+                          <div class="row dx-field">
+                              <div class="col-md-2 dx-field-label text-left">Title</div>
+                              <div class="col-md-10 dx-field-value text-left">
+                                  @(Html.DevExtreme().SelectBoxFor(m => m.TitleCode)
+                                        .ID("PopSelectBoxTitle")
+                                        .ValueExpr("ValueCode")
+                                        .DisplayExpr("ValueDisplay")
+                                        .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetTitleNameForUser").LoadParams(new { includeAll = false }).Key("ValueCode"))
+                                        .Value(ConstantValues.AllValue)
+                                  )
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="row clearfix dx-field">
+                              <div class="col-md-4 dx-field-label text-left">Name</div>
+                              <div class="col-md-8 dx-field-value text-left">
+                                  @(Html.DevExtreme().TextBoxFor(m => m.Name)
+                                //.ShowClearButton(true)
+                                .ID("PopTextBoxName")
+                                  )
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="row clearfix dx-field">
+                              <div class="col-md-4 dx-field-label text-left">Surname</div>
+                              <div class="col-md-8 dx-field-value text-left">
+                                  @(Html.DevExtreme().TextBoxFor(m => m.Surname)
+                                //.ShowClearButton(true)
+                                .ID("PopTextBoxSurname")
+                                  )
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row dialog-pop">
+                     
+                  </div>
+                  <div class="row dialog-pop">
+                      <div class="col-md-4">
+                          <div class="row clearfix dx-field">
+                              <div class="col-md-4 dx-field-label text-left">TEL</div>
+                              <div class="col-md-8 dx-field-value text-left">
+                                  @(Html.DevExtreme().TextBoxFor(m => m.Tel)
+                                //.ShowClearButton(true)
+                                .ID("PopTextBoxTel")
+                                  )
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="row clearfix dx-field">
+                              <div class="col-md-4 dx-field-label text-left">Mobile</div>
+                              <div class="col-md-8 dx-field-value text-left">
+                                  @(Html.DevExtreme().TextBoxFor(m => m.Mobile)
+                                //.ShowClearButton(true)
+                                .ID("PopTextBoxMobile")
+                                  )
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row dialog-pop">
+                      <div class="col-md-4 ">
+                          <div class="row clearfix dx-field">
+                              <div class="col-md-4 dx-field-label text-left">Email</div>
+                              <div class="col-md-8 dx-field-value text-left">
+                                  @(Html.DevExtreme().TextBoxFor(m => m.Email)
+                                //.ShowClearButton(true)
+                                .ID("PopTextBoxEmail")
+                                  )
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="row clearfix dx-field">
+                              <div class="col-md-4 dx-field-label text-left">Status</div>
+                              <div class="col-md-8 dx-field-value text-left">
+                                  @(Html.DevExtreme().SelectBoxFor(m=>m.Status)
+                                     .ID("PopSelectBoxStatus")
+                                     .ValueExpr("ValueCode")
+                                    .DisplayExpr("ValueDisplay")
+                                    .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetAllStatus").LoadParams(new { includeAll = false }).Key("ValueCode"))
+                                  )
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-4 ">
+                      </div>
+                  </div>
+                    <div class="row dialog-pop">
+                        <div class="col-md-4">
+                            <div class="row dx-field">
+                                <div class="col-md-2 dx-field-label text-left">Type</div>
+                                <div class="col-md-10 dx-field-value text-left">
+                                    @(Html.DevExtreme().SelectBoxFor(m => m.UserTypeCode)
+                                    .ID("PopSelectBoxType")
+                                    .ValueExpr("ValueCode")
+                                    .DisplayExpr("ValueDisplay")
+                                    .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetUserType").LoadParams(new { includeAll = false }).Key("ValueCode"))
+                                    .OnValueChanged("onSelectTypeChange")
+                                    .Value(ConstantValues.UserType_STM)
+                                    )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  <div class="row dialog-pop">
+                      <div class="col-md-8 ">
+                          <div class="row clearfix dx-field">
+                              <div id="DivCompany1">
+                                  <div class="col-md-4 dx-field-label text-right">Company</div>
+                                  <div class="col-md-8 dx-field-value text-left">
+                                      @(Html.DevExtreme().DropDownBox()
+                                        .ValueExpr("CompanyCode")
+                                        .ID("PopListBoxCompany")
+                                        .DisplayExpr("CompanyName")
+                                        .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetCompany").Key("CompanyCode").LoadParams(new { includeAll = false, IncludeDelete =false, ValueCode =new JS("getCompanySelect")}))
+                                        .Placeholder("Select a value...")
+                                        .ShowClearButton(false)
+                                        .OnValueChanged("gridBox_valueChanged")
+                                        .ContentTemplate(new TemplateName("EmbeddedDataGridMultiple"))
+                                        .OnInitialized("onIniCompany")
+                                        
+                                      )
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                    <div class="row dialog-pop">
+                        <div class="col-md-8 ">
+                            <div class="row clearfix dx-field">
+                                <div id="DivPlant1">
+                                    <div class="col-md-4 dx-field-label text-right">Plant</div>
+                                    <div class="col-md-8 dx-field-value text-left">
+                                        @(Html.DevExtreme().DropDownBox()
+                                        .ValueExpr("PlantCode")
+                                        .ID("PopListBoxPlant")
+                                        .DisplayExpr("PlantName")
+                                        .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetPlant").Key("PlantCode").LoadParams(new { includeAll = false, IncludeDelete = false, ValueCode = new JS("getPlantSelect") }))
+                                        .Placeholder("Select a value...")
+                                        .ShowClearButton(false)
+                                        .OnValueChanged("gridBox_valueChangedPlant")
+                                        .ContentTemplate(new TemplateName("EmbeddedDataGridMultiplePlant"))
+                                        .OnInitialized("onIniPlant")
+                                        )
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                  <div  id="DivSaveCancel" class="row dialog-pop text-right">
+                      @Html.DevExtreme().Button().Text("Save").OnClick("saveButtonClick").ValidationGroup("UserValidationGroup")
+                      @Html.DevExtreme().Button().Text("Cancel").OnClick("function (e) { cancelButtonClick() }")
+                  </div>
+              </div>
+               
+            }
+            </text>)
+           )
+
+
+            @using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridMultiple"))
+            {
+                @(Html.DevExtreme().DataGrid()
+                    .ID("embedded-datagrid")
+                    
+                    .DataSource(new JS(@"component.option(""dataSource"")"))
+                    .Columns(columns =>
+                    {
+                        columns.Add().DataField("CompanyCode");
+                        columns.Add().DataField("CompanyName");
+                    })
+                    
+                    .HoverStateEnabled(true)
+                    .Paging(p => p.PageSize(10))
+                    .FilterRow(f => f.Visible(true))
+                    .Scrolling(s => s.Mode(GridScrollingMode.Infinite))
+                    .Height(265)
+                    .Selection(s => s.Mode(SelectionMode.Multiple)
+                                    .ShowCheckBoxesMode(GridSelectionShowCheckBoxesMode.Always))
+                    .SelectedRowKeys(new JS(@"component.option(""value"")"))
+                    .OnSelectionChanged(@<text>
+                        function(selectedItems) {
+                        var keys = selectedItems.selectedRowKeys;
+                        component.option("value", keys);
+                            }
+                        </text>)
+                )
+                }
+
+                @using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridMultiplePlant"))
+                {
+                    @(Html.DevExtreme().DataGrid()
+                        .ID("embedded-datagrid")
+                        .DataSource(new JS(@"component.option(""dataSource"")"))
+                        .Columns(columns =>
+                        {
+                            columns.Add().DataField("PlantCode");
+                            columns.Add().DataField("PlantName");
+                        })
+                        .HoverStateEnabled(true)
+                        .Paging(p => p.PageSize(10))
+                        .FilterRow(f => f.Visible(true))
+                        .Scrolling(s => s.Mode(GridScrollingMode.Infinite))
+                        .Height(265)
+                        .Selection(s => s.Mode(SelectionMode.Multiple)
+                                        .ShowCheckBoxesMode(GridSelectionShowCheckBoxesMode.Always))
+                        .SelectedRowKeys(new JS(@"component.option(""value"")"))
+                        .OnSelectionChanged(@<text>
+                            function(selectedItems) {
+                            var keys = selectedItems.selectedRowKeys;
+                            component.option("value", keys);
+                            }
+                        </text>)
+                    )
+                }
+        </div>
+    </form>
+</div>
+
+
+<script>
+    var actionView = false;
+    var currentKey;
+    var resetPassword ;
+    cellTemplate= function (cellElement, cellInfo) {
+        if (cellInfo.row.isEditing && cellInfo.row.inserted)
+            cellElement.text($("#gridContainer").dxDataGrid("instance").totalCount() + 1)
+        else
+            cellElement.text(cellInfo.row.rowIndex + 1);
+
+
+
+    }
+    function onCreateRowNum(cellElement, cellInfo) {
+        cellElement.text((cellInfo.component.pageSize() * cellInfo.component.pageIndex()) + cellInfo.row.rowIndex + 1)
+    }
+    function onSearchClick() {
+        $("#DataGridUserMaintenance").dxDataGrid("instance").refresh();
+    }
+    function onClearClick() {
+        $("#TextBoxUserID").dxTextBox("instance").option("value", "");
+        $("#TextBoxName").dxTextBox("instance").option("value", "");
+        $("#SelectBoxStatus").dxSelectBox("instance").option("value", "@ConstantValues.AllValue");
+        $("#SelectBoxType").dxSelectBox("instance").option("value", "@ConstantValues.AllValue");
+        $("#DataGridUserMaintenance").dxDataGrid("instance").refresh();
+    }
+    function getUserIDValue() {
+        return $("#TextBoxUserID").dxTextBox("instance").option("value");;
+    }
+    function getNameValue() {
+        return $("#TextBoxName").dxTextBox("instance").option("value");
+    }
+    function getStatusValue() {
+        return $("#SelectBoxStatus").dxSelectBox("instance").option("value");
+    }
+    function getTypeValue() {
+        return $("#SelectBoxType").dxSelectBox("instance").option("value");
+    }
+    function getUserCompany()
+    {
+        return $("#PopSelectBoxType").dxSelectBox("instance").option("value");
+    }
+    onEditorPreparing = function (e) {
+        if (actionView && e.parentType == "dataRow")
+        {
+            e.editorOptions.disabled = true;
+            return;
+        }
+
+        if (e.component.__editingStart
+            && e.parentType == "dataRow"
+            && (e.dataField == "EmployeeCode" || e.dataField == "CompanyCode")) {
+            e.editorOptions.readOnly = true;
+        }
+        if (e.parentType == "dataRow" &&
+             (e.dataField == "TempCardNo" || e.dataField == "RoleName" || e.dataField == "PlantName" || e.dataField == "LocationName"))
+        {
+            e.editorOptions.readOnly = true;
+        }
+    }
+
+    onContentReady= function(e){
+        moveEditColumnToLeft(e.component);
+    }
+    function moveEditColumnToLeft(dataGrid) {
+        dataGrid.columnOption("command:edit", {
+            visibleIndex: 20,
+            width: 100
+        });
+    }
+    onCellPrepared = function(e) {
+        if(e.rowType == "data" && e.column.command == "edit")
+        {
+            var isEditing = e.row.isEditing,
+                $links = e.cellElement.find(".dx-link");
+            $links.text("");
+            //e.cellElement.prepend('<a class="dx-link dx-icon-trash margin-right-4" onclick="onDeleteClick(' + e.rowIndex + ');" href="#"/>');
+            //e.cellElement.prepend('<a class="dx-link dx-icon-edit margin-right-4" onclick="onEditClick(' + e.rowIndex + ');" href="#"/>');
+            //e.cellElement.prepend('<a class="dx-link dx-icon-search margin-right-4" onclick="onViewClick(' + e.rowIndex + ');" href="#"/>');
+            if('@(ViewContext.Controller.HasPermission("ADS010", PermissionName.Delete.Value))' == 'True')
+            {
+                e.cellElement.prepend('<a class="" onclick="onDeleteClick(' + e.rowIndex + ');" href="#" ><img  title="Delete" src="@ConstantValues.DeleteCommandImageSource"></a>')
+            }
+            if('@(ViewContext.Controller.HasPermission("ADS010", PermissionName.Edit.Value))' == 'True')
+            {
+                e.cellElement.prepend('<a class="" onclick="onEditClick(' + e.rowIndex + ');" href="#"><img  title="Edit" src="@ConstantValues.EditCommandImageSource"></a>')
+            }
+            e.cellElement.prepend('<a class="" onclick="onViewClick(' + e.rowIndex + ');" href="#"><img  title="View" src="@ConstantValues.ViewCommandImageSource"></a>')
+
+        }
+
+    }
+    onEditingStart = function (e) {
+
+
+    }
+    var mode;
+    var selectBoxCompany;
+    var selectBoxPlant;
+    var company_Selected ='';
+    var plant_Selected='';
+    function onIniCompany(e)
+    {
+        selectBoxCompany = e.component;
+    }
+    function onIniPlant(e) {
+        selectBoxPlant = e.component;
+    }
+    function onAddUser()
+    {
+        @if (ViewContext.Controller.HasPermission("ADS010", PermissionName.Add.Value))
+        {
+            @Html.Raw("$('#customPopup').dxPopup('instance').option('visible', true);");
+            @Html.Raw("mode='add';");
+            @Html.Raw("onClearDataPopUp();");
+            @Html.Raw("onSetState();");
+
+        }
+    }
+    function OnCheckChangePassword(e)
+    {
+        if(e.value)
+            $('#PopTextBoxPassword').dxTextBox('instance').option('readOnly', false);
+        else
+        {
+            $('#PopTextBoxPassword').dxTextBox('instance').option('value', resetPassword);
+            $('#PopTextBoxPassword').dxTextBox('instance').option('readOnly', true);
+        }
+
+        app.ui.ResetReadOnlyControlBackgroundColor();
+    }
+    function onClearDataPopUp()
+    {
+        // --User ID
+        var textBox = $('#PopTextBoxUserID').dxTextBox('instance');
+        textBox.option('value','');
+        //-- Type
+        var selectBox = $('#PopSelectBoxType').dxSelectBox('instance');
+        selectBox.option('value', null);
+        //--Title
+        selectBox = $('#PopSelectBoxTitle').dxSelectBox('instance');
+        selectBox.option('value', null);
+        //--Name
+        textBox = $('#PopTextBoxName').dxTextBox('instance');
+        textBox.option('value', '');
+        //-- Surname
+        textBox = $('#PopTextBoxSurname').dxTextBox('instance');
+        textBox.option('value', '');
+        //--Password
+        textBox = $('#PopTextBoxPassword').dxTextBox('instance');
+        textBox.option('value', '');
+        //-- Tel
+        textBox = $('#PopTextBoxTel').dxTextBox('instance');
+        textBox.option('value', '');
+        //-- Mobile
+        textBox = $('#PopTextBoxMobile').dxTextBox('instance');
+        textBox.option('value', '');
+        //-- Email
+        textBox = $('#PopTextBoxEmail').dxTextBox('instance');
+        textBox.option('value', '');
+        //-- Status
+        selectBox = $('#PopSelectBoxStatus').dxSelectBox('instance');
+        selectBox.option('value', null);
+
+        //Company and Plant
+        selectBoxCompany.reset();
+        selectBoxPlant.reset();
+        $('#PopListBoxCompany').dxDropDownBox('instance').repaint();
+        $('#PopListBoxPlant').dxDropDownBox('instance').repaint();
+        $('#PopListBoxCompany').dxDropDownBox('instance').option('value', '');
+        $('#PopListBoxPlant').dxDropDownBox('instance').option('value', '');
+    }
+    function onEditClick(rowIndex)
+    {
+        @if (ViewContext.Controller.HasPermission("ADS010", PermissionName.Edit.Value))
+        {
+            @Html.Raw("mode = 'edit';");
+            @Html.Raw("onBindingPopup(rowIndex);");
+            @Html.Raw("onSetState();");
+        }
+
+
+
+    }
+
+    function onViewClick(rowIndex)
+    {
+        mode ="view"
+        onBindingPopup(rowIndex);
+        onSetState();
+    }
+
+    function onBindingPopup(rowIndex)
+    {
+        var grid = $('#DataGridUserMaintenance').dxDataGrid('instance');
+        $('#customPopup').dxPopup('instance').option('visible', true);
+        onClearDataPopUp();
+        // --User ID
+        var userID =grid.cellValue(rowIndex, "UserID");
+        currentKey = userID;
+        var textBox = $('#PopTextBoxUserID').dxTextBox('instance');
+        textBox.option('value',userID);
+
+        //-- Type
+        var type = grid.cellValue(rowIndex, "UserTypeCode");
+        var selectBox = $('#PopSelectBoxType').dxSelectBox('instance');
+        selectBox.option('value',type);
+
+        //--Title
+        var title = grid.cellValue(rowIndex, "TitleCode");
+        selectBox = $('#PopSelectBoxTitle').dxSelectBox('instance');
+        selectBox.option('value',title);
+
+        //--Name
+        var name = grid.cellValue(rowIndex, "Name");
+        textBox = $('#PopTextBoxName').dxTextBox('instance');
+        textBox.option('value',name);
+
+        //-- Surname
+        var surname = grid.cellValue(rowIndex, "Surname");
+        textBox = $('#PopTextBoxSurname').dxTextBox('instance');
+        textBox.option('value',surname);
+
+        //--Password
+        var password = grid.cellValue(rowIndex, "Password");
+        textBox = $('#PopTextBoxPassword').dxTextBox('instance');
+        textBox.option('value',password);
+        resetPassword = password;
+        //-- Tel
+        var tel = grid.cellValue(rowIndex, "Tel");
+        textBox = $('#PopTextBoxTel').dxTextBox('instance');
+        textBox.option('value', tel);
+
+        //-- Mobile
+        var mobille = grid.cellValue(rowIndex, "Mobile");
+        textBox = $('#PopTextBoxMobile').dxTextBox('instance');
+        textBox.option('value', mobille);
+
+        //-- Email
+        var email = grid.cellValue(rowIndex, "Email");
+        textBox = $('#PopTextBoxEmail').dxTextBox('instance');
+        textBox.option('value', email);
+
+        //--Status
+        var status = grid.cellValue(rowIndex, "Status");
+        var statusText ="0";
+        if(status)
+            statusText = "1"
+        selectBox = $('#PopSelectBoxStatus').dxSelectBox('instance');
+        selectBox.option('value',statusText);
+
+        var companyCode = grid.cellValue(rowIndex, "CompanyCodeList");
+        var plantCode = grid.cellValue(rowIndex, "PlantCodeList");
+        company_Selected = companyCode;
+        plant_Selected = plantCode;
+        bindindCompany(company_Selected, plant_Selected);
+
+        app.ui.AddBackgroundColorPopupButton();
+    }
+    function onSetState()
+    {
+        if(mode=="edit"|| mode=="view")
+        {
+            document.getElementById("DivChangePassword").style.display = "block";
+            $('#PopCheckEditPassword').dxCheckBox('instance').option('disabled', false);
+            $('#PopTextBoxUserID').dxTextBox('instance').option('readOnly', true);
+            $('#PopSelectBoxType').dxSelectBox('instance').option('readOnly', true);
+            $('#PopTextBoxPassword').dxTextBox('instance').option('readOnly', true);
+        }
+        else if(mode=="add")
+        {
+            document.getElementById("DivChangePassword").style.display = "none";
+            $('#PopCheckEditPassword').dxCheckBox('instance').option('disabled', true);
+            $('#PopTextBoxUserID').dxTextBox('instance').option('readOnly', false);
+            $('#PopSelectBoxType').dxSelectBox('instance').option('readOnly', false);
+            $('#PopSelectBoxType').dxSelectBox('instance').option('value', '01');
+            $('#PopSelectBoxStatus').dxSelectBox('instance').option('value', '1');
+            $('#PopTextBoxPassword').dxTextBox('instance').option('readOnly', false);
+            //document.getElementById("DivCompany").style.display = "none";
+            //document.getElementById("DivPlant").style.display = 'block';
+        }
+
+
+        if(mode=="edit" || mode=="add")
+        {
+            $('#PopSelectBoxTitle').dxSelectBox('instance').option('readOnly', false);
+            $('#PopTextBoxName').dxTextBox('instance').option('readOnly', false);
+            $('#PopTextBoxSurname').dxTextBox('instance').option('readOnly', false);
+            $('#PopTextBoxTel').dxTextBox('instance').option('readOnly', false);
+            $('#PopTextBoxMobile').dxTextBox('instance').option('readOnly', false);
+            $('#PopTextBoxEmail').dxTextBox('instance').option('readOnly', false);
+            $('#PopSelectBoxStatus').dxSelectBox('instance').option('readOnly', false);
+            $('#PopListBoxPlant').dxDropDownBox('instance').option('readOnly', false);
+            $('#PopListBoxCompany').dxDropDownBox('instance').option('readOnly', false);
+            document.getElementById("DivSaveCancel").style.display = "block";
+        }
+        else if(mode=="view")
+        {
+            document.getElementById("DivChangePassword").style.display = "none";
+            $('#PopSelectBoxTitle').dxSelectBox('instance').option('readOnly', true);
+            $('#PopTextBoxName').dxTextBox('instance').option('readOnly', true);
+            $('#PopTextBoxSurname').dxTextBox('instance').option('readOnly', true);
+            $('#PopTextBoxTel').dxTextBox('instance').option('readOnly', true);
+            $('#PopTextBoxMobile').dxTextBox('instance').option('readOnly', true);
+            $('#PopTextBoxEmail').dxTextBox('instance').option('readOnly', true);
+            $('#PopSelectBoxStatus').dxSelectBox('instance').option('readOnly', true);
+            $('#PopListBoxPlant').dxDropDownBox('instance').option('readOnly', false);
+            $('#PopListBoxCompany').dxDropDownBox('instance').option('readOnly', false);
+            document.getElementById("DivSaveCancel").style.display = "none";
+        }
+        app.ui.hideMessagePanel();
+        app.ui.clearValidateIcon();
+        app.ui.ResetReadOnlyControlBackgroundColor();
+    }
+    function onDeleteClick(rowIndex)
+    {
+        @if (ViewContext.Controller.HasPermission("ADS010", PermissionName.Edit.Value))
+         {
+             @Html.Raw("var grid = $('#DataGridUserMaintenance').dxDataGrid('instance');");
+             @Html.Raw("grid.deleteRow(rowIndex);");
+         }
+
+
+    }
+    function deleteButtonClick(data) {
+        var grid = $('#DataGridUserMaintenance').dxDataGrid('instance');
+        var rowIndex = grid.getRowIndexByKey(data.UserID);
+        grid.deleteRow(rowIndex)
+    }
+    function bindindCompany(companyCodeList, plantCodeList)
+    {
+        
+        var arrayListCompany=[];
+        var arrayListPlant=[];
+        if (companyCodeList != null && companyCodeList != '')
+            arrayListCompany = companyCodeList.split(',');
+        if (plantCodeList != null && plantCodeList != '')
+            arrayListPlant = plantCodeList.split(',');
+
+        if (arrayListCompany.length > 0){
+            $('#PopListBoxCompany').dxDropDownBox('instance').option('value', arrayListCompany);
+        }
+        if (arrayListPlant.length > 0) {
+            $('#PopListBoxPlant').dxDropDownBox('instance').option('value', arrayListPlant);
+        }
+    }
+
+    function onSelectTypeChange(e)
+    {
+       /* if (e.value == "01")
+        {
+            document.getElementById("DivCompany").style.display = "none";
+            document.getElementById("DivPlant").style.display = 'block';
+        }
+        else if (e.value == "02")
+        {
+            document.getElementById("DivCompany").style.display = "block";
+            document.getElementById("DivPlant").style.display = 'none';
+        }*/
+    }
+
+    onShowing = function (e) {
+
+        app.ui.AddBackgroundColorPopupButton();
+        if (!actionView)
+            return;
+        actionView = false;
+        var btns = e.component.content().parent().find(".dx-button.dx-button-has-text");
+        for (var i = 0; i < btns.length; i++) {
+            var btn = btns[i];
+            $(btn).dxButton("option", "visible",false);
+            //$(btn).dxButton("option", "text", i == 0 ? "Custom Save" : "Custom Cancel");
+        }
+    }
+    onInitNewRow = function (e) {
+        e.component.__addingStart = true;
+        e.component.__editingStart = false;
+        e.data.IsSpare = false;
+    }
+    onEditingStart = function (e) {
+        e.component.__editingStart = true;
+        e.component.__addingStart = false;
+
+    }
+
+
+    function onEditorPrepared(e) {
+        app.ui.ResetReadOnlyControlBackgroundColor();
+    }
+
+    function gridBox_valueChanged(e) {
+        var $dataGrid = $("#embedded-datagrid");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+    }
+    function gridBox_valueChangedPlant(e) {
+        var $dataGrid = $("#embedded-datagridPlant");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+    }
+    function saveButtonClick(params)
+    {
+        app.ui.hideMessagePanel();
+        if (!params.validationGroup.validate().isValid)
+            return;
+
+        var grid = $('#DataGridUserMaintenance').dxDataGrid('instance');
+        var rowIndex = grid.getRowIndexByKey(currentKey);
+
+        // --User ID
+        var textBox = $('#PopTextBoxUserID').dxTextBox('instance');
+        var userID = textBox.option('value');
+        grid.cellValue(rowIndex, "UserID", userID);
+        //-- Type
+        var selectBox = $('#PopSelectBoxType').dxSelectBox('instance');
+        var type = selectBox.option('value');
+        grid.cellValue(rowIndex, "UserTypeCode", type);
+        //--Title
+        selectBox = $('#PopSelectBoxTitle').dxSelectBox('instance');
+        var title = selectBox.option('value');
+        grid.cellValue(rowIndex, "TitleCode", title);
+        //--Name
+        textBox = $('#PopTextBoxName').dxTextBox('instance');
+        var name = textBox.option('value');
+        grid.cellValue(rowIndex, "Name", name);
+        //-- Surname
+        textBox = $('#PopTextBoxSurname').dxTextBox('instance');
+        var surname = textBox.option('value');
+        grid.cellValue(rowIndex, "Surname", surname);
+        //--Password
+        textBox = $('#PopTextBoxPassword').dxTextBox('instance');
+        var password = textBox.option('value');
+        grid.cellValue(rowIndex, "Password", password);
+        //-- Tel
+        textBox = $('#PopTextBoxTel').dxTextBox('instance');
+        var tel = textBox.option('value');
+        grid.cellValue(rowIndex, "Tel", tel);
+        //-- Mobile
+        textBox = $('#PopTextBoxMobile').dxTextBox('instance');
+        var mobille = textBox.option('value');
+        grid.cellValue(rowIndex, "Mobile", mobille);
+        //-- Email
+        textBox = $('#PopTextBoxEmail').dxTextBox('instance');
+        var email = textBox.option('value');
+        grid.cellValue(rowIndex, "Email", email);
+        //--Status
+        selectBox = $('#PopSelectBoxStatus').dxSelectBox('instance');
+        var statusText = selectBox.option('value');
+        var status =false;
+        if(statusText=="1")
+            status = true
+
+        //--Company and Plant
+        var listBox = $('#PopListBoxPlant').dxDropDownBox('instance');
+        var plantList = listBox.option('value');
+        listBox = $('#PopListBoxCompany').dxDropDownBox('instance');
+        var companyList = listBox.option('value');
+        var company ='';
+        var plant =''
+        if(companyList!='' && companyList!=null) 
+            company= companyList.join();
+        if(plantList!='' && plantList!=null)
+            plant = plantList.join();
+
+        grid.cellValue(rowIndex, "PlantCompanyCode", company);
+
+        if (mode == "edit")
+        {
+            var criteriaEdit = {
+                UserID: userID
+                 , Password: password
+                 , UserTypeCode: type
+                 , TitleCode: title
+                 , Name: name
+                 , Surname: surname
+                 , Tel: tel
+                 , Mobile: mobille
+                 , Email: email
+                 , CompanyCodeList: company
+                 , PlantCodeList:plant
+                 , Status : status
+            }
+            $.ajax({
+                url: "/UserMaintenance/UpdateUserMaintenance",
+                type: "POST",
+                data:app.addAntiForgeryToken( {key:userID, values: JSON.stringify(criteriaEdit) }),
+                success: function (result) {
+                    $('#customPopup').dxPopup('instance').option('visible', false);
+                    $("#DataGridUserMaintenance").dxDataGrid("instance").refresh();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    DevExpress.ui.notify(errorThrown, "error", @ConstantValues.DisplayDurationError);
+                }
+            });
+        }
+        else if (mode == "add")
+        {
+            var criteria = {
+                UserID: userID
+                , Password: password
+                , UserTypeCode: type
+                , TitleCode: title
+                , Name: name
+                , Surname : surname
+                , Tel: tel
+                , Mobile: mobille
+                , Email: email
+                , CompanyCodeList: company
+                , PlantCodeList:plant
+                , Status : status
+            }
+            $.ajax({
+                url: "/UserMaintenance/InsertUserMaintenance",
+                type: "POST",
+                data:app.addAntiForgeryToken( { values: JSON.stringify(criteria) }),
+                success: function (result) {
+                    $('#customPopup').dxPopup('instance').option('visible', false);
+                    $("#DataGridUserMaintenance").dxDataGrid("instance").refresh();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    DevExpress.ui.notify(errorThrown, "error", @ConstantValues.DisplayDurationError);
+                }
+            });
+        }
+
+
+        currentKey = -1;
+
+    }
+    function cancelButtonClick()
+    {
+        $('#customPopup').dxPopup('instance').option('visible', false);
+        currentKey = -1;
+    }
+    function getCompanySelect()
+    {
+        if(mode=="add")
+            return "";
+        else
+            return company_Selected;
+    }
+    function getPlantSelect()
+    {
+        if(mode=="add")
+            return "";
+        else
+            return plant_Selected;
+    }
+
+    /*
+
+
+        var selectType = $('#PopListBoxCompany').dxDropDownBox('instance');
+        if (type == "OTS")
+        {
+            var criteria = {
+                includeAll: false
+            }
+            $.ajax({
+                url: "/Common/GetCompany",
+                type: "GET",
+                data: { criteriaText: JSON.stringify(criteria) },
+                success: function (result) {
+                    if (selectType) {
+                        selectType.option("dataSource", null);
+                        selectType.option("dataSource", new DevExpress.data.ArrayStore({ data: result.data, key: "CompanyCode" }));
+                        //selectType.option("dataSource", result.data);
+                        if (arrayList.length > 0) {
+
+                            selectType.option("value", arrayList);
+                        }
+                        else {
+                            selectType._clearTextValue();
+                        }
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
+        }
+        else if (type == "STM")
+        {
+            var criteriaSTM = {
+                includeAll: false
+            }
+            $.ajax({
+                url: "/Common/GetPlantCompany",
+                type: "GET",
+                data: { criteriaText: JSON.stringify(criteriaSTM) },
+                success: function (result) {
+                    if (selectType) {
+                        //$("#rcGroup").dxDropDownBox("instance").option("dataSource", new DevExpress.data.ArrayStore({ data: result, key: "ID" }));
+                        //selectType.option("dataSource", result.data);
+                        selectType.option("dataSource",null );
+                        selectType.option("dataSource", new DevExpress.data.ArrayStore({ data: result.data, key: "CompanyCode" }));
+
+                        if (arrayList.length > 0) {
+                            selectType.option("value", arrayList);
+                        }
+                        else {
+                            selectType._clearTextValue();
+                        }
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
+        }*/
+    //if(e.rowType=='data' && e.column.name=='Custom')
+    //{
+    //$links = e.cellElement.children()[0];
+    //e.cellElement.children()[0].addClass("linkButton");
+    //$links = e.cellElement.find(".dx-dbutton");
+    //e.cellElement.children().addClass("linkButton");
+
+    //$links = e.cellElement.find(".dx-button");
+    //$links.filter(".dx-button-content").addClass(".dx-icon-edit")
+    //$links.filter(".dx-button-content").removeClass(".dx-button-content")
+    // }
+
+    //if(e.rowType == "data" && e.column.command == "edit") {
+    //    var isEditing = e.row.isEditing,
+    //        $links = e.cellElement.find(".dx-link");
+    //    $links.text("");
+    //    e.cellElement.prepend('<a class="dx-link dx-icon-search" onclick="onShowViewMode(' + e.key + ');" href="#"/>');
+    //    $links.filter(".dx-link-edit").addClass("dx-icon-edit");
+    //    $links.filter(".dx-link-delete").addClass("dx-icon-trash");
+    //if(isEditing){
+    //    $links.filter(".dx-link-save").addClass("dx-icon-save");
+    //    $links.filter(".dx-link-cancel").addClass("dx-icon-revert");
+    //} else {
+    //    e.cellElement.prepend('<a class="dx-link dx-icon-search" onclick="onShowViewMode(' + e.rowIndex +');" href="#"/>');
+    //    $links.filter(".dx-link-edit").addClass("dx-icon-edit");
+    //    $links.filter(".dx-link-delete").addClass("dx-icon-trash");
+    //}
+    // }
+    //    $links.filter(".dx-link-edit").addClass("dx-icon-edit");
+    //    $links.filter(".dx-link-delete").addClass("dx-icon-trash");
+    //if(isEditing){
+    //    $links.filter(".dx-link-save").addClass("dx-icon-save");
+    //    $links.filter(".dx-link-cancel").addClass("dx-icon-revert");
+    //} else {
+    //    e.cellElement.prepend('<a class="dx-link dx-icon-search" onclick="onShowViewMode(' + e.rowIndex +');" href="#"/>');
+    //    $links.filter(".dx-link-edit").addClass("dx-icon-edit");
+    //    $links.filter(".dx-link-delete").addClass("dx-icon-trash");
+    //}
+</script>
+
+ 

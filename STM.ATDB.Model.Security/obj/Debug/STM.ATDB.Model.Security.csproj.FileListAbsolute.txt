@@ -1,0 +1,10 @@
+D:\STM-ATDB\SourceCode\STM.ATDB.Model.Security\bin\Debug\STM.ATDB.Model.Security.dll.config
+D:\STM-ATDB\SourceCode\STM.ATDB.Model.Security\bin\Debug\STM.ATDB.Model.Security.dll
+D:\STM-ATDB\SourceCode\STM.ATDB.Model.Security\bin\Debug\STM.ATDB.Model.Security.pdb
+D:\STM-ATDB\SourceCode\STM.ATDB.Model.Security\bin\Debug\EntityFramework.dll
+D:\STM-ATDB\SourceCode\STM.ATDB.Model.Security\bin\Debug\EntityFramework.SqlServer.dll
+D:\STM-ATDB\SourceCode\STM.ATDB.Model.Security\bin\Debug\EntityFramework.xml
+D:\STM-ATDB\SourceCode\STM.ATDB.Model.Security\bin\Debug\EntityFramework.SqlServer.xml
+D:\STM-ATDB\SourceCode\STM.ATDB.Model.Security\obj\Debug\STM.ATDB.Model.Security.csprojResolveAssemblyReference.cache
+D:\STM-ATDB\SourceCode\STM.ATDB.Model.Security\obj\Debug\STM.ATDB.Model.Security.dll
+D:\STM-ATDB\SourceCode\STM.ATDB.Model.Security\obj\Debug\STM.ATDB.Model.Security.pdb

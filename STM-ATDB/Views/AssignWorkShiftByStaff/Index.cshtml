@@ -1,0 +1,294 @@
+﻿@using STM.ATDB.MvcWeb.Models
+@using STM.ATDB.MvcWeb.App_Helpers
+@using STM.ATDB.Core
+
+@model IEnumerable<AssignWorkShiftByStaffViewModel>
+@{
+    ViewBag.Title = "Assign WorkShift By Staff";
+}
+
+<div id="form-container" class="panel-group col-md-12 no-gutter">
+    <form id="search-container" class="col-md-12">
+        <div class="panel-group col-md-12 well well-sm animated fadeIn">
+            <h3><i class="fa fa-fw fa-th-list"></i> Criteria</h3>
+            <div class="panel-group">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="row clearfix dx-field">
+                            <div class="col-md-2 dx-field-label text-right">Month</div>
+                            <div class="col-md-10 dx-field-value">
+                                @(Html.DevExtreme().DateBox()
+                                    .ID("dbMonth")
+                                    .Type(DateBoxType.Date)
+                                    .DisplayFormat("MMM/yyyy")
+                                    .MaxZoomLevel(CalendarZoomLevel.Year)
+                                    .MinZoomLevel(CalendarZoomLevel.Century)
+                                    .Value(DateTime.Now)
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="row dx-field">
+                            <div class="col-md-2 dx-field-label text-right">Employee</div>
+                            <div class="col-md-10 dx-field-value">
+                                @(Html.DevExtreme().SelectBox()
+                                    .ID("sbEmployee")
+                                    .ValueExpr("StaffID")
+                                    .DisplayExpr("Display")
+                                    .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetEmployeeByUser").LoadParams(new { includeAll = false }).Key("StaffID"))
+                                    .DeferRendering(false)
+                                    .OnContentReady("onContentReady")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="col-md-12">
+                            <div class="pull-right">
+                                @(Html.DevExtreme().Button()
+                                .ID("btnSearch")
+                                .Text("Search")
+                                .OnClick("onbtnSearchClick")
+                                .Type(ButtonType.Success)
+                                .Icon("fa fa-search")
+                                )
+                                @(Html.DevExtreme().Button()
+                                .ID("btnClear")
+                                .Text("Clear")
+                                .OnClick("onbtnClearClick")
+                                .Type(ButtonType.Danger)
+                                .Icon("fa fa-eraser")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </form>
+
+    <form id="grid-container" class="panel-group col-md-12">
+        
+        <div class="well well-sm animated fadeIn">
+            <h3><i class="fa fa-fw fa-th-list"></i> Assign WorkShift By Staff Result List</h3>
+            <div class="text-align-right padding-bottom-10">
+                @(Html.DevExtreme().Button()
+                    .ID("btnAssignWorkShift")
+                    .Text("Assign Work Shift")
+                    .OnClick("onbtnAssignWorkShiftClick")
+                    .Type(ButtonType.Default)
+                    .Disabled(!ViewContext.Controller.HasPermission("SIS060", PermissionName.Add.Value))
+                    .Icon("fa fa-plus-circle")
+                )
+            </div>
+            <div>
+                @(Html.DevExtreme().DataGrid<AssignWorkShiftByStaffViewModel>()
+.ID("gridContainer")
+.DataSource(d => d.Mvc().Controller("AssignWorkShiftByStaff")
+            .LoadAction("SearchAssignWorkShiftByStaff").Key("AssignDate")
+            .InsertAction("AssignWorkShift")
+            .LoadParams(new { EmployeeID = new JS("getSearchEmployeeID"), AssignDate = new JS("getSearchAssignDate") })
+    )
+.ShowBorders(true)
+.ShowRowLines(true)
+.Selection(s => s.Mode(SelectionMode.Multiple)
+               .ShowCheckBoxesMode(GridSelectionShowCheckBoxesMode.Always))
+.Sorting(s => s.Mode(GridSortingMode.None))
+.Editing(e => e.Mode(GridEditMode.Popup)
+    .AllowAdding(false)
+    .Popup(p => p
+        .Title("Assign Work Shift")
+        .ShowTitle(true)
+        .Width(500)
+        .Height(240)
+        .OnShowing("onShowing")
+        .Position(pos => pos
+            .My(HorizontalAlignment.Center, VerticalAlignment.Center)
+            .At(HorizontalAlignment.Center, VerticalAlignment.Center)
+            .Of(new JS("window"))
+            )
+        )
+     .Form(f => f.ColCount(1))
+)
+.AllowColumnResizing(true)
+.ColumnMinWidth(40)
+.ColumnAutoWidth(true)
+.Columns(columns =>
+{
+    columns.AddFor(m => m.EmployeeID)
+        .Visible(false)
+        .FormItem(x => x.Visible(false));
+    columns.AddFor(m => m.EmployeeID)
+            .Caption("No.")
+            .AllowEditing(false)
+            .CellTemplate(new JS("onCreateRowNum"))
+            .FormItem(x => x.Visible(false))
+            .AllowFiltering(false)
+            .Width(40)
+            //.VisibleIndex(1)
+            ;
+    columns.AddFor(m => m.AssignDate)
+        //.VisibleIndex(2)
+        .Format(ConstantValues.DateFormat)
+        .FormItem(x => x.Visible(false));
+    columns.AddFor(m => m.AssignShiftCode)
+            .Lookup(lookup => lookup
+            .DisplayExpr("ShiftName")
+            .ValueExpr("ShiftCode")
+            .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetAllWorkShift").LoadParams(new { includeAll = false }).Key("ShiftCode"))
+        );
+    columns.AddFor(m => m.CreatedBy)
+        //.VisibleIndex(3)
+        .FormItem(x => x.Visible(false));
+    columns.AddFor(m => m.CreatedDate)
+        //.VisibleIndex(4)
+        .Format(ConstantValues.TimeStampFormat)
+        .FormItem(x => x.Visible(false));
+    columns.AddFor(m => m.UpdatedBy)
+        //.VisibleIndex(5)
+        .FormItem(x => x.Visible(false));
+    columns.AddFor(m => m.UpdatedDate)
+        //.VisibleIndex(6)
+        .Format(ConstantValues.TimeStampFormat)
+        .FormItem(x => x.Visible(false));
+    columns.AddFor(m => m.SelectDate)
+        //.VisibleIndex(7)
+        .Visible(false)
+        .FormItem(x => x.Visible(false));
+}
+            )
+                .Paging(p => p.Enabled(false))
+                .FilterRow(f => f.Visible(true))
+                .HeaderFilter(f => f.Visible(true))
+                .GroupPanel(p => p.Visible(true))
+                .Grouping(g => g.AutoExpandAll(false))
+                .RemoteOperations(true)
+                .OnInitNewRow("onInitNewRow")
+                .OnSelectionChanged("OnSelectionChanged")
+                .OnInitialized("OnInitialized")
+                .OnRowInserted("onbtnSearchClick")
+                .OnCellPrepared("OnCellPrepared")
+                )
+
+
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+
+
+
+    function onCreateRowNum(cellElement, cellInfo) {
+        cellElement.text((cellInfo.component.pageSize() * cellInfo.component.pageIndex()) + cellInfo.row.rowIndex + 1)
+    }
+
+    function getSearchEmployeeID() {
+        return $("#sbEmployee").dxSelectBox("instance").option("value");
+    }
+
+    function getSearchAssignDate() {
+        return $("#dbMonth").dxDateBox("option", "text");
+    }
+
+    function onbtnClearClick() {
+        $("#sbEmployee").dxSelectBox("instance").option("value", firstStaffID);
+        $("#dbMonth").dxDateBox("instance").option("value", new Date());
+        $("#gridContainer").dxDataGrid("instance").refresh();
+        $("#gridContainer").dxDataGrid("instance").clearSelection();
+    }
+
+    function onbtnSearchClick(e) {
+        $("#gridContainer").dxDataGrid("refresh");
+        $("#gridContainer").dxDataGrid("instance").clearSelection();
+    }
+
+    function OnCellPrepared(cellInfo)
+    {
+        if (cellInfo.rowType == "data" && cellInfo.column.dataField === 'AssignShiftCode') {
+            if (cellInfo.data.AssignShiftCode === 'N')
+            {
+                cellInfo.cellElement.addClass("night-shift-background-color")
+            }
+            else
+            {
+                cellInfo.cellElement.addClass("day-shift-background-color")
+            }
+        }
+    }
+
+    function onbtnAssignWorkShiftClick(cellInfo) {
+        if (selectedEmployee != null)
+        {
+            @if (ViewContext.Controller.HasPermission("SIS060", PermissionName.Add.Value))
+            {
+                @Html.Raw("$('#gridContainer').dxDataGrid('instance').addRow();")
+            }
+        }
+            
+        else {
+                var type = "error",
+                text = "Please select at last 1 row";
+
+                app.ui.showNotifyMessage('@ToastType.Error', text);
+            }
+    }
+
+    OnInitialized = function (e) {
+        //$("#gridContainer").dxDataGrid('instance').columnOption("command:select", "visibleIndex", 1);
+    }
+
+    onInitNewRow = function (e) {
+        e.component.__addingStart = true;
+        e.component.__editingStart = false;
+        e.data.EmployeeID = selectedEmployee;
+        e.data.AssignShiftCode = 'D';
+        e.data.SelectDate = selectedDateData;
+    }
+
+    function updateSelectRow() {
+        $("#gridContainer").dxDataGrid("instance").clearSelection();
+        //const rows = this.dataGrid.selectedRowKeys.map(v => v.row_status = "update");
+        //console.log(rows);
+    }
+
+
+    var selectedDateData;
+    var listselectedDate = new Array();
+    var selectedEmployee;
+
+    function OnSelectionChanged(selectedItems) {
+        var data = selectedItems.selectedRowsData;
+        listselectedDate = new Array();
+        selectedEmployee = null;
+        if (data.length > 0) {
+            $.each(data, function (i, item) {
+                listselectedDate.push(item.AssignDate);
+            });
+            selectedDateData = JSON.stringify(listselectedDate);
+
+            selectedEmployee = data[0].EmployeeID;
+        }
+
+    }
+
+    var firstStaffID = null;
+    var initialized = false;
+    function onContentReady(e) {
+        if (!initialized) {
+            initialized = true;
+            e.component.getDataSource().load().done(function(res){
+                //e.component.option("value", res[0].StaffID);
+                //firstStaffID = res[0].StaffID;
+            })
+        }
+    }
+
+    function onShowing(e) {
+        app.ui.AddBackgroundColorPopupButton();
+    }
+</script>

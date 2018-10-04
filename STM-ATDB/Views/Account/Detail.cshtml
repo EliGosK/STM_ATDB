@@ -1,0 +1,31 @@
+﻿
+@using STM.ATDB.Model.Security
+
+@model UserInformation
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="well well-sm">
+    <div class="form-horizontal k-text-lg">
+        <div class="row">
+            <label class="control-label col-md-3">User</label>
+            <div class="control-text col-md-3">@Model.UserID</div>
+        </div>
+        <div class="row">
+            <label class="control-label col-md-3">Email</label>
+            <div class="control-text col-md-9">@Model.Email</div>
+        </div>
+        @*<div class="row">
+                <label class="control-label col-md-3">Role</label>
+                <div class="control-text col-md-9">@Model.</div>
+            </div>
+            <div class="row">
+                <label class="control-label col-md-3">Register Date</label>
+                <div class="control-text col-md-3">@Model.CreatedDate.ToString("d MMM yyyy HH:mm")</div>
+                <label class="control-label col-md-2">Last Sign in</label>
+                <div class="control-text col-md-3">@(Model.User.LastSignedInDateTime.ToString("d MMM yyyy HH:mm"))</div>
+            </div>*@
+    </div>
+</div>

@@ -1,0 +1,765 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TranscationModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <Function Name="sp_ADS010_GetDepartmentCombo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProdDate" Type="date" Mode="In" />
+          <Parameter Name="DivCode" Type="varchar" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_ADS010_GetDivisionCombo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProdDate" Type="date" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_ADS010_GetSectionCombo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProdDate" Type="date" Mode="In" />
+          <Parameter Name="DeptCode" Type="varchar" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_ADS011_SearchDashboard" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DivCode" Type="varchar" Mode="In" />
+          <Parameter Name="DeptCode" Type="varchar" Mode="In" />
+          <Parameter Name="SecCode" Type="varchar" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+          <Parameter Name="DivName" Type="varchar" Mode="InOut" />
+          <Parameter Name="WorkHC" Type="varchar" Mode="InOut" />
+          <Parameter Name="TotalHC" Type="varchar" Mode="InOut" />
+          <Parameter Name="WorkPercent" Type="varchar" Mode="InOut" />
+          <Parameter Name="MaxColumn" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="sp_ADS020_DeleteGoOutReason" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="GoOutID" Type="int" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_ADS020_GetGoOutReason" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="GoOutID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_ADS020_SaveGoOutReason" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Mode" Type="char" Mode="In" />
+          <Parameter Name="GoOutID" Type="int" Mode="In" />
+          <Parameter Name="ProdDate" Type="date" Mode="In" />
+          <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+          <Parameter Name="Reason" Type="varchar" Mode="In" />
+          <Parameter Name="StartTime" Type="datetime" Mode="In" />
+          <Parameter Name="EndTime" Type="datetime" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_ADS020_SearchGoOutReason" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProdDateFrom" Type="date" Mode="In" />
+          <Parameter Name="ProdDateTo" Type="date" Mode="In" />
+          <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+          <Parameter Name="EmpName" Type="varchar" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_MAS010_ResetPassword" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EmpCodeXML" Type="xml" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_MAS010_SearchEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SearchEmpCode" Type="varchar" Mode="In" />
+          <Parameter Name="SearchEmpName" Type="varchar" Mode="In" />
+          <Parameter Name="DivCodeKey" Type="varchar" Mode="In" />
+          <Parameter Name="DeptCodeKey" Type="varchar" Mode="In" />
+          <Parameter Name="SecCodeKey" Type="varchar" Mode="In" />
+          <Parameter Name="EmpStatus" Type="varchar" Mode="In" />
+          <Parameter Name="UserStatus" Type="varchar" Mode="In" />
+          <Parameter Name="DisplayStatus" Type="varchar" Mode="In" />
+          <Parameter Name="IsViewActiveOrg" Type="bit" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_MAS010_UpdateDisplayStatus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EmpCodeXML" Type="xml" Mode="In" />
+          <Parameter Name="DisplayStatus" Type="varchar" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_MAS010_UpdateUserStatus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EmpCodeXML" Type="xml" Mode="In" />
+          <Parameter Name="UserStatus" Type="varchar" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_MAS020_DeleteHideOrg" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="OrgCode" Type="varchar" Mode="In" />
+          <Parameter Name="HideDateFrom" Type="date" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_MAS020_SaveHideOrg" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Mode" Type="char" Mode="In" />
+          <Parameter Name="HideDateFrom" Type="date" Mode="In" />
+          <Parameter Name="HideDateTo" Type="date" Mode="In" />
+          <Parameter Name="OrgCode" Type="varchar" Mode="In" />
+          <Parameter Name="DivCodeKey" Type="varchar" Mode="In" />
+          <Parameter Name="DeptCodeKey" Type="varchar" Mode="In" />
+          <Parameter Name="SecCodeKey" Type="varchar" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_MAS020_SearchHideOrg" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProdDateFrom" Type="date" Mode="In" />
+          <Parameter Name="ProdDateTo" Type="date" Mode="In" />
+          <Parameter Name="DivCodeKey" Type="varchar" Mode="In" />
+          <Parameter Name="DeptCodeKey" Type="varchar" Mode="In" />
+          <Parameter Name="SecCodeKey" Type="varchar" Mode="In" />
+          <Parameter Name="OrgCode" Type="varchar" Mode="In" />
+          <Parameter Name="HideDateFrom" Type="date" Mode="In" />
+        </Function>
+        <Function Name="sp_MAS030_DeleteFixOrgByEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+          <Parameter Name="EffectiveDateFrom" Type="date" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_MAS030_SaveFixOrgByEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Mode" Type="char" Mode="In" />
+          <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+          <Parameter Name="EffectiveDateFrom" Type="date" Mode="In" />
+          <Parameter Name="EffectiveDateTo" Type="date" Mode="In" />
+          <Parameter Name="DivCodeKey" Type="varchar" Mode="In" />
+          <Parameter Name="DeptCodeKey" Type="varchar" Mode="In" />
+          <Parameter Name="SecCodeKey" Type="varchar" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_MAS030_SearchFixOrgByEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProdDateFrom" Type="date" Mode="In" />
+          <Parameter Name="ProdDateTo" Type="date" Mode="In" />
+          <Parameter Name="SearchEmpCode" Type="varchar" Mode="In" />
+          <Parameter Name="SearchEmpName" Type="varchar" Mode="In" />
+          <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+          <Parameter Name="EffectiveDateFrom" Type="date" Mode="In" />
+        </Function>
+        <Function Name="sp_MAS040_DeleteWorkShiftByEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProdDate" Type="date" Mode="In" />
+          <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_MAS040_InsertWorkShiftByEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProdDateFrom" Type="date" Mode="In" />
+          <Parameter Name="ProdDateTo" Type="date" Mode="In" />
+          <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+          <Parameter Name="ShiftCode" Type="varchar" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_MAS040_SearchWorkShiftByEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProdDateFrom" Type="date" Mode="In" />
+          <Parameter Name="ProdDateTo" Type="date" Mode="In" />
+          <Parameter Name="SearchEmpCode" Type="varchar" Mode="In" />
+          <Parameter Name="SearchEmpName" Type="varchar" Mode="In" />
+          <Parameter Name="ShiftCode" Type="varchar" Mode="In" />
+          <Parameter Name="ProdDate" Type="date" Mode="In" />
+          <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_MAS040_UpdateWorkShiftByEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProdDate" Type="date" Mode="In" />
+          <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+          <Parameter Name="ShiftCode" Type="varchar" Mode="In" />
+          <Parameter Name="UserCode" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="TranscationModelStoreContainer" />
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TranscationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TransactionEntities" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="SearchDashboard" ReturnType="Collection(TranscationModel.SearchDashboard_Result)">
+            <Parameter Name="DivCode" Mode="In" Type="String" />
+            <Parameter Name="DeptCode" Mode="In" Type="String" />
+            <Parameter Name="SecCode" Mode="In" Type="String" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+            <Parameter Name="DivName" Mode="InOut" Type="String" />
+            <Parameter Name="WorkHC" Mode="InOut" Type="String" />
+            <Parameter Name="TotalHC" Mode="InOut" Type="String" />
+            <Parameter Name="WorkPercent" Mode="InOut" Type="String" />
+            <Parameter Name="MaxColumn" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetDepartmentCombo" ReturnType="Collection(TranscationModel.GetDepartmentComboResult)">
+            <Parameter Name="ProdDate" Mode="In" Type="DateTime" />
+            <Parameter Name="DivCode" Mode="In" Type="String" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetDivisionCombo" ReturnType="Collection(TranscationModel.GetDivisionComboResult)">
+            <Parameter Name="ProdDate" Mode="In" Type="DateTime" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetSectionCombo" ReturnType="Collection(TranscationModel.GetSectionComboResult)">
+            <Parameter Name="ProdDate" Mode="In" Type="DateTime" />
+            <Parameter Name="DeptCode" Mode="In" Type="String" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SearchGoOutReason" ReturnType="Collection(TranscationModel.GoOutReason)">
+            <Parameter Name="ProdDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="ProdDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="EmpCode" Mode="In" Type="String" />
+            <Parameter Name="EmpName" Mode="In" Type="String" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="IsDuplicateKeyGoOutReason" ReturnType="Collection(Boolean)">
+            <Parameter Name="ProdDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EmpCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateUserStatus" ReturnType="Collection(TranscationModel.UpdateUserStatusResult)">
+            <Parameter Name="EmpCodeXML" Mode="In" Type="String" />
+            <Parameter Name="UserStatus" Mode="In" Type="String" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteHideOrg" ReturnType="Collection(TranscationModel.DeleteHideOrgResult)">
+            <Parameter Name="OrgCode" Mode="In" Type="String" />
+            <Parameter Name="HideDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SaveGoOutReason" ReturnType="Collection(TranscationModel.SaveGoOutReasonResult)">
+            <Parameter Name="Mode" Mode="In" Type="String" />
+            <Parameter Name="GoOutID" Mode="In" Type="Int32" />
+            <Parameter Name="ProdDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EmpCode" Mode="In" Type="String" />
+            <Parameter Name="Reason" Mode="In" Type="String" />
+            <Parameter Name="StartTime" Mode="In" Type="DateTime" />
+            <Parameter Name="EndTime" Mode="In" Type="DateTime" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetGoOutReasonID" ReturnType="Collection(TranscationModel.GoOutReason)">
+          <Parameter Name="GoOutID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteGoOutReason" ReturnType="Collection(TranscationModel.DeleteGoOutReasonResult)">
+            <Parameter Name="GoOutID" Mode="In" Type="Int32" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SearchHideOrg" ReturnType="Collection(TranscationModel.HideOrg)">
+            <Parameter Name="ProdDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="ProdDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="DivCodeKey" Mode="In" Type="String" />
+            <Parameter Name="DeptCodeKey" Mode="In" Type="String" />
+            <Parameter Name="SecCodeKey" Mode="In" Type="String" />
+            <Parameter Name="OrgCode" Mode="In" Type="String" />
+            <Parameter Name="HideDateFrom" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="SaveHideOrg" ReturnType="Collection(TranscationModel.SaveHideOrgResult)">
+            <Parameter Name="Mode" Mode="In" Type="String" />
+            <Parameter Name="HideDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="HideDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="OrgCode" Mode="In" Type="String" />
+            <Parameter Name="DivCodeKey" Mode="In" Type="String" />
+            <Parameter Name="DeptCodeKey" Mode="In" Type="String" />
+            <Parameter Name="SecCodeKey" Mode="In" Type="String" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SearchEmpSetting" ReturnType="Collection(TranscationModel.EmployeeSetting)">
+            <Parameter Name="SearchEmpCode" Mode="In" Type="String" />
+            <Parameter Name="SearchEmpName" Mode="In" Type="String" />
+            <Parameter Name="DivCodeKey" Mode="In" Type="String" />
+            <Parameter Name="DeptCodeKey" Mode="In" Type="String" />
+            <Parameter Name="SecCodeKey" Mode="In" Type="String" />
+            <Parameter Name="EmpStatus" Mode="In" Type="String" />
+            <Parameter Name="UserStatus" Mode="In" Type="String" />
+            <Parameter Name="DisplayStatus" Mode="In" Type="String" />
+            <Parameter Name="IsViewActiveOrg" Mode="In" Type="Boolean" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateDisplayStatus" ReturnType="Collection(TranscationModel.UpdateDisplayStatusResult)">
+            <Parameter Name="EmpCodeXML" Mode="In" Type="String" />
+            <Parameter Name="DisplayStatus" Mode="In" Type="String" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="ResetPassword" ReturnType="Collection(TranscationModel.ResetPasswordResult)">
+            <Parameter Name="EmpCodeXML" Mode="In" Type="String" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SaveFixOrgByEmp" ReturnType="Collection(TranscationModel.SaveFixOrgByEmpResult)">
+            <Parameter Name="Mode" Mode="In" Type="String" />
+            <Parameter Name="EmpCode" Mode="In" Type="String" />
+            <Parameter Name="EffectiveDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="EffectiveDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="DivCodeKey" Mode="In" Type="String" />
+            <Parameter Name="DeptCodeKey" Mode="In" Type="String" />
+            <Parameter Name="SecCodeKey" Mode="In" Type="String" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SearchFixOrgByEmp" ReturnType="Collection(TranscationModel.FixOrgEmp)">
+            <Parameter Name="ProdDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="ProdDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="SearchEmpCode" Mode="In" Type="String" />
+            <Parameter Name="SearchEmpName" Mode="In" Type="String" />
+            <Parameter Name="EmpCode" Mode="In" Type="String" />
+            <Parameter Name="EffectiveDateFrom" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteFixOrgByEmp" ReturnType="Collection(TranscationModel.DeleteFixOrgByEmpResult)">
+            <Parameter Name="EmpCode" Mode="In" Type="String" />
+            <Parameter Name="EffectiveDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SearchWorkShiftByEmp" ReturnType="Collection(TranscationModel.AssignWorkShiftByEmp)">
+            <Parameter Name="ProdDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="ProdDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="SearchEmpCode" Mode="In" Type="String" />
+            <Parameter Name="SearchEmpName" Mode="In" Type="String" />
+            <Parameter Name="ShiftCode" Mode="In" Type="String" />
+            <Parameter Name="ProdDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EmpCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="InsertWorkShiftByEmp" ReturnType="Collection(TranscationModel.InsertWorkShiftByEmpResult)">
+            <Parameter Name="ProdDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="ProdDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="EmpCode" Mode="In" Type="String" />
+            <Parameter Name="ShiftCode" Mode="In" Type="String" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateWorkShiftByEmp" ReturnType="Collection(TranscationModel.UpdateWorkShiftByEmpResult)">
+            <Parameter Name="ProdDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EmpCode" Mode="In" Type="String" />
+            <Parameter Name="ShiftCode" Mode="In" Type="String" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteWorkShiftByEmp" ReturnType="Collection(TranscationModel.DeleteWorkShiftByEmpResult)">
+            <Parameter Name="ProdDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EmpCode" Mode="In" Type="String" />
+            <Parameter Name="UserCode" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="SearchDashboard_Result">
+          <Property Type="String" Name="DivCode" Nullable="true" MaxLength="70" />
+          <Property Type="String" Name="DivName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="DeptCode" Nullable="true" MaxLength="70" />
+          <Property Type="String" Name="DeptName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="SecCode" Nullable="true" MaxLength="70" />
+          <Property Type="String" Name="SecName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="EmpName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Reason" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="TotalByDept" Nullable="true" />
+          <Property Type="Int32" Name="HCByDept" Nullable="true" />
+          <Property Type="Int32" Name="LeaveByDept" Nullable="true" />
+          <Property Type="Decimal" Name="PercentByDept" Nullable="true" Precision="5" Scale="0" />
+          <Property Type="Int32" Name="TotalBySec" Nullable="true" />
+          <Property Type="Int32" Name="HCBySec" Nullable="true" />
+          <Property Type="String" Name="EmpImageFullPath" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="OrgLevel" Nullable="true" MaxLength="5" />
+          <Property Type="Int32" Name="EmpColumn" Nullable="true" />
+          <Property Type="String" Name="StatusImageFileName" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="GetDepartmentComboResult">
+          <Property Type="String" Name="DeptCode" Nullable="true" MaxLength="9" />
+          <Property Type="String" Name="DeptCodeDisplay" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="DeptName" Nullable="false" MaxLength="100" />
+          </ComplexType>
+        <ComplexType Name="GetDivisionComboResult">
+          <Property Type="String" Name="DivCode" Nullable="true" MaxLength="6" />
+          <Property Type="String" Name="DivCodeDisplay" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="DivName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="GroupCode" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="GroupName" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="GetSectionComboResult">
+          <Property Type="String" Name="SecCode" Nullable="true" MaxLength="12" />
+          <Property Type="String" Name="SecCodeDisplay" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="SecName" Nullable="false" MaxLength="100" />
+          </ComplexType>
+        <ComplexType Name="GoOutReason">
+          <Property Type="String" Name="EmpCode" Nullable="false" MaxLength="10" />
+          <Property Type="DateTime" Name="ProdDate" Nullable="false" />
+          <Property Type="String" Name="Reason" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="StartTime" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="EndTime" Nullable="false" Precision="23" />
+          <Property Type="String" Name="UpdateBy" Nullable="false" MaxLength="10" />
+          <Property Type="DateTime" Name="UpdateDate" Nullable="false" Precision="23" />
+          <Property Type="Int32" Name="GoOutID" Nullable="false" />
+          <Property Type="String" Name="EmpName" Nullable="false" MaxLength="202" />
+        </ComplexType>
+        <ComplexType Name="UpdateUserStatusResult">
+          <Property Type="String" Name="ErrorCode" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="ErrorMessage" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ErrorType" Nullable="true" MaxLength="1" />
+        </ComplexType>
+        <ComplexType Name="DeleteHideOrgResult">
+          <Property Type="String" Name="ErrorCode" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="ErrorMessage" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ErrorType" Nullable="true" MaxLength="1" />
+        </ComplexType>
+        <ComplexType Name="SaveGoOutReasonResult">
+          <Property Type="String" Name="ErrorCode" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="ErrorMessage" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ErrorType" Nullable="true" MaxLength="1" />
+        </ComplexType>
+        <ComplexType Name="DeleteGoOutReasonResult">
+          <Property Type="String" Name="ErrorCode" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="ErrorMessage" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ErrorType" Nullable="true" MaxLength="1" />
+        </ComplexType>
+        <ComplexType Name="HideOrg">
+          <Property Type="String" Name="OrgCode" Nullable="false" MaxLength="70" />
+          <Property Type="DateTime" Name="HideDateFrom" Nullable="false" />
+          <Property Type="DateTime" Name="HideDateTo" Nullable="false" />
+          <Property Type="String" Name="GroupName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="DivName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="DeptName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="SecName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="UpdateBy" Nullable="false" MaxLength="10" />
+          <Property Type="DateTime" Name="UpdateDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="DivCodeKey" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="DeptCodeKey" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="SecCodeKey" Nullable="true" MaxLength="40" />
+        </ComplexType>
+        <ComplexType Name="SaveHideOrgResult">
+          <Property Type="String" Name="ErrorCode" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="ErrorMessage" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ErrorType" Nullable="true" MaxLength="1" />
+        </ComplexType>
+        <ComplexType Name="EmployeeSetting">
+          <Property Type="String" Name="EmpCode" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="EmpName" Nullable="false" MaxLength="202" />
+          <Property Type="String" Name="EmpStatus" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="DisplayStatus" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="UserStatus" Nullable="true" MaxLength="255" />
+          <Property Type="DateTime" Name="TransferDate" Nullable="true" />
+          <Property Type="String" Name="DivName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="DeptName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="SecName" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="ResignDate" Nullable="true" />
+          <Property Type="String" Name="UpdateBy" Nullable="true" MaxLength="10" />
+          <Property Type="DateTime" Name="UpdateDate" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="UpdateDisplayStatusResult">
+          <Property Type="String" Name="ErrorCode" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="ErrorMessage" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ErrorType" Nullable="true" MaxLength="1" />
+        </ComplexType>
+        <ComplexType Name="ResetPasswordResult">
+          <Property Type="String" Name="ErrorCode" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="ErrorMessage" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ErrorType" Nullable="true" MaxLength="1" />
+        </ComplexType>
+        <ComplexType Name="SaveFixOrgByEmpResult">
+          <Property Type="String" Name="ErrorCode" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="ErrorMessage" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ErrorType" Nullable="true" MaxLength="1" />
+        </ComplexType>
+        <ComplexType Name="FixOrgEmp">
+          <Property Type="String" Name="EmpCode" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="EmpName" Nullable="false" MaxLength="202" />
+          <Property Type="DateTime" Name="EffectiveDateFrom" Nullable="false" />
+          <Property Type="DateTime" Name="EffectiveDateTo" Nullable="false" />
+          <Property Type="String" Name="OrgCode" Nullable="false" MaxLength="70" />
+          <Property Type="String" Name="DivCodeKey" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="DivName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="DeptCodeKey" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="DeptName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="SecCodeKey" Nullable="true" MaxLength="40" />
+          <Property Type="String" Name="SecName" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="UpdateBy" Nullable="false" MaxLength="10" />
+          <Property Type="DateTime" Name="UpdateDate" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="DeleteFixOrgByEmpResult">
+          <Property Type="String" Name="ErrorCode" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="ErrorMessage" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ErrorType" Nullable="true" MaxLength="1" />
+        </ComplexType>
+        <ComplexType Name="AssignWorkShiftByEmp">
+          <Property Type="DateTime" Name="ProdDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="EmpCode" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="EmpName" Nullable="false" MaxLength="202" />
+          <Property Type="String" Name="ShiftCode" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="ShiftName" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="UpdateBy" Nullable="false" MaxLength="10" />
+          <Property Type="DateTime" Name="UpdateDate" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="InsertWorkShiftByEmpResult">
+          <Property Type="String" Name="ErrorCode" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="ErrorMessage" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ErrorType" Nullable="true" MaxLength="1" />
+        </ComplexType>
+        <ComplexType Name="UpdateWorkShiftByEmpResult">
+          <Property Type="String" Name="ErrorCode" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="ErrorMessage" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ErrorType" Nullable="true" MaxLength="1" />
+        </ComplexType>
+        <ComplexType Name="DeleteWorkShiftByEmpResult">
+          <Property Type="String" Name="ErrorCode" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="ErrorMessage" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="ErrorType" Nullable="true" MaxLength="1" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TranscationModelStoreContainer" CdmEntityContainer="TransactionEntities">
+          <FunctionImportMapping FunctionImportName="SearchDashboard" FunctionName="TranscationModel.Store.sp_ADS011_SearchDashboard">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.SearchDashboard_Result">
+                <ScalarProperty Name="DivCode" ColumnName="DivCode" />
+                <ScalarProperty Name="DivName" ColumnName="DivName" />
+                <ScalarProperty Name="DeptCode" ColumnName="DeptCode" />
+                <ScalarProperty Name="DeptName" ColumnName="DeptName" />
+                <ScalarProperty Name="SecCode" ColumnName="SecCode" />
+                <ScalarProperty Name="SecName" ColumnName="SecName" />
+                <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="TotalByDept" ColumnName="TotalByDept" />
+                <ScalarProperty Name="HCByDept" ColumnName="HCByDept" />
+                <ScalarProperty Name="LeaveByDept" ColumnName="LeaveByDept" />
+                <ScalarProperty Name="PercentByDept" ColumnName="PercentByDept" />
+                <ScalarProperty Name="TotalBySec" ColumnName="TotalBySec" />
+                <ScalarProperty Name="HCBySec" ColumnName="HCBySec" />
+                <ScalarProperty Name="EmpImageFullPath" ColumnName="EmpImageFullPath" />
+                <ScalarProperty Name="OrgLevel" ColumnName="OrgLevel" />
+                <ScalarProperty Name="EmpColumn" ColumnName="EmpColumn" />
+                <ScalarProperty Name="StatusImageFileName" ColumnName="StatusImageFileName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetDepartmentCombo" FunctionName="TranscationModel.Store.sp_ADS010_GetDepartmentCombo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.GetDepartmentComboResult">
+                <ScalarProperty Name="DeptCode" ColumnName="DeptCode" />
+                <ScalarProperty Name="DeptCodeDisplay" ColumnName="DeptCodeDisplay" />
+                <ScalarProperty Name="DeptName" ColumnName="DeptName" />
+                </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetDivisionCombo" FunctionName="TranscationModel.Store.sp_ADS010_GetDivisionCombo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.GetDivisionComboResult">
+                <ScalarProperty Name="DivCode" ColumnName="DivCode" />
+                <ScalarProperty Name="DivCodeDisplay" ColumnName="DivCodeDisplay" />
+                <ScalarProperty Name="DivName" ColumnName="DivName" />
+                <ScalarProperty Name="GroupCode" ColumnName="GroupCode" />
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetSectionCombo" FunctionName="TranscationModel.Store.sp_ADS010_GetSectionCombo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.GetSectionComboResult">
+                <ScalarProperty Name="SecCode" ColumnName="SecCode" />
+                <ScalarProperty Name="SecCodeDisplay" ColumnName="SecCodeDisplay" />
+                <ScalarProperty Name="SecName" ColumnName="SecName" />
+                </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SearchGoOutReason" FunctionName="TranscationModel.Store.sp_ADS020_SearchGoOutReason">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.GoOutReason">
+                <ScalarProperty Name="EmpCode" ColumnName="EmpCode" />
+                <ScalarProperty Name="ProdDate" ColumnName="ProdDate" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="GoOutID" ColumnName="GoOutID" />
+                <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UpdateUserStatus" FunctionName="TranscationModel.Store.sp_MAS010_UpdateUserStatus">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.UpdateUserStatusResult">
+                <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="DeleteHideOrg" FunctionName="TranscationModel.Store.sp_MAS020_DeleteHideOrg">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.DeleteHideOrgResult">
+                <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SaveGoOutReason" FunctionName="TranscationModel.Store.sp_ADS020_SaveGoOutReason">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.SaveGoOutReasonResult">
+                <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetGoOutReasonID" FunctionName="TranscationModel.Store.sp_ADS020_GetGoOutReason">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.GoOutReason">
+                <ScalarProperty Name="EmpCode" ColumnName="EmpCode" />
+                <ScalarProperty Name="ProdDate" ColumnName="ProdDate" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="GoOutID" ColumnName="GoOutID" />
+                <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="DeleteGoOutReason" FunctionName="TranscationModel.Store.sp_ADS020_DeleteGoOutReason">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.DeleteGoOutReasonResult">
+                <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SearchHideOrg" FunctionName="TranscationModel.Store.sp_MAS020_SearchHideOrg">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.HideOrg">
+                <ScalarProperty Name="OrgCode" ColumnName="OrgCode" />
+                <ScalarProperty Name="HideDateFrom" ColumnName="HideDateFrom" />
+                <ScalarProperty Name="HideDateTo" ColumnName="HideDateTo" />
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+                <ScalarProperty Name="DivName" ColumnName="DivName" />
+                <ScalarProperty Name="DeptName" ColumnName="DeptName" />
+                <ScalarProperty Name="SecName" ColumnName="SecName" />
+                <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="DivCodeKey" ColumnName="DivCodeKey" />
+                <ScalarProperty Name="DeptCodeKey" ColumnName="DeptCodeKey" />
+                <ScalarProperty Name="SecCodeKey" ColumnName="SecCodeKey" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SaveHideOrg" FunctionName="TranscationModel.Store.sp_MAS020_SaveHideOrg">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.SaveHideOrgResult">
+                <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SearchEmpSetting" FunctionName="TranscationModel.Store.sp_MAS010_SearchEmp">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.EmployeeSetting">
+                <ScalarProperty Name="EmpCode" ColumnName="EmpCode" />
+                <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+                <ScalarProperty Name="EmpStatus" ColumnName="EmpStatus" />
+                <ScalarProperty Name="DisplayStatus" ColumnName="DisplayStatus" />
+                <ScalarProperty Name="UserStatus" ColumnName="UserStatus" />
+                <ScalarProperty Name="TransferDate" ColumnName="TransferDate" />
+                <ScalarProperty Name="DivName" ColumnName="DivName" />
+                <ScalarProperty Name="DeptName" ColumnName="DeptName" />
+                <ScalarProperty Name="SecName" ColumnName="SecName" />
+                <ScalarProperty Name="ResignDate" ColumnName="ResignDate" />
+                <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UpdateDisplayStatus" FunctionName="TranscationModel.Store.sp_MAS010_UpdateDisplayStatus" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.UpdateDisplayStatusResult">
+                <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="ResetPassword" FunctionName="TranscationModel.Store.sp_MAS010_ResetPassword">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.ResetPasswordResult">
+                <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SaveFixOrgByEmp" FunctionName="TranscationModel.Store.sp_MAS030_SaveFixOrgByEmp">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.SaveFixOrgByEmpResult">
+                <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SearchFixOrgByEmp" FunctionName="TranscationModel.Store.sp_MAS030_SearchFixOrgByEmp">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.FixOrgEmp">
+                <ScalarProperty Name="EmpCode" ColumnName="EmpCode" />
+                <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+                <ScalarProperty Name="EffectiveDateFrom" ColumnName="EffectiveDateFrom" />
+                <ScalarProperty Name="EffectiveDateTo" ColumnName="EffectiveDateTo" />
+                <ScalarProperty Name="OrgCode" ColumnName="OrgCode" />
+                <ScalarProperty Name="DivCodeKey" ColumnName="DivCodeKey" />
+                <ScalarProperty Name="DivName" ColumnName="DivName" />
+                <ScalarProperty Name="DeptCodeKey" ColumnName="DeptCodeKey" />
+                <ScalarProperty Name="DeptName" ColumnName="DeptName" />
+                <ScalarProperty Name="SecCodeKey" ColumnName="SecCodeKey" />
+                <ScalarProperty Name="SecName" ColumnName="SecName" />
+                <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="DeleteFixOrgByEmp" FunctionName="TranscationModel.Store.sp_MAS030_DeleteFixOrgByEmp">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.DeleteFixOrgByEmpResult">
+                <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SearchWorkShiftByEmp" FunctionName="TranscationModel.Store.sp_MAS040_SearchWorkShiftByEmp">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.AssignWorkShiftByEmp">
+                <ScalarProperty Name="ProdDate" ColumnName="ProdDate" />
+                <ScalarProperty Name="EmpCode" ColumnName="EmpCode" />
+                <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+                <ScalarProperty Name="ShiftCode" ColumnName="ShiftCode" />
+                <ScalarProperty Name="ShiftName" ColumnName="ShiftName" />
+                <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="InsertWorkShiftByEmp" FunctionName="TranscationModel.Store.sp_MAS040_InsertWorkShiftByEmp">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.InsertWorkShiftByEmpResult">
+                <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UpdateWorkShiftByEmp" FunctionName="TranscationModel.Store.sp_MAS040_UpdateWorkShiftByEmp">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.UpdateWorkShiftByEmpResult">
+                <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="DeleteWorkShiftByEmp" FunctionName="TranscationModel.Store.sp_MAS040_DeleteWorkShiftByEmp">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="TranscationModel.DeleteWorkShiftByEmpResult">
+                <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

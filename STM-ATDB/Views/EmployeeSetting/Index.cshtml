@@ -1,0 +1,986 @@
+﻿@using STM.ATDB.MvcWeb.Models
+@using STM.ATDB.MvcWeb.App_Helpers
+@using STM.ATDB.Core
+@using STM.ATDB.MvcWeb.Resources;
+
+@model EmployeeSettingViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="form-container" class="panel-group col-md-12 no-gutter">
+    <form id="search-container" class="col-md-12">
+        <div class="panel-group col-md-12 well well-sm animated fadeIn">
+            <h3><i class="fa fa-fw fa-th-list"></i> Criteria</h3>
+
+            @*<div class="row padding-bottom-10">
+                <div class="col-md-4">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-empset text-right">Emp Code</div>
+                        <div class="col-md-10 dx-field-value dx-value-empset">
+                            @(Html.DevExtreme().TextBox()
+                                        .ID("txtEmployee")
+                            )
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-empset text-right">Emp Name</div>
+                        <div class="col-md-10 dx-field-value dx-value-empset">
+                            @(Html.DevExtreme().TextBox()
+                                        .ID("txtFullName")
+                            )
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-empset text-right">Status</div>
+                        <div class="col-md-5 dx-value-empset pull-left" style="margin: 7px 0px;">
+                            @(Html.DevExtreme().CheckBox()
+                                        .Value(true)
+                                        .ID("CBViewActive")
+                                        .Text("View Active Org.")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-4">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-empset text-right">Division</div>
+                        <div class="col-md-10 dx-field-value dx-value-empset">
+                            @(Html.DevExtreme().DropDownBox()
+                                    .DataSource(d => d.Mvc().Controller("Common")
+                                                    .LoadAction("GetDivision")
+                                                    .LoadParams(new { IsActiveOnly = new JS("getSearchViewActiveOrg") })
+                                                    .Key("DivCodeKey"))
+                                    .ID("ddbDivision")
+                                    .ValueExpr("DivCodeKey")
+                                    .DisplayExpr("DivName")
+                                    .OnValueChanged("gridBox_valueChangedSrhDivision")
+                                    .Placeholder(ConstantValues.Select)
+                                    .ContentTemplate(new TemplateName("EmbeddedDataGridMultipleSrhDivision"))
+                                    .ShowClearButton(true)
+                            )
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-empset text-right">Department</div>
+                        <div class="col-md-10 dx-field-value dx-value-empset">
+                            @(Html.DevExtreme().DropDownBox()
+                                    .DataSource(d => d.Mvc().Controller("Common")
+                                                    .LoadAction("GetDepartment")
+                                                    .LoadParams(new { IsActiveOnly = new JS("getSearchViewActiveOrg"), DivCodeKey = new JS("getSearchDivCode") })
+                                                    .Key("DeptCodeKey"))
+                                    .ID("ddbDepartment")
+                                    .ValueExpr("DeptCodeKey")
+                                    .DisplayExpr("DeptName")
+                                    .OnValueChanged("gridBox_valueChangedSrhDepartment")
+                                    .Placeholder(ConstantValues.Select)
+                                    .ContentTemplate(new TemplateName("EmbeddedDataGridMultipleSrhDepartment"))
+                                    .ShowClearButton(true)
+                            )
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row dx-field">
+                        <div class="col-md-2 dx-field-label dx-lebel-empset text-right">Section</div>
+                        <div class="col-md-10 dx-field-value dx-value-empset text-left">
+                            @(Html.DevExtreme().DropDownBox()
+                                    .DataSource(d => d.Mvc().Controller("Common")
+                                                    .LoadAction("GetSection")
+                                                    .LoadParams(new { IsActiveOnly = new JS("getSearchViewActiveOrg"), DeptCodeKey = new JS("getSearchDeptCode") })
+                                                    .Key("SecCodeKey"))
+                                    .ID("ddbSection")
+                                    .ValueExpr("SecCodeKey")
+                                    .DisplayExpr("SecName")
+                                    .OnValueChanged("gridBox_valueChangedSrhSectionCode")
+                                    .Placeholder(ConstantValues.Select)
+                                    .ContentTemplate(new TemplateName("EmbeddedDataGridMultipleSrhSection"))
+                                    .ShowClearButton(true)
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-4">
+                    <div class="row dx-field">
+                        <div class="col-md-2 dx-field-label dx-lebel-empset text-right">Work Status</div>
+                        <div class="col-md-10 dx-field-value dx-value-empset text-left">
+                            @(Html.DevExtreme().SelectBox()
+                                    .ID("SBEmpStatus")
+                                    .ValueExpr("ValueCode")
+                                    .DisplayExpr("ValueDisplay")
+                                    .Value(ConstantValues.AllValue)
+                                    .Placeholder(ConstantValues.Select)
+                            .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetEmpStatus").Key("ValueCode"))
+                            )
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-empset text-right">User Status</div>
+                        <div class="col-md-10 dx-field-value dx-value-empset">
+                            @(Html.DevExtreme().SelectBox()
+                                    .ID("SBUserStatus")
+                                    .ValueExpr("ValueCode")
+                                    .DisplayExpr("ValueDisplay")
+                                    .Value(ConstantValues.AllValue)
+                                    .Placeholder(ConstantValues.Select)
+                            .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetUserStatus").Key("ValueCode"))
+                            )
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-empset text-right">Display Status</div>
+                        <div class="col-md-10 dx-field-value dx-value-empset">
+                            @(Html.DevExtreme().SelectBox()
+                                    .ID("SBDisplayStatus")
+                                    .ValueExpr("ValueCode")
+                                    .DisplayExpr("ValueDisplay")
+                                    .Value(ConstantValues.AllValue)
+                                    .Placeholder(ConstantValues.Select)
+                            .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetDisplayStatus").Key("ValueCode"))
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <br />
+            <br />*@
+
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-4">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-empset text-right">Emp Code</div>
+                        <div class="col-md-10 dx-field-value dx-value-empset">
+                            @(Html.DevExtreme().TextBox()
+                                        .ID("txtEmployee")
+                            )
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-empset text-right">Emp Name</div>
+                        <div class="col-md-10 dx-field-value dx-value-empset">
+                            @(Html.DevExtreme().TextBox()
+                                        .ID("txtFullName")
+                            )
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-empset text-right">Status</div>
+                        <div class="col-md-5 dx-value-empset pull-left" style="margin: 7px 0px;">
+                            @(Html.DevExtreme().CheckBox()
+                                        .Value(true)
+                                        .ID("CBViewActive")
+                                        .Text("View Active Org.")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-8">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label text-right" style="width: 12% !important;">Division</div>
+                        <div class="col-md-10 dx-field-value" style="width: 88% !important;">
+                            @(Html.DevExtreme().DropDownBox()
+                                    .DataSource(d => d.Mvc().Controller("Common")
+                                                    .LoadAction("GetDivision")
+                                                    .LoadParams(new { IsActiveOnly = new JS("getSearchViewActiveOrg") })
+                                                    .Key("DivCodeKey"))
+                                    .ID("ddbDivision")
+                                    .ValueExpr("DivCodeKey")
+                                    .DisplayExpr("DivName")
+                                    .OnValueChanged("gridBox_valueChangedSrhDivision")
+                                    .Placeholder(ConstantValues.Select)
+                                    .ContentTemplate(new TemplateName("EmbeddedDataGridMultipleSrhDivision"))
+                                    .ShowClearButton(true)
+                            )
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row dx-field">
+                        <div class="col-md-2 dx-field-label dx-lebel-empset text-right">Work Status</div>
+                        <div class="col-md-10 dx-field-value dx-value-empset text-left">
+                            @(Html.DevExtreme().SelectBox()
+                                    .ID("SBEmpStatus")
+                                    .ValueExpr("ValueCode")
+                                    .DisplayExpr("ValueDisplay")
+                                    .Value(ConstantValues.AllValue)
+                                    .Placeholder(ConstantValues.Select)
+                            .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetEmpStatus").Key("ValueCode"))
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-8">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label text-right" style="width: 12% !important;">Department</div>
+                        <div class="col-md-10 dx-field-value" style="width: 88% !important;">
+                            @(Html.DevExtreme().DropDownBox()
+                                    .DataSource(d => d.Mvc().Controller("Common")
+                                                    .LoadAction("GetDepartment")
+                                                    .LoadParams(new { IsActiveOnly = new JS("getSearchViewActiveOrg"), DivCodeKey = new JS("getSearchDivCode") })
+                                                    .Key("DeptCodeKey"))
+                                    .ID("ddbDepartment")
+                                    .ValueExpr("DeptCodeKey")
+                                    .DisplayExpr("DeptName")
+                                    .OnValueChanged("gridBox_valueChangedSrhDepartment")
+                                    .Placeholder(ConstantValues.Select)
+                                    .ContentTemplate(new TemplateName("EmbeddedDataGridMultipleSrhDepartment"))
+                                    .ShowClearButton(true)
+                            )
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-empset text-right">User Status</div>
+                        <div class="col-md-10 dx-field-value dx-value-empset">
+                            @(Html.DevExtreme().SelectBox()
+                                    .ID("SBUserStatus")
+                                    .ValueExpr("ValueCode")
+                                    .DisplayExpr("ValueDisplay")
+                                    .Value(ConstantValues.AllValue)
+                                    .Placeholder(ConstantValues.Select)
+                            .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetUserStatus").Key("ValueCode"))
+                            )
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-8">
+                    <div class="row dx-field">
+                        <div class="col-md-2 dx-field-label text-right" style="width: 12% !important;">Section</div>
+                        <div class="col-md-10 dx-field-value text-left" style="width: 88% !important;">
+                            @(Html.DevExtreme().DropDownBox()
+                                    .DataSource(d => d.Mvc().Controller("Common")
+                                                    .LoadAction("GetSection")
+                                                    .LoadParams(new { IsActiveOnly = new JS("getSearchViewActiveOrg"), DeptCodeKey = new JS("getSearchDeptCode") })
+                                                    .Key("SecCodeKey"))
+                                    .ID("ddbSection")
+                                    .ValueExpr("SecCodeKey")
+                                    .DisplayExpr("SecName")
+                                    .OnValueChanged("gridBox_valueChangedSrhSectionCode")
+                                    .Placeholder(ConstantValues.Select)
+                                    .ContentTemplate(new TemplateName("EmbeddedDataGridMultipleSrhSection"))
+                                    .ShowClearButton(true)
+                            )
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-empset text-right">Display Status</div>
+                        <div class="col-md-10 dx-field-value dx-value-empset">
+                            @(Html.DevExtreme().SelectBox()
+                                    .ID("SBDisplayStatus")
+                                    .ValueExpr("ValueCode")
+                                    .DisplayExpr("ValueDisplay")
+                                    .Value(ConstantValues.AllValue)
+                                    .Placeholder(ConstantValues.Select)
+                            .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetDisplayStatus").Key("ValueCode"))
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <div class="pull-right">
+                            @(Html.DevExtreme().Button()
+                            .ID("btnSearch")
+                            .Text("Search")
+                            .OnClick("onbtnSearchClick")
+                            .Type(ButtonType.Success)
+                            .Icon("fa fa-search")
+                            )
+                            @(Html.DevExtreme().Button()
+                            .ID("btnClear")
+                            .Text("Clear")
+                            .OnClick("onbtnClearClick")
+                            .Type(ButtonType.Danger)
+                            .Icon("fa fa-eraser")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form id="grid-container" class="panel-group col-md-12">
+        <div class="well well-sm animated fadeIn">
+            <div class="row padding-bottom-10">
+                <div class="col-md-6">
+                    <h3><i class="fa fa-fw fa-th-list"></i> Employee Setting Result List</h3>
+                </div>
+                <div class="col-md-6">
+                    <div class="text-align-right padding-bottom-10">
+                        @(Html.DevExtreme().Button()
+                            .ID("ChangDisplayStatus")
+                            .ElementAttr("class", "button-info")
+                            .Text("Update Display Status")
+                            .Type(ButtonType.Default)
+                            .OnClick("showDisplayStatus")
+                            .Disabled(!ViewContext.Controller.HasPermission("MAS010", PermissionName.Edit.Value))
+                        )
+                        @(Html.DevExtreme().Button()
+                            .ID("ChangUserStatus")
+                            .ElementAttr("class", "button-info")
+                            .Text("Update User Status")
+                            .Type(ButtonType.Default)
+                            .OnClick("showUserStatus")
+                            .Disabled(!ViewContext.Controller.HasPermission("MAS010", PermissionName.Edit.Value))
+                        )
+                    
+                        @(Html.DevExtreme().Button()
+                            .ID("ChangPassword")
+                            .ElementAttr("class", "button-info")
+                            .Text("Reset Password")
+                            .Type(ButtonType.Default)
+                            .OnClick("saveResetPassword")
+                            .Disabled(!ViewContext.Controller.HasPermission("MAS010", PermissionName.Edit.Value))
+                        )
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                @(Html.DevExtreme().DataGrid<EmployeeSettingViewModel>()
+                    .ID("gridContainer")
+                    .DataSource(d => d.Mvc().Controller("EmployeeSetting")
+                                    .LoadAction("SearchEmployeeSetting")
+                                    .Key("EmpCode")
+                                    .LoadParams(new { isFirstLoad = new JS ("function() { return isFirstLoad; }")
+                                                    , searchEmpCode = new JS("getSearchEmpCode")
+                                                    , searchEmpName = new JS("getSearchFullname")
+                                                    , divCodeKey = new JS("getSearchDivCode")
+                                                    , deptCodeKey = new JS("getSearchDeptCode")
+                                                    , secCodeKey = new JS("getSearchSecCode")
+                                                    , empStatus = new JS("getSearchEmpStatus")
+                                                    , userStatus = new JS("getSearchUserStatus")
+                                                    , displayStatus = new JS("getSearchDisplayStatus")
+                                                    , viewActiveOrg = new JS("getSearchViewActiveOrg")
+                                    })
+                            )
+                    .Selection(s => s.Mode(SelectionMode.Multiple))
+                    .HoverStateEnabled(true)
+                    .AllowColumnResizing(true)
+                    .ColumnMinWidth(40)
+                    .ColumnAutoWidth(true)
+                    .ShowBorders(true)
+                    .ShowRowLines(true)
+                    .Sorting(s => s.Mode(GridSortingMode.None))
+
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.EmpCode)
+                            .Caption("No.")
+                            .AllowEditing(false)
+                            .CellTemplate(new JS("onCreateRowNum"))
+                            .FormItem(x => x.Visible(false))
+                            .AllowFiltering(false)
+                            .Width(40);
+                        columns.AddFor(m => m.EmpCode);
+                        columns.AddFor(m => m.EmpName);
+                        columns.AddFor(m => m.EmpStatus);
+                        columns.AddFor(m => m.DisplayStatus);
+                        columns.AddFor(m => m.UserStatus);
+                        columns.AddFor(m => m.TransferDate)
+                            .DataType(GridColumnDataType.DateTime)
+                            .Format(ConstantValues.TimeStampInOutFormat);
+                        columns.AddFor(m => m.DivName);
+                        columns.AddFor(m => m.DeptName);
+                        columns.AddFor(m => m.SecName);
+                        columns.AddFor(m => m.ResignDate)
+                            .DataType(GridColumnDataType.Date)
+                            .Format(ConstantValues.DateFormat);
+                        columns.AddFor(m => m.updateby);
+                        columns.AddFor(m => m.updatedate)
+                            .DataType(GridColumnDataType.Date)
+                            .Format(ConstantValues.DateFormat);
+                    }
+                            )
+                    .OnSelectionChanged("selection_changed")
+                    .Paging(p => p.PageSize(ConstantValues.GRID_PAGE_SIZE))
+                    .HeaderFilter(f => f.Visible(true))
+                    .RemoteOperations(true)
+                )
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--#region Popup  -->
+
+    @*Update Display Status*@
+    <div>
+        @(Html.DevExtreme().Popup()
+                .ID("updateDisplayStatus-popup")
+                .ElementAttr("class", "popup")
+                .Width(500)
+                .Height(200)
+                .ShowTitle(true)
+                .Title("Update Display Status")
+                .Visible(false)
+                .DragEnabled(true)
+                .CloseOnOutsideClick(true)
+        )
+
+        @using (Html.DevExtreme().NamedTemplate("updateDisplayStatus-template"))
+        {
+            <div class="row padding-bottom-10">
+                <div class="col-md-12">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-1 dx-field-label text-right">Display Status</div>
+                        <div class="col-md-11 dx-field-value">
+                            @(Html.DevExtreme().SelectBoxFor(m => m.DisplayStatus)
+                                        .ID("PUUpdateDisplayStatus")
+                                        .ValueExpr("ValueCode")
+                                        .DisplayExpr("ValueDisplay")
+                                        .Placeholder(ConstantValues.Select)
+                                .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetDisplayStatus").Key("ValueCode"))
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row padding-top-10">
+                <div class="col-md-12" style="text-align: center;">
+                    <div>
+                        @(Html.DevExtreme().Button()
+                                    .ID("btnCDSave")
+                                    .Text("Save")
+                                    .OnClick("saveDisplayStatus")
+                                    .Type(ButtonType.Success)
+                                    .Icon("fa fa-save")
+                        )
+                        @(Html.DevExtreme().Button()
+                                    .ID("btnCDCancel")
+                                    .Text("Cancel")
+                                    .OnClick("CloseDisplayStatusPopup")
+                                    .Type(ButtonType.Danger)
+                                    .Icon("fa fa-times")
+                        )
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @*Update User Status*@
+    <div>
+        @(Html.DevExtreme().Popup()
+                .ID("updateUserStatus-popup")
+                .ElementAttr("class", "popup")
+                .Width(500)
+                .Height(200)
+                .ShowTitle(true)
+                .Title("Update User Status")
+                .Visible(false)
+                .DragEnabled(true)
+                .CloseOnOutsideClick(true)
+        )
+
+        @using (Html.DevExtreme().NamedTemplate("updateUserStatus-template"))
+        {   
+            <div class="row padding-bottom-10">
+                <div class="col-md-12">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-1 dx-field-label text-right">User Status</div>
+                        <div class="col-md-11 dx-field-value">
+                            @(Html.DevExtreme().SelectBoxFor(m => m.UserStatus)
+                                        .ID("PUUpdateUserStatus")
+                                        .ValueExpr("ValueCode")
+                                        .DisplayExpr("ValueDisplay")
+                                        .Placeholder(ConstantValues.Select)
+                                .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetUserStatus").Key("ValueCode"))
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row padding-top-10">
+                <div class="col-md-12" style="text-align: center;">
+                    <div>
+                        @(Html.DevExtreme().Button()
+                                    .ID("btnCuSave")
+                                    .Text("Save")
+                                    .OnClick("saveUserStatus")
+                                    .Type(ButtonType.Success)
+                                    .Icon("fa fa-save")
+                        )
+                        @(Html.DevExtreme().Button()
+                                    .ID("btnCUCancel")
+                                    .Text("Cancel")
+                                    .OnClick("CloseUserStatusPopup")
+                                    .Type(ButtonType.Danger)
+                                    .Icon("fa fa-times")
+                        )
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+<!--#endregion -->
+
+<!--#region Template-->
+
+    @*Division*@
+    <div>
+        @using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridMultipleSrhDivision"))
+        {
+            @(Html.DevExtreme().DataGrid()
+            .ID("embedded-datagridSrhDivision")
+            .DataSource(new JS(@"component.option(""dataSource"")"))
+            .Columns(columns =>
+            {
+                columns.Add().DataField("DivCode").Caption("Code")
+                    .Width(60).AllowSorting(false).AllowEditing(false);
+                columns.Add().DataField("DivName").Caption("Name")
+                    .Width(370).AllowSorting(false).AllowEditing(false);
+                columns.Add().DataField("GroupName").Caption("Group")
+                    .Width(300).AllowSorting(false).AllowEditing(false);
+            })
+            .HoverStateEnabled(true)
+            .Paging(p => p.PageSize(100))
+            .FilterRow(f => f.Visible(false))
+            .Scrolling(s => s.Mode(GridScrollingMode.Infinite))
+            .Height(265)
+            .Width(800)
+            .Selection(s => s.Mode(SelectionMode.Single))
+            .SelectedRowKeys(new JS(@"component.option(""value"")"))
+            .OnCellClick("close_gridBoxSrhDivision")
+            .OnSelectionChanged(@<text>
+                function(selectedItems) {
+                var keys = selectedItems.selectedRowKeys;
+                component.option("value", keys);
+                }
+            </text>)
+            )
+        }
+    </div>
+
+    @*Department*@
+    <div>
+        @using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridMultipleSrhDepartment"))
+        {
+            @(Html.DevExtreme().DataGrid()
+            .ID("embedded-datagridSrhDepartment")
+            .DataSource(new JS(@"component.option(""dataSource"")"))
+            .Columns(columns =>
+            {
+                columns.Add().DataField("DeptCode").Caption("Code")
+                    .Width(60).AllowSorting(false);
+                columns.Add().DataField("DeptName").Caption("Name")
+                    .Width(470).AllowSorting(false);
+            })
+            .HoverStateEnabled(true)
+            .Paging(p => p.PageSize(100))
+            .FilterRow(f => f.Visible(false))
+            .Scrolling(s => s.Mode(GridScrollingMode.Infinite))
+            .Height(265)
+            .Width(800)
+            .Selection(s => s.Mode(SelectionMode.Single))
+            .SelectedRowKeys(new JS(@"component.option(""value"")"))
+            .OnCellClick("close_gridBoxSrhDepartment")
+            .OnSelectionChanged(@<text>
+                function(selectedItems) {
+                var keys = selectedItems.selectedRowKeys;
+                component.option("value", keys);
+                }
+            </text>)
+            )
+        }
+    </div>
+
+    @*Section*@
+    <div>
+        @using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridMultipleSrhSection"))
+        {
+            @(Html.DevExtreme().DataGrid()
+            .ID("embedded-datagridSrhSection")
+            .DataSource(new JS(@"component.option(""dataSource"")"))
+            .Columns(columns =>
+            {
+                columns.Add().DataField("SecCode").Caption("Code")
+                    .Width(60).AllowSorting(false);
+                columns.Add().DataField("SecName").Caption("Name")
+                    .Width(470).AllowSorting(false);
+            })
+            .HoverStateEnabled(true)
+            .Paging(p => p.PageSize(100))
+            .FilterRow(f => f.Visible(false))
+            .Scrolling(s => s.Mode(GridScrollingMode.Infinite))
+            .Height(265)
+            .Width(800)
+            .Selection(s => s.Mode(SelectionMode.Single))
+            .SelectedRowKeys(new JS(@"component.option(""value"")"))
+            .OnCellClick("close_gridBoxSrhSection")
+            .OnSelectionChanged(@<text>
+                function(selectedItems) {
+                var keys = selectedItems.selectedRowKeys;
+                component.option("value", keys);
+                }
+            </text>)
+            )
+        }
+    </div>
+
+<!--#endregion-->
+
+@section script{
+<script  type="text/javascript">
+
+    var isFirstLoad = true;
+
+    function onCreateRowNum(cellElement, cellInfo) {
+        cellElement.text((cellInfo.component.pageSize() * cellInfo.component.pageIndex()) + cellInfo.row.rowIndex + 1)
+        //
+    }
+
+    function onbtnClearClick(e) {
+        try {
+            isFirstLoad = true;
+            $("#txtEmployee").dxTextBox("instance").option("value", "");
+            $("#txtFullName").dxTextBox("instance").option("value", "");
+            $("#SBUserStatus").dxSelectBox('instance').option("value", "@ConstantValues.AllValue");
+            $("#SBDisplayStatus").dxSelectBox('instance').option("value", "@ConstantValues.AllValue");
+            $("#SBEmpStatus").dxSelectBox('instance').option("value", "@ConstantValues.AllValue");
+            $("#CBViewActive").dxCheckBox("instance").option("value", true);
+            $("#gridContainer").dxDataGrid("instance").refresh();
+
+            $("#ddbDivision").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridSrhDivision").dxDataGrid("instance").refresh();
+            $("#ddbDepartment").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridSrhDepartment").dxDataGrid("instance").refresh();
+            $("#ddbSection").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridSrhSection").dxDataGrid("instance").refresh();
+        }
+        catch (err) { }
+    }
+
+    function onbtnSearchClick(e) {
+        isFirstLoad = false;
+        $("#gridContainer").dxDataGrid("refresh");
+    }
+
+    function getSearchEmpCode() {
+        return $("#txtEmployee").dxTextBox("instance").option("value");
+    }
+
+    function getSearchFullname() {
+        return $("#txtFullName").dxTextBox("instance").option("value");
+    }
+
+    function getSearchDivCode() {
+        return $("#ddbDivision").dxDropDownBox("instance").option("value");
+    }
+
+    function getSearchDeptCode() {
+        return $("#ddbDepartment").dxDropDownBox("instance").option("value");
+    }
+
+    function getSearchSecCode() {
+        return $("#ddbSection").dxDropDownBox("instance").option("value");
+    }
+
+    function getSearchUserStatus() {
+        return $("#SBUserStatus").dxSelectBox("instance").option("value");
+    }
+
+    function getSearchDisplayStatus() {
+        return $("#SBDisplayStatus").dxSelectBox("instance").option("value");
+    }
+
+    function getSearchEmpStatus() {
+        return $("#SBEmpStatus").dxSelectBox("instance").option("value");
+    }
+
+    function getSearchViewActiveOrg() {
+        return $("#CBViewActive").dxCheckBox("instance").option("value");
+    }
+
+    function gridBox_valueChangedSrhDivision(e) {
+        var $dataGrid = $("#embedded-datagridSrhDivision");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+        try {
+            $("#ddbDepartment").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridSrhDepartment").dxDataGrid("instance").refresh();
+
+            $("#ddbSection").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridSrhSection").dxDataGrid("instance").refresh();
+        }
+        catch (err) { }
+
+        $("#ddbDivision").dxDropDownBox("instance").close();
+    }
+
+    function close_gridBoxSrhDivision() {
+        $("#ddbDivision").dxDropDownBox("instance").close();
+    }
+
+    function gridBox_valueChangedSrhDepartment(e) {
+        var $dataGrid = $("#embedded-datagridSrhDepartment");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+        try {
+            $("#ddbSection").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridSrhSection").dxDataGrid("instance").refresh();
+        }
+        catch (err) { }
+        //e.component.close();
+        $("#ddbDepartment").dxDropDownBox("instance").close();
+
+    }
+
+    function close_gridBoxSrhDepartment() {
+        $("#ddbDepartment").dxDropDownBox("instance").close();
+    }
+
+    function gridBox_valueChangedSrhSectionCode(e) {
+        var $dataGrid = $("#embedded-datagridSrhSection");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+        //e.component.close();
+        $("#ddbSection").dxDropDownBox("instance").close();
+    }
+
+    function close_gridBoxSrhSection() {
+        $("#ddbSection").dxDropDownBox("instance").close();
+    }
+
+    dataKeyGridSelect = null;
+
+    function selection_changed(selectedItems) {
+        if (selectedItems.selectedRowKeys.length > 0) {
+            dataKeyGridSelect = selectedItems.selectedRowKeys;
+        }
+        else {
+            dataKeyGridSelect = null;
+        }
+
+    }
+
+    function showDisplayStatus(e) {
+
+        if (dataKeyGridSelect == null) {
+            app.ui.showNotifyMessage('@ToastType.Warning', "@MessageListResource.W0006");
+            return false;
+        }
+        else {
+            var popup = $("#updateDisplayStatus-popup").dxPopup("instance");
+            popup.option("contentTemplate", $("#updateDisplayStatus-template"));
+
+            popup.show();
+
+            e.validationGroup.reset();
+            $("#PUUpdateDisplayStatus").dxSelectBox("instance").option("value", null);
+        }
+    }
+
+    function showUserStatus(e) {
+
+        if (dataKeyGridSelect == null) {
+            app.ui.showNotifyMessage('@ToastType.Warning', "@MessageListResource.W0006");
+            return false;
+        }
+        else {
+            var popup = $("#updateUserStatus-popup").dxPopup("instance");
+            popup.option("contentTemplate", $("#updateUserStatus-template"));
+
+            popup.show();
+
+            e.validationGroup.reset();
+            $("#PUUpdateUserStatus").dxSelectBox("instance").option("value", null);
+        }
+    }
+
+    function CloseDisplayStatusPopup() {
+        $("#updateDisplayStatus-popup").dxPopup("hide");
+    }
+
+    function CloseUserStatusPopup() {
+        $("#updateUserStatus-popup").dxPopup("hide");
+    }
+
+    function saveDisplayStatus(params) {
+
+        if (params.validationGroup.validate().isValid) {
+            var result = DevExpress.ui.dialog.confirm("@MessageListResource.C0001", "Confirm Save");
+            result.done(function (dialogResult) {
+                if (dialogResult) {
+                    var EmpCode = dataKeyGridSelect;
+                    var DisplayStatus = $("#PUUpdateDisplayStatus").dxSelectBox("instance").option("value");
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("UpdateDisplayStatus", "EmployeeSetting")",
+                        dataType: "json",
+                        data: { "EmpCode": EmpCode, "DisplayStatus": DisplayStatus },
+                        success: function (data, status, xhr) {
+                            CloseDisplayStatusPopup();
+
+                            if (data.ErrorType == "@ConstantValues.TypeError") {
+                                app.ui.showNotifyMessage('@ToastType.Error', data.ErrorMessage);
+                            }
+                            if (data.ErrorType == "@ConstantValues.TypeWarning") {
+                                app.ui.showNotifyMessage('@ToastType.Warning', data.ErrorMessage);
+                            }
+                            if (data.ErrorType == "@ConstantValues.TypeInfo") {
+                                app.ui.showNotifyMessage('@ToastType.Success', data.ErrorMessage);
+                            }
+
+                            onbtnSearchClick();
+                        },
+                        error: function (xhr, statu, error) {
+                            CloseDisplayStatusPopup();
+                            var message = app.ui.handleAjaxError(xhr, status, error);
+                            app.ui.showNotifyMessage('@ToastType.Error', message);
+                        }
+                    })
+                }
+            });
+        }
+
+        return false;
+    }
+
+    function saveUserStatus(params) {
+
+        if (params.validationGroup.validate().isValid) {
+            var result = DevExpress.ui.dialog.confirm("@MessageListResource.C0001", "Confirm Save");
+            result.done(function (dialogResult) {
+                if (dialogResult) {
+                    var EmpCode = dataKeyGridSelect;
+                    var UserStatus = $("#PUUpdateUserStatus").dxSelectBox("instance").option("value");
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("UpdateUserStatus", "EmployeeSetting")",
+                        dataType: "json",
+                        data: { "EmpCode": EmpCode, "UserStatus": UserStatus },
+                        success: function (data, status, xhr) {
+                            CloseUserStatusPopup();
+
+                            if (data.ErrorType == "@ConstantValues.TypeError") {
+                                app.ui.showNotifyMessage('@ToastType.Error', data.ErrorMessage);
+                            }
+                            if (data.ErrorType == "@ConstantValues.TypeWarning") {
+                                app.ui.showNotifyMessage('@ToastType.Warning', data.ErrorMessage);
+                            }
+                            if (data.ErrorType == "@ConstantValues.TypeInfo") {
+                                app.ui.showNotifyMessage('@ToastType.Success', data.ErrorMessage);
+                            }
+
+                            onbtnSearchClick();
+                        },
+                        error: function (xhr, statu, error) {
+                            CloseUserStatusPopup();
+                            var message = app.ui.handleAjaxError(xhr, status, error);
+                            app.ui.showNotifyMessage('@ToastType.Error', message);
+                        }
+                    })
+                }
+            });
+        }
+
+        return false;
+    }
+
+    function saveResetPassword(params) {
+
+        if (dataKeyGridSelect == null) {
+            app.ui.showNotifyMessage('@ToastType.Warning', "@MessageListResource.W0006");
+            return false;
+        }
+
+        if (true) {
+            var result = DevExpress.ui.dialog.confirm("@MessageListResource.C0001", "Confirm Save");
+            result.done(function (dialogResult) {
+                if (dialogResult) {
+                    var EmpCode = dataKeyGridSelect;
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("ResetPassword", "EmployeeSetting")",
+                        dataType: "json",
+                        data: { "EmpCode": EmpCode },
+                        success: function (data, status, xhr) {
+                            if (data.ErrorType == "@ConstantValues.TypeError") {
+                                app.ui.showNotifyMessage('@ToastType.Error', data.ErrorMessage);
+                            }
+                            if (data.ErrorType == "@ConstantValues.TypeWarning") {
+                                app.ui.showNotifyMessage('@ToastType.Warning', data.ErrorMessage);
+                            }
+                            if (data.ErrorType == "@ConstantValues.TypeInfo") {
+                                app.ui.showNotifyMessage('@ToastType.Success', data.ErrorMessage);
+                            }
+
+                            onbtnSearchClick();
+                        },
+                        error: function (xhr, statu, error) {
+                            var message = app.ui.handleAjaxError(xhr, status, error);
+                            app.ui.showNotifyMessage('@ToastType.Error', message);
+                        }
+                    })
+                }
+            });
+        }
+
+        return false;
+    }
+
+</script>
+
+}
+
+

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvcSiteMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0"
+            xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0 MvcSiteMapSchema.xsd">
+
+  <mvcSiteMapNode title=" " controller="Home" action="Index" icon="desktop">
+    <!--<mvcSiteMapNode title="ATDB" clickable="false" icon="desktop">
+      <mvcSiteMapNode objectId="ADS010" title="ADS010: Daily Attendance Dashboard" controller="SearchDashboard" action="Index" icon="desktop" permissions="View,Add,Edit,Delete" />
+    </mvcSiteMapNode>-->
+    <!--<mvcSiteMapNode title="Report" clickable="false" icon="desktop">
+      <mvcSiteMapNode objectId="RPS010" title="RPS010: Time In/Out Report" controller="TimeInOutReport" action="Index" icon="print" permissions="View" />
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="Admin" clickable="false" icon="desktop">
+      <mvcSiteMapNode objectId="ADS0100" title="ADS010: User Maintenance" controller="UserMaintenance" action="Index" icon="desktop" permissions="View,Add,Edit,Delete" />
+      <mvcSiteMapNode objectId="ADS020" title="ADS020: Permission Setting" controller="Account" action="PermissionSetting" icon="desktop" permissions="View,Add"/>
+      <mvcSiteMapNode objectId="ADS030" title="ADS030: Change Password" controller="Account" action="ChangePassword" icon="desktop" permissions="View"/>
+    </mvcSiteMapNode>-->
+    <mvcSiteMapNode title="Admin" clickable="false" icon="desktop">
+      <mvcSiteMapNode objectId="AMS020" title="AMS020: Permission Setting" controller="Account" action="PermissionSetting" icon="desktop" permissions="View,Add"/>
+      <mvcSiteMapNode objectId="AMS030" title="AMS030: Change Password" controller="Account" action="ChangePassword" icon="desktop" permissions="View"/>
+    </mvcSiteMapNode>
+
+    <mvcSiteMapNode title="Master" clickable="false" icon="desktop">
+      <mvcSiteMapNode objectId="MAS010" title="MAS010: Employee Setting" controller="EmployeeSetting" action="Index" icon="desktop" permissions="VIEW,EDIT"/>
+      <mvcSiteMapNode objectId="MAS020" title="MAS020: Hide Organization" controller="HideOrganization" action="Index" icon="desktop" permissions="VIEW,ADD,EDIT,DELETE"/>
+      <mvcSiteMapNode objectId="MAS030" title="MAS030: Fix Organization" controller="FixOrganization" action="Index" icon="desktop" permissions="VIEW,ADD,EDIT,DELETE"/>
+      <mvcSiteMapNode objectId="MAS040" title="MAS040: Assign Work Shift" controller="AssignWorkShift" action="Index" icon="desktop" permissions="VIEW,ADD,EDIT,DELETE"/>
+    </mvcSiteMapNode>
+    
+    <mvcSiteMapNode title="Transaction" clickable="false" icon="desktop">
+      <mvcSiteMapNode objectId="ADS020" title="ADS020: Go Out Reason" controller="GoOutReason" action="Index" icon="desktop" permissions="VIEW,ADD,EDIT,DELETE"/>
+    </mvcSiteMapNode>
+    
+  </mvcSiteMapNode>
+
+</mvcSiteMap>

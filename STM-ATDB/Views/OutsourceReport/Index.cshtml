@@ -1,0 +1,192 @@
+﻿@using STM.ATDB.MvcWeb.Models
+@using STM.ATDB.MvcWeb.App_Helpers
+
+@model OutsourceReportViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="form-container" class="panel-group col-md-12 no-gutter">
+    <div id="search-container" class="col-md-12">
+        <div class="panel-group col-md-12 well well-sm animated fadeIn">
+            <h3><i class="fa fa-fw fa-th-list"></i> Report Criteria</h3>
+            @using (Html.BeginForm("Export", "OutsourceReport", new { DateFrom = @Model.DateFrom, DateTo = @Model.DateTo, Company = @Model.Company }, FormMethod.Get, new { @class = "form-horizontal k-text-lg", role = "form", @novalidate = "novalidate" }))
+            {
+                @*@Html.AntiForgeryToken()*@
+                using (Html.DevExtreme().ValidationGroup())
+                {
+                <div class="panel-group pl-2">
+                    <div class="row padding-bottom-10">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="row dx-field">
+                                <div class="col-md-2 text-right">@(Html.LabelFor(m => m.DateFrom))</div>
+                                <div class="col-md-2">
+                                    @(Html.DevExtreme().DateBoxFor(m => m.DateFrom)
+                                    .ID("DateFrom")
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .OnValueChanged("DateBoxFrom_OnValueChanged")
+                                    )
+                                </div>
+                                <div class="col-md-1 text-center">@(Html.LabelFor(m => m.DateTo))</div>
+                                <div class="col-md-2">
+                                    @(Html.DevExtreme().DateBoxFor(m=> m.DateTo)
+                                    .ID("DateTo")
+                                    .DisplayFormat("dd/MM/yyyy")
+                                    .OnValueChanged("DateBoxTo_OnValueChanged")
+                                    )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row padding-bottom-10">
+                        <div class="col-md-offset-2 col-md-10">
+                            <div class="row dx-field">
+                                <div class="col-md-2 text-right">@(Html.LabelFor(m => m.Company))</div>
+                                <div class="col-md-5 dx-field-item">
+                                   @(Html.DevExtreme().SelectBoxFor(m=> m.Company)
+                                  .ID("Company")
+                                  .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetCompanyByUser").LoadParams(new { includeAll = false, IncludeDelete = false }).Key("CompanyCode"))
+                                  .DisplayExpr("CompanyName")
+                                  .ValueExpr("CompanyCode")
+                                  .SearchEnabled(true)
+                                  .DeferRendering(false)
+                                  .OnContentReady("onContentReady")
+
+                                )
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                                <div class="dx-field text-center">
+                                
+                                    @*@(Html.DevExtreme().Button()
+                                        .Text("Export")
+                                        .Icon("fa fa-file-excel")
+                                        .Type(ButtonType.Success)
+                                        .UseSubmitBehavior(false)
+                                        .OnClick("onExportClick")
+                                    )*@
+
+                                    @(Html.DevExtreme().Button()
+                                        .Text("Export")
+                                        .Icon("fa fa-file-pdf")
+                                        .Type(ButtonType.Success)
+                                        .UseSubmitBehavior(false)
+                                        .OnClick("onExportPDFClick")
+                                    )
+
+                                    @(Html.DevExtreme().Button()
+                                        .Text("Clear")
+                                        .OnClick("onClearClick")
+                                        .Icon("fa fa-eraser")
+                                        .Type(ButtonType.Danger)
+                                    )
+                                
+                                </div>
+                        </div>
+                    </div>
+                 </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<script>
+
+    function onClearClick()
+    {
+        $("#Company").dxSelectBox("instance").option("value", firstCompanyCode);
+        $("#DateFrom").dxDateBox("instance").option("value", new Date());
+        $("#DateTo").dxDateBox("instance").option("value", new Date());
+    }
+
+    function onExportClick()
+    {
+        var dateFrom = $("#DateFrom").dxDateBox("instance").option("value");
+        var dateTo = $("#DateTo").dxDateBox("instance").option("value");
+        var company = $("#Company").dxSelectBox("instance").option("value");
+        var criteriaEdit = {
+            DateFrom: dateFrom
+          , DateTo: dateTo
+          , Company: company
+        }
+        $.ajax({
+            url: "/OutsourceReport/CheckExistOutsource",
+            //url: "/OutsourceReport/ExportByUrl",
+            type: "POST",
+            data:app.addAntiForgeryToken({ key: null, values: JSON.stringify(criteriaEdit) }),
+            success: function (result) {
+                window.location.href = '/OutsourceReport/ExportByUrl?values='+JSON.stringify(criteriaEdit);
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                //DevExpress.ui.notify(errorThrown, "error", @ConstantValues.DisplayDuration);
+                app.ui.showNotifyMessage('@ToastType.Error', errorThrown);
+            }
+        });
+    }
+
+    function onExportPDFClick() {
+        var dateFrom = $("#DateFrom").dxDateBox("instance").option("value");
+        var dateTo = $("#DateTo").dxDateBox("instance").option("value");
+        var company = $("#Company").dxSelectBox("instance").option("value");
+        var criteriaEdit = {
+            DateFrom: dateFrom
+          , DateTo: dateTo
+          , Company: company
+        }
+        $.ajax({
+            url: "/OutsourceReport/CheckExistOutsource",
+            //url: "/OutsourceReport/ExportByUrl",
+            type: "POST",
+            data: app.addAntiForgeryToken({ key: null, values: JSON.stringify(criteriaEdit) }),
+            success: function (result) {
+                window.location.href = '/OutsourceReport/ExportByUrlPDF?values=' + JSON.stringify(criteriaEdit);
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                //DevExpress.ui.notify(errorThrown, "error", @ConstantValues.DisplayDuration);
+                app.ui.showNotifyMessage('@ToastType.Error', errorThrown);
+            }
+        });
+    }
+
+    
+
+    function getCompanyName() {
+        return $("#Company").dxSelectBox("instance").option("text");
+    }
+
+    function DateBoxFrom_OnValueChanged(e)
+    {
+        var DateTo = $("#DateTo").dxDateBox("instance").option("value");
+        if(e.value > DateTo)
+        {
+            $("#DateTo").dxDateBox("instance").option("value", e.value);
+        }
+    }
+
+    function DateBoxTo_OnValueChanged(e)
+    {
+        var DateFrom = $("#DateFrom").dxDateBox("instance").option("value");
+        if (e.value < DateFrom) {
+            $("#DateFrom").dxDateBox("instance").option("value", e.value);
+        }
+    }
+
+    var firstCompanyCode = null;
+    var initialized = false;
+    function onContentReady(e) {
+        if (!initialized) {
+            initialized = true;
+            e.component.getDataSource().load().done(function (res) {
+                e.component.option("value", res[0].CompanyCode);
+                firstCompanyCode = res[0].CompanyCode;
+            })
+        }
+    }
+</script>

@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="SecurityModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="tbs_Screen">
+    <Key>
+      <PropertyRef Name="ScreenCode" />
+    </Key>
+    <Property Name="ScreenCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="ScreenName" Type="varchar" MaxLength="100" />
+    <Property Name="ScreenClass" Type="varchar" MaxLength="200" />
+    <Property Name="Seq" Type="int" />
+  </EntityType>
+  <EntityType Name="tbs_ScreenPermission">
+    <Key>
+      <PropertyRef Name="PermissionCode" />
+    </Key>
+    <Property Name="PermissionCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="PermissionName" Type="varchar" MaxLength="50" />
+    <Property Name="Seq" Type="int" />
+  </EntityType>
+  <EntityType Name="tbs_ScreenPermissionMapping">
+    <Key>
+      <PropertyRef Name="ScreenCode" />
+      <PropertyRef Name="PermissionCode" />
+    </Key>
+    <Property Name="ScreenCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="PermissionCode" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tbs_SecurityMapping">
+    <Key>
+      <PropertyRef Name="UserCode" />
+      <PropertyRef Name="Role" />
+      <PropertyRef Name="ScreenCode" />
+      <PropertyRef Name="PermissionCode" />
+    </Key>
+    <Property Name="UserCode" Type="varchar" MaxLength="15" Nullable="false" />
+    <Property Name="Role" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="ScreenCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="PermissionCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="PermissionType" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="CreateBy" Type="varchar" MaxLength="15" />
+    <Property Name="CreateDate" Type="datetime" />
+    <Property Name="UpdateBy" Type="varchar" MaxLength="15" />
+    <Property Name="UpdateDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="tbs_User">
+    <Key>
+      <PropertyRef Name="UserCode" />
+    </Key>
+    <Property Name="UserCode" Type="varchar" MaxLength="15" Nullable="false" />
+    <Property Name="Password" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="CreateBy" Type="varchar" MaxLength="15" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="UpdateBy" Type="varchar" MaxLength="15" Nullable="false" />
+    <Property Name="UpdateDate" Type="datetime" Nullable="false" />
+  </EntityType>
+  <Function Name="sp_AMS020_GetScreenPermissionList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="UserID" Type="varchar" Mode="In" />
+    <Parameter Name="UserRole" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_AMS020_GetUserAndRoleList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="UserID" Type="varchar" Mode="In" />
+    <Parameter Name="UserRole" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_Common_GetScreenPermissionList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+  </Function>
+  <EntityContainer Name="SecurityModelStoreContainer">
+    <EntitySet Name="tbs_Screen" EntityType="Self.tbs_Screen" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbs_ScreenPermission" EntityType="Self.tbs_ScreenPermission" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbs_ScreenPermissionMapping" EntityType="Self.tbs_ScreenPermissionMapping" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbs_SecurityMapping" EntityType="Self.tbs_SecurityMapping" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbs_User" EntityType="Self.tbs_User" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

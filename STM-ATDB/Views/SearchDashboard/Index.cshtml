@@ -1,0 +1,346 @@
+﻿@using STM.ATDB.MvcWeb.Models
+@using STM.ATDB.MvcWeb.App_Helpers
+
+@model DailyAttendanceDashboardViewModel
+@{
+    ViewBag.Title = "Index";
+
+    string alert = "Your custom error message";
+
+    if (ViewBag.TestMsg != null)
+    {
+        alert = (string)ViewBag.TestMsg;
+    }
+}
+<div id="form-container" class="panel-group col-md-12 no-gutter">
+    <form id="search-container" class="col-md-12">
+        <div class="panel-group col-md-12 well well-sm animated fadeIn">
+            <h3><i class="fa fa-fw fa-th-list"></i>Dashboard Criteria</h3>
+            <div class="panel-group pl-2">
+                <div class="row padding-bottom-10">
+                    <div class="col-md-offset-2 col-md-10">
+                        <div class="row dx-field">
+                            <div class="col-md-1 text-align-right no-padding" style="width:120px !important; padding-top: 7px !important; padding-right: 10px !important;">@(Html.LabelFor(m => m.Division)) <span style="color:red;">*</span></div>
+                            <div class="col-md-7 dx-field-item no-padding" style="max-width: 600px !important;">
+                                @(Html.DevExtreme().DropDownBoxFor(m => m.Division)
+                                    .DataSource(d => d.Mvc().Controller("SearchDashboard").LoadAction("GetDivisionComboData").LoadParams(new { }).Key("DivCode"))
+                                    .DisplayExpr("DivName")
+                                    .ValueExpr("DivCode")
+                                    .ID("ddbDivision")
+                                    .OnValueChanged("gridBox_valueChangedDivision")
+                                    .Placeholder(ConstantValues.Select)
+                                    .ContentTemplate(new TemplateName("EmbeddedDataGridMultipleDivision"))
+                                    .ShowClearButton(true)
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row padding-bottom-10">
+                    <div class="col-md-offset-2 col-md-10">
+                        <div class="row dx-field">
+                            <div class="col-md-1 text-align-right no-padding" style="width:120px !important; padding-top: 7px !important; padding-right: 10px !important;">@(Html.LabelFor(m => m.Department))<span style="color:red;">&nbsp;&nbsp;</span></div>
+                            <div class="col-md-7 dx-field-item no-padding" style="max-width: 600px !important;">
+                                @(Html.DevExtreme().DropDownBoxFor(m => m.Department)
+                                    .DataSource(d => d.Mvc().Controller("SearchDashboard").LoadAction("GetDepartmentComboData").LoadParams(new { strDivCode = new JS("GetDivitionCode") }).Key("DeptCode"))
+                                    .DisplayExpr("DeptName")
+                                    .ValueExpr("DeptCode")
+                                    .ID("ddbDepartment")
+                                    .OnValueChanged("gridBox_valueChangedDepartment")
+                                    .Placeholder(ConstantValues.Select)
+                                    .ContentTemplate(new TemplateName("EmbeddedDataGridMultipleDepartment"))
+                                    .ShowClearButton(true)
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row padding-bottom-10">
+                    <div class="col-md-offset-2 col-md-10">
+                        <div class="row dx-field">
+                            <div class="col-md-1 text-align-right no-padding" style="width:120px !important; padding-top: 7px !important; padding-right: 10px !important;">@(Html.LabelFor(m => m.Section))<span style="color:red;">&nbsp;&nbsp;</span></div>
+                            <div class="col-md-7 dx-field-item no-padding" style="max-width: 600px !important;">
+                                @(Html.DevExtreme().DropDownBoxFor(m => m.Section)
+                                    .DataSource(d => d.Mvc().Controller("SearchDashboard").LoadAction("GetSectionComboData").LoadParams(new { strDeptCode = new JS("GetDepartmentCode") }).Key("SecCode"))
+                                    .DisplayExpr("SecName")
+                                    .ValueExpr("SecCode")
+                                    .ID("ddbSection")
+                                    .OnValueChanged("gridBox_valueChangedSectionCode")
+                                    .Placeholder(ConstantValues.Select)
+                                    .ContentTemplate(new TemplateName("EmbeddedDataGridMultipleSection"))
+                                    .ShowClearButton(true)
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="dx-field text-center">
+
+                            @(Html.DevExtreme().Button()
+                                        .Text("View")
+                                        .Icon("find")
+                                        .Type(ButtonType.Success)
+                                        .UseSubmitBehavior(false)
+                                        .OnClick("onViewClick")
+                            )
+
+                            @(Html.DevExtreme().Button()
+                                        .Text("Clear")
+                                        .OnClick("onClearClick")
+                                        .Icon("fa fa-eraser")
+                                        .Type(ButtonType.Danger)
+                            )
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridMultipleDivision"))
+            {
+                @(Html.DevExtreme().DataGrid()
+        .ID("embedded-datagridDivision")
+        .DataSource(new JS(@"component.option(""dataSource"")"))
+        .Columns(columns =>
+        {
+            columns.Add().DataField("DivCodeDisplay").Caption("Code")
+                .Width(60).AllowSorting(false).AllowEditing(false);
+            columns.Add().DataField("DivName").Caption("Name")
+                .Width(370).AllowSorting(false).AllowEditing(false);
+            columns.Add().DataField("GroupName").Caption("Group")
+                .Width(300).AllowSorting(false).AllowEditing(false);
+        })
+        .HoverStateEnabled(true)
+        .Paging(p => p.PageSize(100))
+        .FilterRow(f => f.Visible(false))
+        .Scrolling(s => s.Mode(GridScrollingMode.Infinite))
+        .Height(265)
+        .Selection(s => s.Mode(SelectionMode.Single))
+        .SelectedRowKeys(new JS(@"component.option(""value"")"))
+        .OnCellClick("close_gridBoxDivision")
+        .OnSelectionChanged(@<text>
+            function(selectedItems) {
+            var keys = selectedItems.selectedRowKeys;
+            component.option("value", keys);
+            }
+        </text>)
+                )
+            }
+            @using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridMultipleDepartment"))
+            {
+                @(Html.DevExtreme().DataGrid()
+        .ID("embedded-datagridDepartment")
+        .DataSource(new JS(@"component.option(""dataSource"")"))
+        .Columns(columns =>
+        {
+            columns.Add().DataField("DeptCodeDisplay").Caption("Code")
+                .Width(60).AllowSorting(false);
+            columns.Add().DataField("DeptName").Caption("Name")
+                .Width(470).AllowSorting(false);
+        })
+        .HoverStateEnabled(true)
+        .Paging(p => p.PageSize(100))
+        .FilterRow(f => f.Visible(false))
+        .Scrolling(s => s.Mode(GridScrollingMode.Infinite))
+        .Height(265)
+        .Selection(s => s.Mode(SelectionMode.Single))
+        .SelectedRowKeys(new JS(@"component.option(""value"")"))
+        .OnCellClick("close_gridBoxDepartment")
+        .OnSelectionChanged(@<text>
+            function(selectedItems) {
+            var keys = selectedItems.selectedRowKeys;
+            component.option("value", keys);
+            }
+        </text>)
+                )
+            }
+            @using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridMultipleSection"))
+            {
+                @(Html.DevExtreme().DataGrid()
+        .ID("embedded-datagridSection")
+        .DataSource(new JS(@"component.option(""dataSource"")"))
+        .Columns(columns =>
+        {
+            columns.Add().DataField("SecCodeDisplay").Caption("Code")
+                .Width(60).AllowSorting(false);
+            columns.Add().DataField("SecName").Caption("Name")
+                .Width(470).AllowSorting(false);
+        })
+        .HoverStateEnabled(true)
+        .Paging(p => p.PageSize(100))
+        .FilterRow(f => f.Visible(false))
+        .Scrolling(s => s.Mode(GridScrollingMode.Infinite))
+        .Height(265)
+        .Selection(s => s.Mode(SelectionMode.Single))
+        .SelectedRowKeys(new JS(@"component.option(""value"")"))
+        .OnCellClick("close_gridBoxSection")
+        .OnSelectionChanged(@<text>
+            function(selectedItems) {
+            var keys = selectedItems.selectedRowKeys;
+            component.option("value", keys);
+            }
+        </text>)
+                )
+            }
+        </div>
+    </form>
+</div>
+
+<style>
+    .nopadding {
+        padding: 0px !important;
+    }
+
+    .dx-header-row {
+        background-color: #a6d0f100 !important;
+        color: #030303;
+    }
+</style>
+
+<script>
+
+    function onClearClick(e) {
+        try {
+            $("#ddbDivision").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridDivision").dxDataGrid("instance").refresh();
+
+            $("#ddbDepartment").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridDepartment").dxDataGrid("instance").refresh();
+
+            $("#ddbSection").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridSection").dxDataGrid("instance").refresh();
+        }
+        catch (err) { }
+
+        e.validationGroup.reset();
+    }
+
+    function onViewClick(e){
+        var result = e.validationGroup.validate();
+        if (result.isValid) {
+
+            var divCode = $("#ddbDivision").dxDropDownBox("instance").option("value");
+            var deptCode = $("#ddbDepartment").dxDropDownBox("instance").option("value");
+            var secCode = $("#ddbSection").dxDropDownBox("instance").option("value");
+
+            //alert(divCode + ":" + deptCode + ":" + secCode);
+
+            var criteriaSearch = {
+                DivisionCode: divCode
+              , DepartmentCode: deptCode
+              , SectionCode: secCode
+            }
+
+            $.ajax({
+                url: "/SearchDashboard/CallDisplayFrist",
+                type: "POST",
+                data: app.addAntiForgeryToken({ key: null, values: JSON.stringify(criteriaSearch), DivCode: divCode, DeptCode: deptCode, SecCode: secCode }),
+                success: function (result) {
+
+                    //alert(result.id);
+                    //window.location.href = '/OutsourceReport/ExportByUrlPDF?values=' + JSON.stringify(criteriaEdit);
+                    var url = '@Url.Action("Index", "DailyAttendanceDashboardDetail")' + '?id=' + result.id;
+                    window.open(url, '_blank', '', false);
+
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    app.ui.showNotifyMessage('@ToastType.Error', errorThrown);
+                }
+            });
+        }
+    }
+
+    var firstCompanyCode = null;
+    var initialized = false;
+    function onContentReady(e) {
+        //if (!initialized) {
+        //    initialized = true;
+        //    e.component.getDataSource().load().done(function (res) {
+        //        e.component.option("value", res[0].CompanyCode);
+        //        firstCompanyCode = res[0].CompanyCode;
+        //    })
+        //}
+    }
+
+    function gridBox_valueChangedDivision(e) {
+        var $dataGrid = $("#embedded-datagridDivision");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+        try {
+            //$("#ddbDepartment")e.component.getDataSource().reload();  .getDataSource().load();
+            $("#ddbDepartment").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridDepartment").dxDataGrid("instance").refresh();
+
+            $("#ddbSection").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridSection").dxDataGrid("instance").refresh();
+        }
+        catch (err) { }
+
+        $("#ddbDivision").dxDropDownBox("instance").close();
+
+    }
+
+    function gridBox_valueChangedDepartment(e) {
+        var $dataGrid = $("#embedded-datagridDepartment");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+        try {
+            $("#ddbSection").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridSection").dxDataGrid("instance").refresh();
+        }
+        catch (err) { }
+        //e.component.close();
+        $("#ddbDepartment").dxDropDownBox("instance").close();
+
+    }
+
+    function gridBox_valueChangedSectionCode(e) {
+        var $dataGrid = $("#embedded-datagridSection");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+        //e.component.close();
+        $("#ddbSection").dxDropDownBox("instance").close();
+    }
+
+    function close_gridBoxDivision() {
+        $("#ddbDivision").dxDropDownBox("instance").close();
+    }
+
+    function close_gridBoxDepartment() {
+        $("#ddbDepartment").dxDropDownBox("instance").close();
+    }
+
+    function close_gridBoxSection() {
+        $("#ddbSection").dxDropDownBox("instance").close();
+    }
+
+    function GetDivitionCode() {
+        var listBox = $('#ddbDivision').dxDropDownBox('instance');
+        var SelectData = listBox.option('value');
+        return SelectData;
+    }
+    function GetDepartmentCode() {
+        //--Company and Plant
+        var listBox = $('#ddbDepartment').dxDropDownBox('instance');
+        var SelectData = listBox.option('value');
+        return SelectData;
+    }
+    function GetSectionCode() {
+        //--Company and Plant
+        var listBox = $('#ddbSection').dxDropDownBox('instance');
+        var SelectData = listBox.option('value');
+        return SelectData;
+    }
+
+
+</script>

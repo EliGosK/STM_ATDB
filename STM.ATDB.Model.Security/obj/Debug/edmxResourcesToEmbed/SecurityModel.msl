@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="SecurityModelStoreContainer" CdmEntityContainer="SecurityEntities">
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="SecurityModel.User">
+        <MappingFragment StoreEntitySet="tbs_User">
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="CreateBy" ColumnName="CreateBy" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="UserCode" ColumnName="UserCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Screens">
+      <EntityTypeMapping TypeName="SecurityModel.Screen">
+        <MappingFragment StoreEntitySet="tbs_Screen">
+          <ScalarProperty Name="Seq" ColumnName="Seq" />
+          <ScalarProperty Name="ScreenClass" ColumnName="ScreenClass" />
+          <ScalarProperty Name="ScreenName" ColumnName="ScreenName" />
+          <ScalarProperty Name="ScreenCode" ColumnName="ScreenCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ScreenPermissions">
+      <EntityTypeMapping TypeName="SecurityModel.ScreenPermission">
+        <MappingFragment StoreEntitySet="tbs_ScreenPermission">
+          <ScalarProperty Name="Seq" ColumnName="Seq" />
+          <ScalarProperty Name="PermissionName" ColumnName="PermissionName" />
+          <ScalarProperty Name="PermissionCode" ColumnName="PermissionCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ScreenPermissionMappings">
+      <EntityTypeMapping TypeName="SecurityModel.ScreenPermissionMapping">
+        <MappingFragment StoreEntitySet="tbs_ScreenPermissionMapping">
+          <ScalarProperty Name="PermissionCode" ColumnName="PermissionCode" />
+          <ScalarProperty Name="ScreenCode" ColumnName="ScreenCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SecurityMappings">
+      <EntityTypeMapping TypeName="SecurityModel.SecurityMapping">
+        <MappingFragment StoreEntitySet="tbs_SecurityMapping">
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="CreateBy" ColumnName="CreateBy" />
+          <ScalarProperty Name="PermissionType" ColumnName="PermissionType" />
+          <ScalarProperty Name="PermissionCode" ColumnName="PermissionCode" />
+          <ScalarProperty Name="ScreenCode" ColumnName="ScreenCode" />
+          <ScalarProperty Name="Role" ColumnName="Role" />
+          <ScalarProperty Name="UserCode" ColumnName="UserCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="GetScreenPermissionList" FunctionName="SecurityModel.Store.sp_Common_GetScreenPermissionList">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="SecurityModel.ScreenPermissionListResult">
+          <ScalarProperty Name="ScreenCode" ColumnName="ScreenCode" />
+          <ScalarProperty Name="ScreenName" ColumnName="ScreenName" />
+          <ScalarProperty Name="ScreenSeq" ColumnName="ScreenSeq" />
+          <ScalarProperty Name="PermissionCode" ColumnName="PermissionCode" />
+          <ScalarProperty Name="PermissionName" ColumnName="PermissionName" />
+          <ScalarProperty Name="PermissionSeq" ColumnName="PermissionSeq" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetUserAndRoleList" FunctionName="SecurityModel.Store.sp_AMS020_GetUserAndRoleList">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="SecurityModel.UserAndRoleListResult">
+          <ScalarProperty Name="UserCode" ColumnName="UserCode" />
+          <ScalarProperty Name="UserDisplay" ColumnName="UserDisplay" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetScreenPermissionListTree" FunctionName="SecurityModel.Store.sp_AMS020_GetScreenPermissionList">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="SecurityModel.ScreenPermissionListTreeResult">
+          <ScalarProperty Name="ScreenCode" ColumnName="ScreenCode" />
+          <ScalarProperty Name="ScreenName" ColumnName="ScreenName" />
+          <ScalarProperty Name="ScreenSeq" ColumnName="ScreenSeq" />
+          <ScalarProperty Name="PermissionCode" ColumnName="PermissionCode" />
+          <ScalarProperty Name="PermissionName" ColumnName="PermissionName" />
+          <ScalarProperty Name="PermissionSeq" ColumnName="PermissionSeq" />
+          <ScalarProperty Name="IsHavePermission" ColumnName="IsHavePermission" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+  </EntityContainerMapping>
+</Mapping>

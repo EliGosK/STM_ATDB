@@ -1,0 +1,297 @@
+﻿@using STM.ATDB.MvcWeb.Models
+@using STM.ATDB.MvcWeb.App_Helpers
+@using STM.ATDB.MvcWeb.Properties
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div id="form-container" class="panel-group col-md-12 no-gutter">
+    <form id="search-container" class="col-md-12">
+        <div class="panel-group col-md-12 well well-sm animated fadeIn">
+            <div id='contentPopup' style='display: normal;'>
+                
+                @(Html.DevExtreme().Button()
+                    .ElementAttr("class", "button-info")
+                    .Text("Close")
+                    .OnClick(@<text>
+                        function showInfo(data) {
+                        var popup = $("#detail-popup").dxPopup("instance");
+                        popup.hide();
+                        }
+                    </text>)
+                )
+                <div id='contentA' style='display: normal;'>Loding...</div>
+            </div>
+            <div id='displayArea'></div>
+            <div>
+                @(Html.DevExtreme().Button()
+                    .ElementAttr("class", "button-info")
+                    .Text("Details")
+                    .OnClick(@<text>
+                        function showInfo(data) {
+                        var popup = $("#detail-popup").dxPopup("instance");
+                        popup.option("width", '95%');  
+                        popup.option("height", '95%');  
+                        popup.option("contentTemplate", $("#contentPopup"));
+                        popup.show();
+                        }
+                    </text>)
+                )
+            </div>
+        </div>
+    </form>
+</div>
+
+@(Html.DevExtreme().Popup()
+        .ID("detail-popup")
+        .ElementAttr("class", "popup")
+        .Width(300)
+        .Height(250)
+        .ShowTitle(true)
+        .ShowCloseButton(true)
+        .Visible(false)
+        .DragEnabled(false)
+        .CloseOnOutsideClick(false)
+        .FullScreen(true)
+)
+
+<style>
+#popup {
+    padding: 10px;
+}
+.tableDetail {
+    background-color:red;
+    height:50px;
+}
+
+.Table_Main{
+    
+}
+.Table_Dept{
+
+}
+.Table_Sec{
+
+}
+.Table_Header{
+ 
+}
+.Table_Emp{
+
+}
+.Table_SecHeader{
+
+}
+.Sec_Header_Col_Collapse{
+
+}
+.Emp_Img_Col{
+    padding:0px 0px 0px 0px;
+    width:15%;
+    display:inline;
+}
+.Emp_Name_Col{
+    width:50%;
+    display:inline;
+} 
+.Emp_Status_Col{
+    width:15%;
+    display:inline;
+
+}
+.Emp_Reason_Col{
+    width:20%;
+    display:inline;
+
+}
+.Header1{
+    text-align:right;
+    color:blue;
+    font-weight: 900;
+    font-size:18px;
+}
+.Dept_Col_Collapse{
+
+}
+.Dept_Header_Label{
+
+}
+.Dept_Total_Label{
+
+}
+.Dept_Total{
+
+}
+.Clock{
+    width:100%;
+    color:red;
+    font-weight: 900;
+    font-size:12px;
+}
+.Header_Total{
+    padding:3px 3px 3px 3px;
+    color:red;
+    font-weight: 900;
+    font-size:14px;
+}
+.Header_Total_Label{
+    color:blue;
+    font-weight: 900;
+    font-size:14px;
+}
+.button-info {
+    margin: 10px;
+}
+input.PanelToggleUp {
+    height: 18px;
+    width: 18px;
+    background-image: url("../Content/images/Button/ButtonToggle-Up-normal.png");
+    background-repeat: repeat-y;
+    border-style: none;
+    background-color: transparent;
+    padding: 0;
+}
+
+input.PanelToggleDown {
+    height: 18px;
+    width: 18px;
+    background-image: url("../Content/images/Button/ButtonToggle-Down-normal.png");
+    background-repeat: repeat-y;
+    border-style: none;
+    background-color: transparent;
+    padding: 0;
+}
+</style>
+
+<script>
+    (function () {
+        //var delay = 1000*60*0.3;
+        
+        var delay = 10;
+        var state = 0;
+        (function next() {
+            state = 1 - state;
+            //var src = state ? '#contentA' : '#contentB';
+            var src = '#contentA';
+            if (state) {
+                
+                $.get('@Url.Action("CallDisplay", "TestSwitch")', {
+                    
+                }, function (response) {
+                    $('#contentA').empty();
+                    $("#contentA").html(response);
+                });
+
+                delay = 1000;
+            }
+            else {
+                $.get('@Url.Action("CallDisplay", "TestSwitch")', {
+
+                }, function (response) {
+                    $('#contentA').empty();
+                    $("#contentA").html(response);
+                });
+
+                delay = 1000 * 60 ;
+            }
+            //var $contents = $(src).contents().clone();
+            //$('#displayArea').empty().append($contents);
+            setTimeout(next, delay);
+        })();
+    })();
+
+    $(function () {
+        $(document).on("click", "[id^=button\\-]", function () {
+            var n = $(this).attr("id").split("-").pop();
+            $("[id^=toggle\\-div\\-" + n + "]").toggle();
+
+            if ($("[id^=toggle\\-div\\-" + n + "]").is(":visible")) {
+                $(this).attr('class', 'PanelToggleUp')
+            } else {
+                $(this).attr('class', 'PanelToggleDown')
+            }
+        });
+    });
+
+   /* (function () {
+        var delay = 1000 * 60;
+        var state = 0;
+        (function next() {
+            state = 1 - state;
+            var src = state ? '#contentA' : '#contentB';
+            if (state) {
+
+                var mainDiv = "toggle-div-1";
+
+                //Create an input type dynamically.   
+                var element = document.createElement("input");
+                //Assign different attributes to the element. 
+                element.setAttribute("type", "button");
+                element.setAttribute("class", "PanelToggleUp");
+                element.setAttribute("id", "button-1");
+                var divBtn = document.createElement('span');
+                divBtn.innerHTML = " Button 1 <br/>";
+
+                $('#contentA').empty();
+                //Append the element in page (in span). 
+                var foo = document.getElementById("contentA");
+                foo.appendChild(element);
+                foo.appendChild(divBtn);
+
+
+                var div = document.createElement("div");
+                div.id = mainDiv;
+                div.style.width = "200px";
+                div.style.height = "400px";
+                div.innerHTML = "Hello";
+
+                document.getElementById("contentA").appendChild(div);
+
+                var i;
+                for (i = 2; i < 4; i++) {
+                    var element1 = document.createElement("input");
+                    element1.setAttribute("type", "button");
+                    element1.setAttribute("class", "PanelToggleUp");
+                    element1.setAttribute("id", "button-" + i);
+
+                    document.getElementById(mainDiv).appendChild(element1);
+                    var divBtn = document.createElement('span');
+                    divBtn.innerHTML = "button-" + i + "<br/>";
+                    document.getElementById(mainDiv).appendChild(divBtn);
+
+                    var div1 = document.createElement("div");
+                    div1.id = "toggle-div-" + i;
+                    div1.style.width = "200px";
+                    div1.style.height = "200px";
+                    div1.style.background = "red";
+                    div1.style.color = "white";
+                    div1.innerHTML = "Hello - " + (i - 1);
+
+                    document.getElementById("toggle-div-1").appendChild(div1);
+
+                }
+
+
+            }
+            else {
+                var words = ['one', 'two', 'three'];
+
+                var html = '<table>';
+
+                $.each(words, function (i, word) {
+                    html += '<tr><td>' + word + '</td></tr>';
+                });
+
+                html += '</table>';
+
+                $('#contentB').empty();
+                $("#contentB").append(html);
+            }
+            var $contents = $(src).contents().clone();
+            $('#displayArea').empty().append($contents);
+            setTimeout(next, delay);
+        })();
+    })();*/
+</script>
+

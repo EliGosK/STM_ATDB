@@ -1,0 +1,119 @@
+﻿@model MvcSiteMapProvider.Web.Html.Models.MenuHelperModel
+@using System.Web.Mvc.Html
+@using MvcSiteMapProvider.Web.Html.Models
+@using STM.ATDB.Framework.Web.Mvc
+@using STM.ATDB.MvcWeb.App_Helpers
+@using STM.ATDB.Core
+
+
+@helper  TopMenu(List<SiteMapNodeModel> nodeList)
+{
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navMenuBar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @*<a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                    Attendance Dashboard
+                </a>*@
+                <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                    <img src="~/Content/images/head-logo.png" alt="Attendance Dashboard">
+                    @*<div style="width:7%" >
+                        <div >
+                            <img src="~/Content/images/stm-logo.png" />
+                        </div>
+                        <div >
+                            @Html.Label("STM-ATDB", new { @class = "logon-header-label" })
+                        </div>
+                    </div>*@
+                </a>
+            </div>
+            <div id="navMenuBar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    @foreach (SiteMapNodeModel node in nodeList)
+                    {
+                        var visible = !node.Attributes.ContainsKey("visibility") ? "true" : (string)node.Attributes["visibility"];
+                        var iconClass = !node.Attributes.ContainsKey("icon") ? "fa fa-lg fa-fw" : String.Concat("fa fa-lg fa-fw fa-", (string)node.Attributes["icon"]);
+                        string url = node.IsClickable ? node.Url : "#";
+
+                        if (String.Compare(visible, "false", true) == 0)
+                        {
+                            continue;
+                        }
+
+                        if (node.Children.Any())
+                        {
+                            if (ViewContext.Controller.CheckSubMenuPermission(node.Children))
+                            {
+                                <li class="@Html.RouteIf(node.Controller, node.Action, "active")">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">@node.Title<span class="caret"></span></a>
+                                    @DropDownSubMenu(node.Children)
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="@Html.RouteIf(node.Controller,node.Action, "active")">
+                                <a href="@url" title="@node.Title">@node.Title</a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+}
+
+
+
+@helper DropDownSubMenu(SiteMapNodeModelList nodeList)
+{
+    <ul class="dropdown-menu" role="menu">
+        @foreach (SiteMapNodeModel node in nodeList)
+        {
+            var visible = !node.Attributes.ContainsKey("visibility") ? "true" : (string)node.Attributes["visibility"];
+            if (node.Title == "Separator")
+            {
+                <li role="separator" class="divider"></li>
+                continue;
+            }
+
+            if (String.Compare(visible, "false", true) == 0)
+            {
+                continue;
+            }
+
+            if (node.Attributes["objectId"] != null)
+            {
+                if (!ViewContext.Controller.HasPermission(node.Attributes["objectId"].ToString(), PermissionName.View.Value))
+                {
+                    continue;
+                }
+            }
+
+            var iconClass = !node.Attributes.ContainsKey("icon") ? "fa fa-lg fa-fw" : String.Concat("fa fa-lg fa-fw fa-", (string)node.Attributes["icon"]);
+            string url = node.IsClickable ? node.Url : "#";
+
+            if (node.Children.Any())
+            {
+                <li class="@Html.RouteIf(node.Controller, node.Action, "active")">
+                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"><i class="@iconClass"></i> @node.Title<span class="caret"></span></a>
+                    @DropDownSubMenu(node.Children)
+                </li>
+            }
+            else
+            {
+                <li class="@Html.RouteIf(node.Controller, node.Action, "active")">
+                    <a href="@url" title="@node.Title"><i class="@iconClass"></i> @node.Title</a>
+                </li>
+            }
+        }
+    </ul>
+}
+
+@TopMenu(Model.Nodes)

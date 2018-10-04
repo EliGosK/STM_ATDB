@@ -1,0 +1,10 @@
+D:\STM-ATDB\SourceCode\STM.ATDB.Core\bin\Debug\STM.ATDB.Core.dll
+D:\STM-ATDB\SourceCode\STM.ATDB.Core\bin\Debug\STM.ATDB.Core.pdb
+D:\STM-ATDB\SourceCode\STM.ATDB.Core\bin\Debug\EPPlus.dll
+D:\STM-ATDB\SourceCode\STM.ATDB.Core\bin\Debug\Newtonsoft.Json.dll
+D:\STM-ATDB\SourceCode\STM.ATDB.Core\bin\Debug\Security.dll
+D:\STM-ATDB\SourceCode\STM.ATDB.Core\bin\Debug\EPPlus.xml
+D:\STM-ATDB\SourceCode\STM.ATDB.Core\bin\Debug\Newtonsoft.Json.xml
+D:\STM-ATDB\SourceCode\STM.ATDB.Core\obj\Debug\STM.ATDB.Core.csprojResolveAssemblyReference.cache
+D:\STM-ATDB\SourceCode\STM.ATDB.Core\obj\Debug\STM.ATDB.Core.dll
+D:\STM-ATDB\SourceCode\STM.ATDB.Core\obj\Debug\STM.ATDB.Core.pdb

@@ -1,0 +1,416 @@
+﻿@using STM.ATDB.MvcWeb.Models
+@using STM.ATDB.MvcWeb.App_Helpers
+@using STM.ATDB.Core
+
+
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="form-container" class="panel-group col-md-12 no-gutter">
+    <form id="search-container" class="col-md-12">
+
+        <div class="panel-group col-md-12 well well-sm animated fadeIn">
+            <h3><i class="fa fa-fw fa-th-list"></i> Criteria</h3>
+            <div class="panel-group">
+                <div class="row padding-bottom-10">
+                    <div class="col-md-4">
+                        <div class="row clearfix dx-field">
+                            <div class="col-md-4 dx-field-label text-right">Company</div>
+                            <div class="col-md-8 dx-field-value text-left">
+                                @(Html.DevExtreme().SelectBox()
+                                    .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetCompanyByUser").LoadParams(new { includeAll = true, IncludeDelete = false }).Key("CompanyCode"))
+                                    .DisplayExpr("CompanyName")
+                                    .ValueExpr("CompanyCode")
+                                    .Value(ConstantValues.AllValue)
+                                    .ID("SelectBoxCompany")
+                                    .SearchEnabled(true)
+
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row dx-field">
+                            <div class="col-md-2 dx-field-label text-right">Role</div>
+                            <div class="col-md-10 dx-field-value text-left">
+                                @(Html.DevExtreme().SelectBox()
+                                    .ID("SelectBoxRole")
+                                    .ValueExpr("RoleCode")
+                                    .DisplayExpr("RoleName")
+                                    .Value(ConstantValues.AllValue)
+                                    .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetStaffRole").LoadParams(new { IncludeAll = true }).Key("RoleCode"))
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row dx-field">
+                            <div class="col-md-2 dx-field-label text-right">Active Only</div>
+                            <div class="col-md-10 dx-field-value text-left">
+                                @(Html.DevExtreme().SelectBox()
+                                    .ID("SelectBoxStatus")
+                                    .ValueExpr("ValueCode")
+                                    .DisplayExpr("ValueDisplay")
+                                    .Value(ConstantValues.AllValue)
+                                    .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetAllStatus").LoadParams(new { IncludeAll = true }).Key("ValueCode"))
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="row clearfix dx-field">
+                            <div class="col-md-4 dx-field-label text-right">Employee ID</div>
+                            <div class="col-md-8 dx-field-value text-left">
+                                @(Html.DevExtreme().TextBox()
+                                    .ID("TextBoxEmployeeID")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row dx-field">
+                            <div class="col-md-2 dx-field-label text-right">Name-Surname</div>
+                            <div class="col-md-10 dx-field-value text-left">
+                                @(Html.DevExtreme().TextBox()
+                                    .ID("TextBoxEmployeeName")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row dx-field">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-10">
+                                <div class="pull-right">
+                                    @(Html.DevExtreme().Button()
+                                        .ID("SearchButton")
+                                        .Text("Search")
+                                        .OnClick("onSearchClick")
+                                        .Type(ButtonType.Success)
+                                        .Icon("fa fa-search")
+                                    )
+                                    @(Html.DevExtreme().Button()
+                                        .ID("ClearhButton")
+                                        .Text("Clear")
+                                        .OnClick("onClearClick")
+                                        .Type(ButtonType.Danger)
+                                        .Icon("fa fa-eraser")
+                                    )
+                                </div>
+                                
+                            </div>
+                        </div>
+                     </div>
+                    @*<div class="col-md-6">
+
+                        </div>*@
+
+
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form id="grid-container" class="panel-group col-md-12">
+        <div class="well well-sm animated fadeIn">
+            <h3><i class="fa fa-fw fa-th-list"></i>Result List</h3>
+            <div class="text-align-right padding-bottom-10">
+                @(Html.DevExtreme().Button()
+                                .ID("btnAdd")
+                                .Text("Add")
+                                .OnClick("onButtonAddClick")
+                                .Type(ButtonType.Default)
+                                .Disabled(!ViewContext.Controller.HasPermission("SIS030", PermissionName.Add.Value))
+                                .Icon("fa fa-plus-circle")
+                )
+            </div>
+            @(Html.DevExtreme().DataGrid<OutsourceStaffViewModel>()
+                .ID("DataGridOutsourceStaff")
+                .ShowBorders(true)
+                .DataSource(d => d.Mvc().Controller("OutsourceStaff").LoadAction("SearchOutsourceStaff").Key("StaffID")
+                .UpdateAction("UpdateOutsourceStaff")
+                .InsertAction("InsertOutsourceStaff")
+                .DeleteAction("DeleteOutsourceStaff")
+                .LoadParams(new { Company = new JS("getCompanyValue"), Role = new JS("getRoleValue"), StatusCri = new JS("getStatusValue"), Employee = new JS("getEmployeeValue"), Name = new JS("getNameValue") })
+                )
+                .Editing(e => e.Mode(GridEditMode.Popup)
+                        .AllowUpdating(ViewContext.Controller.HasPermission("SIS030", PermissionName.Edit.Value))
+                        .AllowAdding(false)
+                        .AllowDeleting(ViewContext.Controller.HasPermission("SIS030", PermissionName.Delete.Value))
+                        .Popup(p => p
+                            .Title("Add/Edit Outsource Staff Information")
+                            .ShowTitle(true)
+                            .Width(800)
+                            .Height(440)
+                            .OnShowing("onShowing")
+                            .Position(pos => pos
+                                .My(HorizontalAlignment.Center, VerticalAlignment.Center)
+                                .At(HorizontalAlignment.Center, VerticalAlignment.Center)
+                                .Of(new JS("window"))
+                            )
+                        )
+                    )
+                .AllowColumnResizing(true)
+                .ColumnMinWidth(40)
+                .ColumnAutoWidth(true)
+                .Columns(columns =>
+                {
+                    columns.AddFor(m => m.StaffID)
+                        .Caption("No.")
+                        .AllowEditing(false)
+                        .CellTemplate(new JS("onCreateRowNum"))
+                        .FormItem(x => x.Visible(false))
+                        .AllowFiltering(false)
+                        .Width(40)
+                    ;
+                    columns.AddFor(m => m.EmployeeCode)
+                    ;
+                    columns.AddFor(m => m.TitleCode)
+                        .Visible(false)
+                        .FormItem(x => x.Visible(true))
+                        .Lookup(lookup => lookup
+                        .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetTitleName").LoadParams(new { includeAll = false }).Key("ValueDisplay"))
+                                .DisplayExpr("ValueDisplay")
+                                .ValueExpr("ValueDisplay"))
+                    ;
+                    columns.AddFor(m => m.Name)
+                       .Visible(false)
+                       .FormItem(x => x.Visible(true))
+                    ;
+                    columns.AddFor(m => m.Surname)
+                      .Visible(false)
+                      .FormItem(x => x.Visible(true))
+                    ;
+                    columns.AddFor(m => m.FullName)
+                        .FormItem(x => x.Visible(false))
+                    ;
+                    columns.AddFor(m => m.EffectiveDate)
+                       .Format(ConstantValues.DateFormat)
+                   ;
+                    columns.AddFor(m => m.ExpiredDate)
+                        .Format(ConstantValues.DateFormat)
+                    ;
+                    columns.AddFor(m => m.IsSpare)
+                        .Visible(false)
+                        .FormItem(x => x.Visible(true))
+                   ;
+                    columns.AddFor(m => m.CompanyCode)
+                    .Lookup(lookup => lookup
+                    .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetCompanyByUser").LoadParams(new { includeAll = false, IncludeDelete=false,ValueCode =new JS("getComapanySelected") }).Key("CompanyCode"))
+                                .DisplayExpr("CompanyName")
+                                .ValueExpr("CompanyCode"))
+                    ;
+                    columns.AddFor(m => m.TempCardNo)
+                        .Visible(false)
+                        .FormItem(x => x.Visible(true))
+                    ;
+                    columns.AddFor(m => m.RoleName)
+                        .Visible(false)
+                        .FormItem(x => x.Visible(true))
+                    ;
+                    columns.AddFor(m => m.PlantName)
+                        .Visible(false)
+                        .FormItem(x => x.Visible(true))
+                    ;
+                    columns.AddFor(m => m.LocationName)
+                        .Visible(false)
+                        .FormItem(x => x.Visible(true))
+                    ;
+                    columns.AddFor(m => m.CreatedBy)
+                        .Visible(false)
+                        .FormItem(x => x.Visible(false))
+                   ;
+                    columns.AddFor(m => m.CreatedDate)
+                        .Visible(false)
+                        .FormItem(x => x.Visible(false))
+                   ;
+                    columns.AddFor(m => m.UpdatedBy)
+                        .FormItem(x => x.Visible(false))
+                    ;
+                    columns.AddFor(m => m.UpdatedDate)
+                        .Format(ConstantValues.TimeStampFormat)
+                        .FormItem(x => x.Visible(false))
+                    ;
+                })
+                .Paging(p => p.PageSize(ConstantValues.GRID_PAGE_SIZE))
+                .FilterRow(f => f.Visible(true))
+                .HeaderFilter(f => f.Visible(true))
+                .GroupPanel(p => p.Visible(true))
+                .Grouping(g => g.AutoExpandAll(false))
+                .RemoteOperations(true)
+                .OnEditorPreparing("onEditorPreparing")
+                .OnInitNewRow("onInitNewRow")
+                .OnEditingStart("onEditingStart")
+                //command
+                .OnCellPrepared("onCellPrepared")
+                .OnContentReady("onContentReady")
+                .OnEditorPrepared("onEditorPrepared")
+
+                
+                
+            )
+
+
+        </div>
+    </form>
+    
+</div>
+
+<script>
+    
+
+
+    var actionView = false;
+    function onCreateRowNum(cellElement, cellInfo) {
+        cellElement.text((cellInfo.component.pageSize() * cellInfo.component.pageIndex()) + cellInfo.row.rowIndex + 1)
+    }
+
+    function onButtonAddClick() {
+        @if (ViewContext.Controller.HasPermission("SIS030", PermissionName.Add.Value))
+        {
+            @Html.Raw("$('#DataGridOutsourceStaff').dxDataGrid('instance').addRow();")
+        }
+        
+    }
+    function onEditClick(rowIndex)
+    {
+        @if (ViewContext.Controller.HasPermission("SIS030", PermissionName.Edit.Value))
+        {
+            @Html.Raw("$('#DataGridOutsourceStaff').dxDataGrid('instance').editRow(rowIndex);")
+        }
+    }
+    function onDeleteClick(rowIndex) {
+
+         @if (ViewContext.Controller.HasPermission("SIS030", PermissionName.Delete.Value))
+         {
+            @Html.Raw("$('#DataGridOutsourceStaff').dxDataGrid('instance').deleteRow(rowIndex);")
+         }
+    }
+    function onViewClick(rowIndex) {
+        actionView = true;
+        $("#DataGridOutsourceStaff").dxDataGrid("instance").editRow(rowIndex);
+    }
+    function onSearchClick() {
+        $("#DataGridOutsourceStaff").dxDataGrid("instance").refresh();
+    }
+
+    function onClearClick() {
+        $("#SelectBoxCompany").dxSelectBox("instance").option("value", "@ConstantValues.AllValue");
+        $("#SelectBoxRole").dxSelectBox("instance").option("value", "@ConstantValues.AllValue");
+        $("#SelectBoxStatus").dxSelectBox("instance").option("value", "@ConstantValues.AllValue");
+        $("#TextBoxEmployeeID").dxTextBox("instance").option("value", "");
+        $("#TextBoxEmployeeName").dxTextBox("instance").option("value","");
+        $("#DataGridOutsourceStaff").dxDataGrid("instance").refresh();
+    }
+    function getCompanyValue() {
+        return $("#SelectBoxCompany").dxSelectBox("instance").option("value");;
+    }
+    function getRoleValue() {
+        return $("#SelectBoxRole").dxSelectBox("instance").option("value");
+    }
+    function getStatusValue() {
+        return $("#SelectBoxStatus").dxSelectBox("instance").option("value");
+    }
+    function getEmployeeValue() {
+        return $("#TextBoxEmployeeID").dxTextBox("instance").option("value");
+    }
+    function getNameValue() {
+        return $("#TextBoxEmployeeName").dxTextBox("instance").option("value");
+    }
+    var companyCodeSelected="";
+    onEditorPreparing = function (e) {
+        if (actionView && e.parentType == "dataRow")
+        {
+            e.editorOptions.readOnly = true;
+            return;
+        }
+
+        
+
+        if (e.component.__editingStart && e.parentType == "dataRow") {
+            if (e.dataField == "EmployeeCode" || e.dataField == "CompanyCode")
+                e.editorOptions.readOnly = true;
+            if (e.dataField == "CompanyCode")
+                companyCodeSelected = e.value;
+        }
+        else if (e.component.__addingStart && e.parentType == "dataRow" && e.dataField == "CompanyCode")
+            companyCodeSelected = "";
+        if (e.parentType == "dataRow" &&
+             (e.dataField == "TempCardNo" || e.dataField == "RoleName" || e.dataField == "PlantName" || e.dataField == "LocationName"))
+        {
+            e.editorOptions.readOnly = true;
+        }
+    }
+
+    onContentReady= function(e){
+        moveEditColumnToLeft(e.component);
+    }
+    function moveEditColumnToLeft(dataGrid) {
+        dataGrid.columnOption("command:edit", {
+            visibleIndex: 20,
+            width: 100
+        });
+    }
+    onCellPrepared = function(e) {
+        if(e.rowType == "data" && e.column.command == "edit") {
+            var isEditing = e.row.isEditing,
+                $links = e.cellElement.find(".dx-link");
+
+            $links.text("");
+            if ('@(ViewContext.Controller.HasPermission("SIS030", PermissionName.Delete.Value))' == 'True') {
+                e.cellElement.prepend('<a class="" onclick="onDeleteClick(' + e.rowIndex + ');" href="#" ><img  title="Delete" src="@ConstantValues.DeleteCommandImageSource"></a>')
+            }
+            if ('@(ViewContext.Controller.HasPermission("SIS030", PermissionName.Edit.Value))' == 'True') {
+                e.cellElement.prepend('<a class="" onclick="onEditClick(' + e.rowIndex + ');" href="#"><img  title="Edit" src="@ConstantValues.EditCommandImageSource" ></a>')
+            }
+
+            e.cellElement.prepend('<a class="" onclick="onViewClick(' + e.rowIndex + ');" href="#"><img  title="View" src="@ConstantValues.ViewCommandImageSource"></a>')
+            
+        }
+    }
+    onEditingStart = function (e) {
+
+
+    }
+    function getComapanySelected()
+    {
+        return companyCodeSelected;
+    }
+    onShowing = function (e) {
+
+        app.ui.AddBackgroundColorPopupButton();
+        if (!actionView)
+            return;
+        actionView = false;
+        var btns = e.component.content().parent().find(".dx-button.dx-button-has-text");
+        for (var i = 0; i < btns.length; i++) {
+            var btn = btns[i];
+            $(btn).dxButton("option", "visible",false);
+            //$(btn).dxButton("option", "text", i == 0 ? "Custom Save" : "Custom Cancel");
+        }
+    }
+    onInitNewRow = function (e) {
+        e.component.__addingStart = true;
+        e.component.__editingStart = false;
+        e.data.IsSpare = false;
+    }
+    onEditingStart = function (e) {
+        e.component.__editingStart = true;
+        e.component.__addingStart = false;
+
+    }
+
+
+    function onEditorPrepared(e) {
+        app.ui.ResetReadOnlyControlBackgroundColor();
+    }
+</script>
+
+

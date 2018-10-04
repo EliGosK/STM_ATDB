@@ -1,0 +1,1049 @@
+﻿@using STM.ATDB.MvcWeb.Models
+@using STM.ATDB.MvcWeb.App_Helpers
+@using STM.ATDB.Core
+@using STM.ATDB.MvcWeb.Resources;
+
+@model FixOrganizationViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="form-container" class="panel-group col-md-12 no-gutter">
+    <form id="search-container" class="col-md-12">
+        <div class="panel-group col-md-12 well well-sm animated fadeIn">
+            <h3><i class="fa fa-fw fa-th-list"></i> Criteria</h3>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-6">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-fixorg text-right">Date From</div>
+                        <div class="col-md-10 dx-field-value dx-value-fixorg">
+                            <table>
+                                <tr>
+                                    <td>
+                                        @(Html.DevExtreme().DateBox()
+                                            .ID("DateFrom")
+                                            .Min(new DateTime(2000, 1, 1))
+                                            .Max(new DateTime(2029, 12, 31))
+                                            .Value(DateTime.Now)
+                                            .DisplayFormat(ConstantValues.DateFormat)
+                                            .Width(132)
+                                        )
+
+                                    </td>
+                                    <td style="padding:0px 10px 0px 10px; color:#8c8c8c;">To</td>
+                                    <td>
+                                        @(Html.DevExtreme().DateBox()
+                                            .ID("DateTo")
+                                            .Min(new DateTime(2000, 1, 1))
+                                            .Max(new DateTime(2029, 12, 31))
+                                            .Value(DateTime.Now)
+                                            .DisplayFormat(ConstantValues.DateFormat)
+                                            .Width(132)
+                                        )
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-6">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-fixorg text-right">Emp Code</div>
+                        <div class="col-md-10 dx-field-value dx-value-fixorg">
+                            @(Html.DevExtreme().TextBox()
+                                        .ID("txtEmpCode")
+                            )
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-fixorg text-right">Emp Name</div>
+                        <div class="col-md-10 dx-field-value dx-value-fixorg">
+                            @(Html.DevExtreme().TextBox()
+                                        .ID("txtEmpName")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-12">
+                        <div class="pull-right">
+                            @(Html.DevExtreme().Button()
+                                .ID("btnSearch")
+                                .Text("Search")
+                                .OnClick("onbtnSearchClick")
+                                .Type(ButtonType.Success)
+                                .Icon("fa fa-search")
+                            )
+                            @(Html.DevExtreme().Button()
+                                .ID("btnClear")
+                                .Text("Clear")
+                                .OnClick("onbtnClearClick")
+                                .Type(ButtonType.Danger)
+                                .Icon("fa fa-eraser")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form id="grid-container" class="panel-group col-md-12">
+        <div class="well well-sm animated fadeIn">
+            <div class="row padding-bottom-10">
+                <div class="col-md-9">
+                    <h3><i class="fa fa-fw fa-th-list"></i> Fix Organization Result List </h3>
+                </div>
+                <div class="col-md-3 text-align-right ">
+                    @(Html.DevExtreme().Button()
+                                .ID("btnAdd")
+                                .Text("Add")
+                                .OnClick("onButtonAddClick")
+                                .Type(ButtonType.Default)
+                                .Disabled(!ViewContext.Controller.HasPermission("MAS030", PermissionName.Add.Value))
+                                .Icon("fa fa-plus-circle")
+                    )
+                </div>
+            </div>
+
+            <div>
+                @(Html.DevExtreme().DataGrid<FixOrganizationViewModel>()
+                    .ID("gridContainer")
+                    .DataSource(d => d.Mvc().Controller("FixOrganization")
+                                    .LoadAction("SearchFixOrganization")
+                                    .Key("EmpCode")
+                                    .LoadParams(new { isFirstLoad = new JS("function() { return isFirstLoad; }")
+                                                    , SearchEmpCode = new JS("getSearchEmpCode")
+                                                    , SearchEmpName = new JS("getSearchEmpName")
+                                                    , ProdDateFrom = new JS("getSearchDateFrom")
+                                                    , ProdDateTo = new JS("getSearchDateTo") })
+                            )
+                    .AllowColumnResizing(true)
+                    .ColumnMinWidth(40)
+                    .ColumnAutoWidth(true)
+                    .ShowBorders(true)
+                    .ShowRowLines(true)
+                    .Sorting(s => s.Mode(GridSortingMode.None))
+                    .Columns(columns =>
+                    {
+                    columns.AddFor(m => m.EmpCode)
+                        .Caption("No.")
+                        .AllowEditing(false)
+                        .CellTemplate(new JS("onCreateRowNum"))
+                        .FormItem(x => x.Visible(false))
+                        .AllowFiltering(false)
+                        .Width(40);
+                    columns.AddFor(m => m.EmpCode);
+                    columns.AddFor(m => m.EmpName);
+                    columns.AddFor(m => m.EffectiveDateFrom)
+                        .DataType(GridColumnDataType.Date)
+                        .Format(ConstantValues.DateFormat);
+                    columns.AddFor(m => m.EffectiveDateTo)
+                        .DataType(GridColumnDataType.Date)
+                        .Format(ConstantValues.DateFormat);
+                    columns.AddFor(m => m.DivName);
+                    columns.AddFor(m => m.DeptName);
+                    columns.AddFor(m => m.SecName);
+                    columns.AddFor(m => m.UpdateBy);
+                    columns.AddFor(m => m.UpdateDate)
+                        .DataType(GridColumnDataType.Date)
+                        .Format(ConstantValues.DateFormat);
+                    columns.Add().Width(70).Alignment(HorizontalAlignment.Center).CellTemplate(@<text>
+                                @Html.DevExtreme().Button().Template("<img title=\"Edit\" src=\""+ @ConstantValues.EditCommandImageSource + "\">").OnClick("function (e) { editButtonClick(data)}").ElementAttr(new { @class = "button-sm" }).Visible(ViewContext.Controller.HasPermission("MAS030", PermissionName.Edit.Value))
+                                @Html.DevExtreme().Button().Template("<img title=\"Delete\" src=\"" + @ConstantValues.DeleteCommandImageSource + "\">").OnClick("function (e) { deleteButtonClick(data)}").ElementAttr(new { @class = "button-sm" }).Visible(ViewContext.Controller.HasPermission("MAS030", PermissionName.Delete.Value))
+                         </text>);
+                    }
+                            )
+                    .Paging(p => p.PageSize(ConstantValues.GRID_PAGE_SIZE))
+                    .HeaderFilter(f => f.Visible(true))
+                    .OnEditorPrepared("onEditorPrepared")
+                )
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<!--#region Popup  -->
+    @*Add Dialog*@
+    <div>
+        @(Html.DevExtreme().Popup()
+                .ID("saveDialog-popup")
+                .ElementAttr("class", "popup")
+                .Width(600)
+                .Height(380)
+                .ShowTitle(true)
+                .Title("Add - Fix Organization By Employee")
+                .Visible(false)
+                .DragEnabled(true)
+                .CloseOnOutsideClick(false)
+        )
+
+        @using (Html.DevExtreme().NamedTemplate("saveDialog-template"))
+        {
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Employee <span style="color:red;">*</span></div>
+                <div class="col-md-9">
+                    @(Html.DevExtreme().SelectBoxFor(m => m.EmpCode)
+                                    .ID("AddEmpCode")
+                                    .ValueExpr("EmpCode")
+                                    .DisplayExpr("EmpName")
+                                    .SearchEnabled(true)
+                            .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetEmployee")
+                                                    .LoadParams(new { IsActiveOnly = true })
+                                                    .Key("EmpCode"))
+                            .DataSourceOptions(d => d.Paginate(true))
+                    )
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Hide Date From <span style="color:red;">*</span></div>
+                <div class="col-md-9">
+                    <div class="col-md-3" style="padding-left: 0px">
+                        @(Html.DevExtreme().DateBoxFor(m => m.EffectiveDateFrom)
+                                        .ID("AddDateFrom")
+                                        .Min(new DateTime(2000, 1, 1))
+                                        .Max(new DateTime(2029, 12, 31))
+                                        .Value(DateTime.Now)
+                                        .DisplayFormat(ConstantValues.DateFormat)
+                                        .Width(132)
+                        )
+                    </div>
+                    <div class="col-md-1 dx-text text-right" style="width: 50px; margin-left: 12px">To</div>
+                    <div class="col-md-3" style="padding-left: 5px">
+                        @(Html.DevExtreme().DateBoxFor(m => m.EffectiveDateTo)
+                                        .ID("AddDateTo")
+                                        .Min(new DateTime(2000, 1, 1))
+                                        .Max(new DateTime(2029, 12, 31))
+                                        .Value(DateTime.Now)
+                                        .DisplayFormat(ConstantValues.DateFormat)
+                                        .Width(132)
+                        )
+                    </div>
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Division <span style="color:red;">*</span></div>
+                <div class="col-md-9">
+                    @(Html.DevExtreme().DropDownBoxFor(m => m.DivCodeKey)
+                                    .DataSource(d => d.Mvc().Controller("Common")
+                                                    .LoadAction("GetDivision")
+                                                    .LoadParams(new { ProdDateFrom = new JS("getAddDateFrom"), ProdDateTo = new JS("getAddDateTo"), IsActiveOnly = true })
+                                                    .Key("DivCodeKey"))
+                                    .ID("ddbAddDivision")
+                                    .ValueExpr("DivCodeKey")
+                                    .DisplayExpr("DivName")
+                                    .OnValueChanged("gridBox_valueChangedAddDivision")
+                                    .Placeholder(ConstantValues.Select)
+                                    .ContentTemplate(new TemplateName("EmbeddedDataGridMultipleAddDivision"))
+                                    .ShowClearButton(true)
+                    )
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Department <span style="color:red;">*</span></div>
+                <div class="col-md-9">
+                    @(Html.DevExtreme().DropDownBoxFor(m => m.DeptCodeKey)
+                                    .DataSource(d => d.Mvc().Controller("Common")
+                                                    .LoadAction("GetDepartment")
+                                                    .LoadParams(new { ProdDateFrom = new JS("getAddDateFrom"), ProdDateTo = new JS("getAddDateTo"), IsActiveOnly = true, DivCodeKey = new JS("getAddDivCode") })
+                                                    .Key("DeptCodeKey"))
+                                    .ID("ddbAddDepartment")
+                                    .ValueExpr("DeptCodeKey")
+                                    .DisplayExpr("DeptName")
+                                    .OnValueChanged("gridBox_valueChangedAddDepartment")
+                                    .Placeholder(ConstantValues.Select)
+                                    .ContentTemplate(new TemplateName("EmbeddedDataGridMultipleAddDepartment"))
+                                    .ShowClearButton(true)
+                    )
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Section <span style="color:red;">*</span></div>
+                <div class="col-md-9">
+                    @(Html.DevExtreme().DropDownBoxFor(m => m.SecCodeKey)
+                                    .DataSource(d => d.Mvc().Controller("Common")
+                                                    .LoadAction("GetSection")
+                                                    .LoadParams(new { ProdDateFrom = new JS("getAddDateFrom"), ProdDateTo = new JS("getAddDateTo"), IsActiveOnly = true, DeptCodeKey = new JS("getAddDeptCode") })
+                                                    .Key("SecCodeKey"))
+                                    .ID("ddbAddSection")
+                                    .ValueExpr("SecCodeKey")
+                                    .DisplayExpr("SecName")
+                                    .OnValueChanged("gridBox_valueChangedAddSectionCode")
+                                    .Placeholder(ConstantValues.Select)
+                                    .ContentTemplate(new TemplateName("EmbeddedDataGridMultipleAddSection"))
+                                    .ShowClearButton(true)
+                    )
+                </div>
+            </div>
+
+            <div class="row padding-top-10">
+                <div class="col-md-12" style="text-align: center;">
+                    <div>
+                        @(Html.DevExtreme().Button()
+                                .ID("btnAddSave")
+                                .Text("Save")
+                                .OnClick("saveAddDialog")
+                                .Type(ButtonType.Success)
+                                .Icon("fa fa-save")
+                        )
+                        @(Html.DevExtreme().Button()
+                                .ID("btnAddCancel")
+                                .Text("Cancel")
+                                .OnClick("CloseSaveDialog")
+                                .Type(ButtonType.Danger)
+                                .Icon("fa fa-times")
+                        )
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @*Edit Dialog*@
+    <div>
+        @(Html.DevExtreme().Popup()
+                    .ID("editDialog-popup")
+                    .ElementAttr("class", "popup")
+                    .Width(600)
+                    .Height(380)
+                    .ShowTitle(true)
+                    .Title("Edit - Fix Organization By Employee")
+                    .Visible(false)
+                    .DragEnabled(true)
+                    .CloseOnOutsideClick(false)
+        )
+
+        @using (Html.DevExtreme().NamedTemplate("editDialog-template"))
+        {
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Employee</div>
+                <div class="col-md-9">
+                    @(Html.DevExtreme().SelectBoxFor(m => m.EmpCode)
+                                        .ID("EditEmpCode")
+                                        .ValueExpr("EmpCode")
+                                        .DisplayExpr("EmpName")
+                                        .Value(ConstantValues.AllValue)
+                                        .Disabled(true)
+                                .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetEmployee")
+                                                        .LoadParams(new { IsActiveOnly = true })
+                                                        .Key("EmpCode"))
+                                .DataSourceOptions(d => d.Paginate(true))
+                    )
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Hide Date From <span style="color:red;">*</span></div>
+                <div class="col-md-9">
+                    <div class="col-md-3" style="padding-left: 0px">
+                        @(Html.DevExtreme().DateBoxFor(m => m.EffectiveDateFrom)
+                                        .ID("EditDateFrom")
+                                        .Min(new DateTime(2000, 1, 1))
+                                        .Max(new DateTime(2029, 12, 31))
+                                        .Disabled(true)
+                                        .DisplayFormat(ConstantValues.DateFormat)
+                                        .Width(132)
+                        )
+                    </div>
+                    <div class="col-md-1 dx-text text-right" style="width: 50px; margin-left: 12px">To</div>
+                    <div class="col-md-3" style="padding-left: 5px">
+                        @(Html.DevExtreme().DateBoxFor(m => m.EffectiveDateTo)
+                                        .ID("EditDateTo")
+                                        .Min(new DateTime(2000, 1, 1))
+                                        .Max(new DateTime(2029, 12, 31))
+                                        .DisplayFormat(ConstantValues.DateFormat)
+                                        .Width(132)
+                        )
+                    </div>
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Division</div>
+                <div class="col-md-9">
+                    @(Html.DevExtreme().DropDownBoxFor(m => m.DivCodeKey)
+                                    .DataSource(d => d.Mvc().Controller("Common")
+                                                    .LoadAction("GetDivision")
+                                                    .LoadParams(new { ProdDateFrom = new JS("getEditDateFrom"), ProdDateTo = new JS("getEditDateTo"), IsActiveOnly = true })
+                                                    .Key("DivCodeKey"))
+                                        .ID("ddbEditDivision")
+                                        .ValueExpr("DivCodeKey")
+                                        .DisplayExpr("DivName")
+                                        .ReadOnly(true)
+                                        .Disabled(true)
+                                        .OnValueChanged("gridBox_valueChangedEditDivision")
+                                        .Placeholder(ConstantValues.Select)
+                                        .ContentTemplate(new TemplateName("EmbeddedDataGridMultipleEditDivision"))
+                                        .ShowClearButton(true)
+                    )
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Department</div>
+                <div class="col-md-9">
+                    @(Html.DevExtreme().DropDownBoxFor(m => m.DeptCodeKey)
+                                    .DataSource(d => d.Mvc().Controller("Common")
+                                                    .LoadAction("GetDepartment")
+                                                    .LoadParams(new { ProdDateFrom = new JS("getEditDateFrom"), ProdDateTo = new JS("getEditDateTo"), IsActiveOnly = true, DivCodeKey = new JS("getEditDivCode") })
+                                                    .Key("DeptCodeKey"))
+                                        .ID("ddbEditDepartment")
+                                        .ValueExpr("DeptCodeKey")
+                                        .DisplayExpr("DeptName")
+                                        .OnValueChanged("gridBox_valueChangedEditDepartment")
+                                        .Placeholder(ConstantValues.Select)
+                                        .ContentTemplate(new TemplateName("EmbeddedDataGridMultipleEditDepartment"))
+                                        .ShowClearButton(true)
+                                        .ReadOnly(true)
+                                        .Disabled(true)
+                    )
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Section</div>
+                <div class="col-md-9">
+                    @(Html.DevExtreme().DropDownBoxFor(m => m.SecCodeKey)
+                                    .DataSource(d => d.Mvc().Controller("Common")
+                                                    .LoadAction("GetSection")
+                                                    .LoadParams(new { ProdDateFrom = new JS("getEditDateFrom"), ProdDateTo = new JS("getEditDateTo"), IsActiveOnly = true, DeptCodeKey = new JS("getEditDeptCode") })
+                                                    .Key("SecCodeKey"))
+                                        .ID("ddbEditSection")
+                                        .ValueExpr("SecCodeKey")
+                                        .DisplayExpr("SecName")
+                                        .OnValueChanged("gridBox_valueChangedEditSectionCode")
+                                        .Placeholder(ConstantValues.Select)
+                                        .ContentTemplate(new TemplateName("EmbeddedDataGridMultipleEditSection"))
+                                        .ShowClearButton(true)
+                                        .ReadOnly(true)
+                                        .Disabled(true)
+                    )
+                </div>
+            </div>
+
+            <div class="row padding-top-10">
+                <div class="col-md-12" style="text-align: center;">
+                    <div>
+                        @(Html.DevExtreme().Button()
+                                .ID("btnEditSave")
+                                .Text("Save")
+                                .OnClick("saveEditDialog")
+                                .Type(ButtonType.Success)
+                                .Icon("fa fa-save")
+                        )
+                        @(Html.DevExtreme().Button()
+                                .ID("btnEditCancel")
+                                .Text("Cancel")
+                                .OnClick("CloseEditDialog")
+                                .Type(ButtonType.Danger)
+                                .Icon("fa fa-times")
+                        )
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+<!--#endregion -->
+
+<!--#region Template-->
+
+    <!--#region Add-->
+    @*Division*@
+    <div>
+        @using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridMultipleAddDivision"))
+        {
+            @(Html.DevExtreme().DataGrid()
+                    .ID("embedded-datagridAddDivision")
+                    .DataSource(new JS(@"component.option(""dataSource"")"))
+                    .Columns(columns =>
+                    {
+                        columns.Add().DataField("DivCode").Caption("Code")
+                            .Width(60).AllowSorting(false).AllowEditing(false);
+                        columns.Add().DataField("DivName").Caption("Name")
+                            .Width(370).AllowSorting(false).AllowEditing(false);
+                        columns.Add().DataField("GroupName").Caption("Group")
+                            .Width(300).AllowSorting(false).AllowEditing(false);
+                    })
+                    .HoverStateEnabled(true)
+                    .Paging(p => p.PageSize(100))
+                    .FilterRow(f => f.Visible(false))
+                    .Scrolling(s => s.Mode(GridScrollingMode.Infinite))
+                    .Height(265)
+                    .Width(500)
+                    .Selection(s => s.Mode(SelectionMode.Single))
+                    .SelectedRowKeys(new JS(@"component.option(""value"")"))
+                    .OnCellClick("close_gridBoxAddDivision")
+                    .OnSelectionChanged(@<text>
+                        function(selectedItems) {
+                        var keys = selectedItems.selectedRowKeys;
+                        component.option("value", keys);
+                        }
+                    </text>)
+            )
+        }
+    </div>
+
+    @*Department*@
+    <div>
+        @using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridMultipleAddDepartment"))
+        {
+            @(Html.DevExtreme().DataGrid()
+                    .ID("embedded-datagridAddDepartment")
+                    .DataSource(new JS(@"component.option(""dataSource"")"))
+                    .Columns(columns =>
+                    {
+                        columns.Add().DataField("DeptCode").Caption("Code")
+                            .Width(60).AllowSorting(false);
+                        columns.Add().DataField("DeptName").Caption("Name")
+                            .Width(470).AllowSorting(false);
+                    })
+                    .HoverStateEnabled(true)
+                    .Paging(p => p.PageSize(100))
+                    .FilterRow(f => f.Visible(false))
+                    .Scrolling(s => s.Mode(GridScrollingMode.Infinite))
+                    .Height(265)
+                    .Selection(s => s.Mode(SelectionMode.Single))
+                    .SelectedRowKeys(new JS(@"component.option(""value"")"))
+                    .OnCellClick("close_gridBoxAddDepartment")
+                    .OnSelectionChanged(@<text>
+                        function(selectedItems) {
+                        var keys = selectedItems.selectedRowKeys;
+                        component.option("value", keys);
+                        }
+                    </text>)
+            )
+        }
+    </div>
+
+    @*Section*@
+    <div>
+        @using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridMultipleAddSection"))
+        {
+            @(Html.DevExtreme().DataGrid()
+                    .ID("embedded-datagridAddSection")
+                    .DataSource(new JS(@"component.option(""dataSource"")"))
+                    .Columns(columns =>
+                    {
+                        columns.Add().DataField("SecCode").Caption("Code")
+                            .Width(60).AllowSorting(false);
+                        columns.Add().DataField("SecName").Caption("Name")
+                            .Width(470).AllowSorting(false);
+                    })
+                    .HoverStateEnabled(true)
+                    .Paging(p => p.PageSize(100))
+                    .FilterRow(f => f.Visible(false))
+                    .Scrolling(s => s.Mode(GridScrollingMode.Infinite))
+                    .Height(265)
+                    .Selection(s => s.Mode(SelectionMode.Single))
+                    .SelectedRowKeys(new JS(@"component.option(""value"")"))
+                    .OnCellClick("close_gridBoxAddSection")
+                    .OnSelectionChanged(@<text>
+                        function(selectedItems) {
+                        var keys = selectedItems.selectedRowKeys;
+                        component.option("value", keys);
+                        }
+                    </text>)
+            )
+        }
+    </div>
+    <!--#endregion-->
+
+    <!--#region Edit-->
+    @*Division*@
+    <div>
+        @using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridMultipleEditDivision"))
+        {
+            @(Html.DevExtreme().DataGrid()
+                    .ID("embedded-datagridEditDivision")
+                    .DataSource(new JS(@"component.option(""dataSource"")"))
+                    .Columns(columns =>
+                    {
+                        columns.Add().DataField("DivCode").Caption("Code")
+                            .Width(60).AllowSorting(false).AllowEditing(false);
+                        columns.Add().DataField("DivName").Caption("Name")
+                            .Width(370).AllowSorting(false).AllowEditing(false);
+                        columns.Add().DataField("GroupName").Caption("Group")
+                            .Width(300).AllowSorting(false).AllowEditing(false);
+                    })
+                    .HoverStateEnabled(true)
+                    .Paging(p => p.PageSize(100))
+                    .FilterRow(f => f.Visible(false))
+                    .Scrolling(s => s.Mode(GridScrollingMode.Infinite))
+                    .Height(265)
+                    .Width(500)
+                    .Selection(s => s.Mode(SelectionMode.Single))
+                    .SelectedRowKeys(new JS(@"component.option(""value"")"))
+                    .OnCellClick("close_gridBoxEditDivision")
+                    .OnSelectionChanged(@<text>
+                        function(selectedItems) {
+                        var keys = selectedItems.selectedRowKeys;
+                        component.option("value", keys);
+                        }
+                    </text>)
+            )
+        }
+    </div>
+
+    @*Department*@
+    <div>
+        @using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridMultipleEditDepartment"))
+        {
+            @(Html.DevExtreme().DataGrid()
+                    .ID("embedded-datagridEditDepartment")
+                    .DataSource(new JS(@"component.option(""dataSource"")"))
+                    .Columns(columns =>
+                    {
+                        columns.Add().DataField("DeptCode").Caption("Code")
+                            .Width(60).AllowSorting(false);
+                        columns.Add().DataField("DeptName").Caption("Name")
+                            .Width(470).AllowSorting(false);
+                    })
+                    .HoverStateEnabled(true)
+                    .Paging(p => p.PageSize(100))
+                    .FilterRow(f => f.Visible(false))
+                    .Scrolling(s => s.Mode(GridScrollingMode.Infinite))
+                    .Height(265)
+                    .Selection(s => s.Mode(SelectionMode.Single))
+                    .SelectedRowKeys(new JS(@"component.option(""value"")"))
+                    .OnCellClick("close_gridBoxEditDepartment")
+                    .OnSelectionChanged(@<text>
+                        function(selectedItems) {
+                        var keys = selectedItems.selectedRowKeys;
+                        component.option("value", keys);
+                        }
+                    </text>)
+            )
+        }
+    </div>
+
+    @*Section*@
+    <div>
+        @using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridMultipleEditSection"))
+        {
+            @(Html.DevExtreme().DataGrid()
+                    .ID("embedded-datagridEditSection")
+                    .DataSource(new JS(@"component.option(""dataSource"")"))
+                    .Columns(columns =>
+                    {
+                        columns.Add().DataField("SecCode").Caption("Code")
+                            .Width(60).AllowSorting(false);
+                        columns.Add().DataField("SecName").Caption("Name")
+                            .Width(470).AllowSorting(false);
+                    })
+                    .HoverStateEnabled(true)
+                    .Paging(p => p.PageSize(100))
+                    .FilterRow(f => f.Visible(false))
+                    .Scrolling(s => s.Mode(GridScrollingMode.Infinite))
+                    .Height(265)
+                    .Selection(s => s.Mode(SelectionMode.Single))
+                    .SelectedRowKeys(new JS(@"component.option(""value"")"))
+                    .OnCellClick("close_gridBoxEditSection")
+                    .OnSelectionChanged(@<text>
+                        function(selectedItems) {
+                        var keys = selectedItems.selectedRowKeys;
+                        component.option("value", keys);
+                        }
+                    </text>)
+            )
+        }
+    </div>
+    <!--#endregion-->
+
+<!--#endregion-->
+
+@section script{
+<script  type="text/javascript">
+
+    var isFirstLoad = true;
+
+    function onCreateRowNum(cellElement, cellInfo) {
+        cellElement.text((cellInfo.component.pageSize() * cellInfo.component.pageIndex()) + cellInfo.row.rowIndex + 1)
+        //
+    }
+
+    function onbtnSearchClick(e) {
+        isFirstLoad = false;
+        $("#gridContainer").dxDataGrid("refresh");
+    }
+
+    function onbtnClearClick() {
+        isFirstLoad = true;
+        $("#DateFrom").dxDateBox("instance").option("value", new Date());
+        $("#DateTo").dxDateBox("instance").option("value", new Date());
+        $("#txtEmpCode").dxTextBox("instance").option("value", "");
+        $("#txtEmpName").dxTextBox("instance").option("value", "");
+        $("#gridContainer").dxDataGrid("instance").refresh();
+    }
+
+    function getSearchDateFrom() {
+        return $("#DateFrom").dxDateBox("instance").option("text");
+    }
+
+    function getSearchDateTo() {
+        return $("#DateTo").dxDateBox("instance").option("text");
+    }
+
+    function getSearchEmpCode() {
+        return $("#txtEmpCode").dxTextBox("instance").option("value");
+    }
+
+    function getSearchEmpName() {
+        return $("#txtEmpName").dxTextBox("instance").option("value");
+    }
+
+    function getAddDateFrom() {
+        return $("#AddDateTo").dxDateBox("instance").option("text");
+    }
+
+    function getAddDateTo() {
+        return $("#AddDateTo").dxDateBox("instance").option("text");
+    }
+
+    function getAddDivCode() {
+        return $("#ddbAddDivision").dxDropDownBox("instance").option("value");
+    }
+
+    function getAddDeptCode() {
+        return $("#ddbAddDepartment").dxDropDownBox("instance").option("value");
+    }
+
+    function getEditDateFrom() {
+        return $("#EditDateTo").dxDateBox("instance").option("text");
+    }
+
+    function getEditDateTo() {
+        return $("#EditDateTo").dxDateBox("instance").option("text");
+    }
+
+    function getEditDivCode() {
+        return $("#ddbEditDivision").dxDropDownBox("instance").option("value");
+    }
+
+    function getEditDeptCode() {
+        return $("#ddbEditDepartment").dxDropDownBox("instance").option("value");
+    }
+
+    function onButtonAddClick(e) {
+        var popup = $("#saveDialog-popup").dxPopup("instance");
+        popup.option("contentTemplate", $("#saveDialog-template"));
+
+        popup.show();
+        e.validationGroup.reset();
+        try {
+            var today = new Date();
+            $("#AddDateFrom").dxDateBox("instance").option("value", today);
+            $("#AddDateTo").dxDateBox("instance").option("value", today);
+            $("#AddEmpCode").dxSelectBox("instance").option("value", null);
+
+            $("#ddbAddDivision").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridAddDivision").dxDataGrid("instance").refresh();
+        }
+        catch (err) { }
+    }
+
+    //Add Mode
+    function gridBox_valueChangedAddDivision(e) {
+        var $dataGrid = $("#embedded-datagridAddDivision");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+        try {
+            $("#ddbAddDepartment").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridAddDepartment").dxDataGrid("instance").refresh();
+
+            $("#ddbAddSection").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridAddSection").dxDataGrid("instance").refresh();
+        }
+        catch (err) { }
+
+        $("#ddbAddDivision").dxDropDownBox("instance").close();
+    }
+
+    function close_gridBoxAddDivision() {
+        $("#ddbAddDivision").dxDropDownBox("instance").close();
+    }
+
+    function gridBox_valueChangedAddDepartment(e) {
+        var $dataGrid = $("#embedded-datagridAddDepartment");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+        try {
+            $("#ddbAddSection").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridAddSection").dxDataGrid("instance").refresh();
+        }
+        catch (err) { }
+        //e.component.close();
+        $("#ddbAddDepartment").dxDropDownBox("instance").close();
+
+    }
+
+    function close_gridBoxAddDepartment() {
+        $("#ddbAddDepartment").dxDropDownBox("instance").close();
+    }
+
+    function gridBox_valueChangedAddSectionCode(e) {
+        var $dataGrid = $("#embedded-datagridAddSection");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+        //e.component.close();
+        $("#ddbAddSection").dxDropDownBox("instance").close();
+    }
+
+    function close_gridBoxAddSection() {
+        $("#ddbAddSection").dxDropDownBox("instance").close();
+    }
+
+    function CloseSaveDialog(e) {
+        $("#saveDialog-popup").dxPopup("hide");
+    }
+
+    function saveAddDialog(params) {
+        if (params.validationGroup.validate().isValid) {
+            var result = DevExpress.ui.dialog.confirm("@MessageListResource.C0001", "Confirm Save");
+            result.done(function (dialogResult) {
+                if (dialogResult) {
+                    var criteria = {
+                        EmpCode: $("#AddEmpCode").dxSelectBox("instance").option("value"),
+                        EffectiveDateFrom: $("#AddDateFrom").dxDateBox("instance").option("text"),
+                        EffectiveDateTo: $("#AddDateTo").dxDateBox("instance").option("text"),
+                        DivCodeKey: $("#ddbAddDivision").dxDropDownBox("instance").option("value"),
+                        DeptCodeKey: $("#ddbAddDepartment").dxDropDownBox("instance").option("value"),
+                        SecCodeKey: $("#ddbAddSection").dxDropDownBox("instance").option("value")
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("InsertFixOrganization", "FixOrganization")",
+                        dataType: "json",
+                        data: { value: JSON.stringify(criteria) },
+                        success: function (data, status, xhr) {
+                            CloseSaveDialog();
+
+                            if (data.ErrorType == "@ConstantValues.TypeError") {
+                                app.ui.showNotifyMessage('@ToastType.Error', data.ErrorMessage);
+                            }
+                            if (data.ErrorType == "@ConstantValues.TypeWarning") {
+                                app.ui.showNotifyMessage('@ToastType.Warning', data.ErrorMessage);
+                            }
+                            if (data.ErrorType == "@ConstantValues.TypeInfo") {
+                                app.ui.showNotifyMessage('@ToastType.Success', data.ErrorMessage);
+                            }
+
+                            onbtnSearchClick();
+                        },
+                        error: function (xhr, statu, error) {
+                            var message = app.ui.handleAjaxError(xhr, status, error);
+                            app.ui.showNotifyMessage('@ToastType.Error', message);
+                        }
+                    })
+                }
+            });
+        }
+
+        return false;
+    }
+
+    //Edit Mode
+    function gridBox_valueChangedEditDivision(e) {
+        var $dataGrid = $("#embedded-datagridEditDivision");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+        try {
+            $("#ddbEditDepartment").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridEditDepartment").dxDataGrid("instance").refresh();
+
+            $("#ddbEditSection").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridEditSection").dxDataGrid("instance").refresh();
+        }
+        catch (err) { }
+
+        $("#ddbEditDivision").dxDropDownBox("instance").close();
+    }
+
+    function close_gridBoxEditDivision() {
+        $("#ddbEditDivision").dxDropDownBox("instance").close();
+    }
+
+    function gridBox_valueChangedEditDepartment(e) {
+        var $dataGrid = $("#embedded-datagridEditDepartment");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+        try {
+            $("#ddbEditSection").dxDropDownBox("instance").option("value", null);
+            $("#embedded-datagridEditSection").dxDataGrid("instance").refresh();
+        }
+        catch (err) { }
+        //e.component.close();
+        $("#ddbEditDepartment").dxDropDownBox("instance").close();
+
+    }
+
+    function close_gridBoxEditDepartment() {
+        $("#ddbEditDepartment").dxDropDownBox("instance").close();
+    }
+
+    function gridBox_valueChangedEditSectionCode(e) {
+        var $dataGrid = $("#embedded-datagridEditSection");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+        //e.component.close();
+        $("#ddbEditSection").dxDropDownBox("instance").close();
+    }
+
+    function close_gridBoxEditSection() {
+        $("#ddbEditSection").dxDropDownBox("instance").close();
+    }
+
+    function editButtonClick(data) {
+        var popup = $("#editDialog-popup").dxPopup("instance");
+        popup.option("contentTemplate", $("#editDialog-template"));
+        popup.show();
+
+        $("#EditEmpCode").dxSelectBox("instance").option("value", data.EmpCode);
+        $("#EditDateFrom").dxDateBox("instance").option("value", data.EffectiveDateFrom);
+        $("#EditDateTo").dxDateBox("instance").option("value", data.EffectiveDateTo);
+
+        if (data.DivCodeKey != null)
+            $("#ddbEditDivision").dxDropDownBox("instance").option("value", data.DivCodeKey);
+        if (data.DeptCodeKey != null)
+            $("#ddbEditDepartment").dxDropDownBox("instance").option("value", data.DeptCodeKey);
+        if (data.SecCodeKey != null)
+            $("#ddbEditSection").dxDropDownBox("instance").option("value", data.SecCodeKey);
+    }
+
+    function CloseEditDialog() {
+
+        $("#editDialog-popup").dxPopup("hide");
+
+    }
+
+    function saveEditDialog(params) {
+        if (params.validationGroup.validate().isValid) {
+            var result = DevExpress.ui.dialog.confirm("@MessageListResource.C0001", "Confirm Update");
+            result.done(function (dialogResult) {
+                if (dialogResult) {
+                    var criteria = {
+                        EmpCode: $("#EditEmpCode").dxSelectBox("instance").option("value"),
+                        EffectiveDateFrom: $("#EditDateFrom").dxDateBox("instance").option("text"),
+                        EffectiveDateTo: $("#EditDateTo").dxDateBox("instance").option("text"),
+                        DivCodeKey: $("#EditSBDivision").dxSelectBox("instance").option("value"),
+                        DeptCodeKey: $("#EditSBDepartment").dxSelectBox("instance").option("value"),
+                        SecCodeKey: $("#EditSBSection").dxSelectBox("instance").option("value")
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("UpdateFixOrganization", "FixOrganization")",
+                        dataType: "json",
+                        data: { value: JSON.stringify(criteria) },
+                        success: function (data, status, xhr) {
+                            CloseEditDialog();
+
+                            if (data.ErrorType == "@ConstantValues.TypeError") {
+                                app.ui.showNotifyMessage('@ToastType.Error', data.ErrorMessage);
+                            }
+                            if (data.ErrorType == "@ConstantValues.TypeWarning") {
+                                app.ui.showNotifyMessage('@ToastType.Warning', data.ErrorMessage);
+                            }
+                            if (data.ErrorType == "@ConstantValues.TypeInfo") {
+                                app.ui.showNotifyMessage('@ToastType.Success', data.ErrorMessage);
+                            }
+
+                            onbtnSearchClick();
+                        },
+                        error: function (xhr, statu, error) {
+                            var message = app.ui.handleAjaxError(xhr, status, error);
+                            app.ui.showNotifyMessage('@ToastType.Error', message);
+                        }
+                    })
+                }
+            });
+        }
+        return false;
+    }
+
+    function deleteButtonClick(data) {
+        var result = DevExpress.ui.dialog.confirm(format("@MessageListResource.C0002", "Emp no. " + data.EmpCode), "Confirm Delete");
+        result.done(function (dialogResult) {
+            if (dialogResult) {
+                var criteria = {
+                    EmpCode: data.EmpCode,
+                    EffectiveDateFrom: data.EffectiveDateFrom
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("DeleteFixOrganization", "FixOrganization")",
+                    dataType: "json",
+                    data: { value: JSON.stringify(criteria) },
+                    success: function (data, status, xhr) {
+                        if (data.ErrorType == "@ConstantValues.TypeError") {
+                            app.ui.showNotifyMessage('@ToastType.Error', data.ErrorMessage);
+                        }
+                        if (data.ErrorType == "@ConstantValues.TypeWarning") {
+                            app.ui.showNotifyMessage('@ToastType.Warning', data.ErrorMessage);
+                        }
+                        if (data.ErrorType == "@ConstantValues.TypeInfo") {
+                            app.ui.showNotifyMessage('@ToastType.Success', data.ErrorMessage);
+                        }
+
+                        onbtnSearchClick();
+                    },
+                    error: function (xhr, statu, error) {
+                        var message = app.ui.handleAjaxError(xhr, status, error);
+                        app.ui.showNotifyMessage('@ToastType.Error', message);
+                    }
+                })
+            }
+        });
+    }
+
+    function format(fmtstr) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        return fmtstr.replace(/\{(\d+)\}/g, function (match, index) {
+            return args[index];
+        });
+    }
+
+    function onEditorPrepared(e) {
+        app.ui.ResetReadOnlyControlBackgroundColor();
+    }
+
+    function onShowing(e) {
+        app.ui.AddBackgroundColorPopupButton();
+    }
+
+</script>
+
+}
+
+

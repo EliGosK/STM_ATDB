@@ -1,0 +1,349 @@
+﻿@using STM.ATDB.MvcWeb.Models
+@using STM.ATDB.MvcWeb.App_Helpers
+@using STM.ATDB.Core
+
+@model IEnumerable<OutsourceCompanyViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="form-container" class="panel-group col-md-12 no-gutter">
+    <form id="search-container" class="col-md-12">
+        <div class="panel-group col-md-12 well well-sm animated fadeIn">
+            <h3><i class="fa fa-fw fa-th-list"></i> Criteria</h3>
+            <div class="panel-group pl-2">
+                <div class="row padding-bottom-10">
+                    <div class="col-md-4">
+                        <div class="row dx-field clearfix">
+                            <div class="col-md-7 dx-field-label">Company Code</div>
+                            <div class="col-md-5 dx-field-value">
+                                @(Html.DevExtreme().TextBox()
+                                .ID("txtCompanyCode")
+                                .MaxLength(40)
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row dx-field clearfix">
+                            <div class="col-md-7 dx-field-label">Company Name</div>
+                            <div class="col-md-5 dx-field-value">
+                                @(Html.DevExtreme().TextBox()
+                    .ID("txtCompanyName")
+                    .MaxLength(40)
+                                )
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row dx-field clearfix">
+                            <div class="col-md-4 dx-field-label">Status</div>
+                            <div class="col-md-8 dx-field-value">
+                                @(Html.DevExtreme().SelectBox()
+                                .ID("sbStatus")
+                                .ValueExpr("ValueCode")
+                                .DisplayExpr("ValueDisplay")
+                                .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetAllStatus").LoadParams(new { includeAll = true }).Key("ValueCode"))
+                                .Value(ConstantValues.AllValue)
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <div class="pull-right">
+                                @(Html.DevExtreme().Button()
+                            .ID("ExpandAllButton")
+                            .Text("Expand All")
+                            .OnClick("ExpandAllClick")
+                            .Type(ButtonType.Default)
+                            .Icon("fa fa-angle-double-down")
+                                )
+                                @(Html.DevExtreme().Button()
+                                    .ID("btnClear")
+                                    .Text("Clear")
+                                    .OnClick("onbtnClearClick")
+                                    .Type(ButtonType.Danger)
+                                    .Icon("fa fa-eraser")
+                                )
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <form id="grid-container" class="panel-group col-md-12">
+        <div class="well well-sm animated fadeIn">
+            <h3><i class="fa fa-fw fa-th-list"></i> Outsource Company Result List</h3>
+            <div class="text-align-right padding-bottom-10">
+                @(Html.DevExtreme().Button()
+                                .ID("btnAdd")
+                                .Text("Add")
+                                .OnClick("onButtonAddClick")
+                                .Type(ButtonType.Default)
+                                .Disabled(!ViewContext.Controller.HasPermission("MAS010", PermissionName.Add.Value))
+                                .Icon("fa fa-plus-circle")
+                )
+            </div>
+            <div>
+                @(Html.DevExtreme().DataGrid<OutsourceCompanyViewModel>()
+                    .ID("gridContainer")
+                    .DataSource(d => d.Mvc().Controller("OutsourceCompany")
+                                    .LoadAction("SearchOutsourceCompany").Key("CompanyCode")
+                                    .InsertAction("InsertOutsourceCompany")
+                                    .UpdateAction("UpdateOutsourceCompany")
+                                    .DeleteAction("DeleteOutsourceCompany")
+                                     //.LoadParams(new JS("getCriteria()"))
+                                     .LoadParams(new { CompanyCode = new JS("getSearchCompanyCode"), CompanyName = new JS("getSearchCompanyName"), StatusCri = new JS("getSearchStatus"), DeleteFlag = false })
+                            )
+                    .AllowColumnResizing(true)
+                    .ColumnMinWidth(40)
+                    .ColumnAutoWidth(true)
+                    .ShowBorders(true)
+                    .ShowRowLines(true)
+                    .Sorting(s => s.Mode(GridSortingMode.None))
+                    .Editing(e => e.Mode(GridEditMode.Popup)
+                            .AllowUpdating(ViewContext.Controller.HasPermission("MAS010", PermissionName.Edit.Value))
+                            .AllowAdding(false)
+                            .AllowDeleting(ViewContext.Controller.HasPermission("MAS010", PermissionName.Delete.Value))
+                            .Popup(p => p
+                                .Title("Add/Edit Outsource Company")
+                                .ShowTitle(true)
+                                //.Width(700)
+                                .Height(260)
+                                .OnShowing("onShowing")
+                                .Position(pos => pos
+                                    .My(HorizontalAlignment.Center, VerticalAlignment.Center)
+                                    .At(HorizontalAlignment.Center, VerticalAlignment.Center)
+                                    .Of(new JS("window"))
+                                    )
+                                )
+                        )
+
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.CompanyCode)
+                            .Caption("No.")
+                            .AllowEditing(false)
+                            .CellTemplate(new JS("onCreateRowNum"))
+                            .FormItem(x => x.Visible(false))
+                            .AllowFiltering(false)
+                            .Width(40);
+                        columns.AddFor(m => m.CompanyCode);
+                        columns.AddFor(m => m.CompanyName);
+                        columns.AddFor(m => m.Status)
+                            .Lookup(lookup => lookup
+                                .DisplayExpr("ValueDisplay")
+                                .ValueExpr("ValueBoolean")
+                                .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetStatusBoolean").Key("ValueBoolean"))
+                            );
+                        columns.AddFor(m => m.CreatedBy)
+                            .Visible(false)
+                            .FormItem(x => x.Visible(false));
+                        columns.AddFor(m => m.CreatedDate)
+                            .Visible(false)
+                            .FormItem(x => x.Visible(false));
+                        columns.AddFor(m => m.UpdatedBy)
+                            .FormItem(x => x.Visible(false));
+                        columns.AddFor(m => m.UpdatedDate)
+                            .DataType(GridColumnDataType.DateTime)
+                            .Format(ConstantValues.TimeStampFormat)
+                            .FormItem(x => x.Visible(false));
+                    }
+                            )
+                    .Paging(p => p.PageSize(ConstantValues.GRID_PAGE_SIZE))
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .RemoteOperations(true)
+                    .OnEditorPreparing("onEditorPreparing")
+                    .OnInitNewRow("onInitNewRow")
+                    .OnEditingStart("onEditingStart")
+                    .OnCellPrepared("onCellPrepared")
+                    //.OnCellPrepared("cell_prepared")
+                    .OnEditorPrepared("onEditorPrepared")
+                    .OnInitialized("onInitialized")
+                )
+
+
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    onInitialized = function (e) {
+        //e.component.columnOption('command:edit', 'background-image', '../../Content/images/icon-delete.png');
+        e.component.columnOption('command:edit',
+        {
+            background: '../../Content/images/icon-delete.png'
+        });
+    }
+
+    function onCellPrepared(e) {
+        if (e.rowType == "data" && e.column.command == "edit") {
+            var isEditing = e.row.isEditing,
+                $links = e.cellElement.find(".dx-link");
+            $links.text("");
+
+            if ('@(ViewContext.Controller.HasPermission("MAS010", PermissionName.Delete.Value))' == 'True') {
+                e.cellElement.prepend('<a class="" onclick="onDeleteClick(' + e.rowIndex + ');" href="#" ><img  title="Delete" src="@ConstantValues.DeleteCommandImageSource"></a>')
+            }
+            if ('@(ViewContext.Controller.HasPermission("MAS010", PermissionName.Edit.Value))' == 'True') {
+                e.cellElement.prepend('<a class="" onclick="onEditClick(' + e.rowIndex + ');" href="#"><img  title="Edit" src="@ConstantValues.EditCommandImageSource"></a>')
+            }
+
+        }
+    }
+    function onCreateRowNum(cellElement, cellInfo) {
+        cellElement.text((cellInfo.component.pageSize() * cellInfo.component.pageIndex()) + cellInfo.row.rowIndex + 1)
+        //
+    }
+
+    function onButtonAddClick() {
+        @if (ViewContext.Controller.HasPermission("MAS010", PermissionName.Add.Value))
+            {
+                @Html.Raw("$('#gridContainer').dxDataGrid('instance').addRow();")
+            }
+    }
+    function onEditClick(rowIndex) {
+        @if (ViewContext.Controller.HasPermission("MAS010", PermissionName.Edit.Value))
+        {
+                @Html.Raw("$('#gridContainer').dxDataGrid('instance').editRow(rowIndex);")
+        }
+    }
+    function onDeleteClick(rowIndex) {
+        @if (ViewContext.Controller.HasPermission("MAS010", PermissionName.Delete.Value))
+         {
+                @Html.Raw("$('#gridContainer').dxDataGrid('instance').deleteRow(rowIndex);")
+         }
+    }
+
+
+        function getSearchCompanyCode() {
+            return $("#txtCompanyCode").dxTextBox("instance").option("value");
+        }
+
+        function getSearchCompanyName() {
+            return $("#txtCompanyName").dxTextBox("instance").option("value");
+        }
+
+        function getSearchStatus() {
+            return $("#sbStatus").dxSelectBox("instance").option("value");
+        }
+
+        function onbtnClearClick() {
+        $("#txtCompanyCode").dxTextBox("instance").option("value", "");
+        $("#txtCompanyName").dxTextBox("instance").option("value", "");
+        $("#sbStatus").dxSelectBox("instance").option("value", "@ConstantValues.AllValue");
+        $("#gridContainer").dxDataGrid("instance").refresh();
+        }
+
+        function onbtnSearchClick(e) {
+        $("#gridContainer").dxDataGrid("refresh");
+        }
+
+        function getCriteria() {
+            return {
+                CompanyCode: $("#txtCompanyCode").dxTextBox("instance").option("value")
+                , CompanyName: $("#txtCompanyName").dxTextBox("instance").option("value")
+                , Status: $("#sbStatus").dxSelectBox("instance").option("value")
+            }
+        }
+
+        onInitNewRow = function (e) {
+            e.component.__addingStart = true;
+            e.component.__editingStart = false;
+            e.data.Status = true;
+        }
+        onEditingStart = function (e) {
+            e.component.__editingStart = true;
+            e.component.__addingStart = false;
+
+        }
+        onEditorPreparing = function (e) {
+            if (e.component.__editingStart
+                && e.parentType === "dataRow"
+                && (e.dataField == "CompanyCode")) {
+                e.editorOptions.readOnly = true;
+            }
+        }
+
+        function onEditorPrepared(e) {
+            app.ui.ResetReadOnlyControlBackgroundColor();
+        }
+
+        function cell_prepared(e) {
+            if (e.rowType === "data" && e.column.command === "edit") {
+                var isEditing = e.row.isEditing,
+                    $links = e.cellElement.find(".dx-link");
+
+            $links.text("");
+
+                //$links.filter(".dx-link-save").addClass("dx-icon-edit");
+                //$links.filter(".dx-link-delete").addClass("dx-icon-trash");
+
+                if (isEditing) {
+                $links.filter(".dx-link-save").addClass("dx-icon-save");
+                $links.filter(".dx-link-cancel").addClass("dx-icon-revert");
+                } else {
+                $links.filter(".dx-link-edit").dxButton({
+                        icon: "myicon",
+
+                }).addClass("button - style");
+                $links.filter(".dx-link-delete").addClass("dx-icon-trash");
+                }
+
+                //if (e.rowType === "data" && e.column.command === "edit") {
+
+                //    $editLink = e.cellElement.find(".dx-link:contains(Edit)");
+
+                //    $editLink.text("ed");
+
+
+                //}
+            }
+        }
+
+        function onShowing(e) {
+            app.ui.AddBackgroundColorPopupButton();
+        }
+</script>
+<style>
+    /*.dx-command-edit .dx-link {
+        text-decoration: none;
+        font-size: 18px;
+        margin: 0 3px;
+       
+    }*/
+
+        /*.dx-command-edit .dx-link:hover {
+            opacity: 0.8;
+        }55b   bbn r*/
+        /*.dx-icon-edit{
+            background-image: url('../../Content/images/icon-delete.png') !important;
+            background-size:18px !important;
+            text-decoration: none !important;
+            font-size: 10px !important;
+            width:18px !important;
+            height:18px !important;
+        }*/
+
+        .dx-icon-myicon
+        {
+            background: url('../../Content/images/icon-delete.png');
+        }
+        .button-style{
+            border:none;
+            background-size:auto;
+            font-size:18px;
+        }
+</style>

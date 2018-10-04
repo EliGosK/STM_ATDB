@@ -1,0 +1,581 @@
+﻿@using STM.ATDB.MvcWeb.Models
+@using STM.ATDB.MvcWeb.App_Helpers
+@using STM.ATDB.Core
+@using STM.ATDB.MvcWeb.Resources;
+
+@model AssignWorkShiftViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="form-container" class="panel-group col-md-12 no-gutter">
+    <form id="search-container" class="col-md-12">
+        <div class="panel-group col-md-12 well well-sm animated fadeIn">
+            <h3><i class="fa fa-fw fa-th-list"></i> Criteria</h3>
+            <div class="row padding-bottom-10">
+                <div class="col-md-6">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-assign text-right">Date From</div>
+                        <div class="col-md-10 dx-field-value dx-value-assign">
+                            <table>
+                                <tr>
+                                    <td>
+                                        @(Html.DevExtreme().DateBox()
+                                            .ID("DateFrom")
+                                            .Min(new DateTime(2000, 1, 1))
+                                            .Max(new DateTime(2029, 12, 31))
+                                            .Value(DateTime.Now)
+                                            .DisplayFormat(ConstantValues.DateFormat)
+                                            .Width(132)
+                                        )
+
+                                    </td>
+                                    <td style="padding:0px 10px 0px 10px; color:#8c8c8c;">To</td>
+                                    <td>
+                                        @(Html.DevExtreme().DateBox()
+                                            .ID("DateTo")
+                                            .Min(new DateTime(2000, 1, 1))
+                                            .Max(new DateTime(2029, 12, 31))
+                                            .Value(DateTime.Now)
+                                            .DisplayFormat(ConstantValues.DateFormat)
+                                            .Width(132)
+                                        )
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-6">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-assign text-right">Emp Code</div>
+                        <div class="col-md-10 dx-field-value dx-value-assign">
+                            @(Html.DevExtreme().TextBox()
+                                        .ID("txtEmpCode")
+                            //.MaxLength(40)
+                            )
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-assign text-right">Emp Name</div>
+                        <div class="col-md-10 dx-field-value dx-value-assign">
+                            @(Html.DevExtreme().TextBox()
+                                        .ID("txtEmpName")
+                            //.MaxLength(40)
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row dx-field clearfix">
+                        <div class="col-md-2 dx-field-label dx-lebel-assign text-right">Shift</div>
+                        <div class="col-md-10" style="width: 25% !important;">
+                            @(Html.DevExtreme().SelectBox()
+                                .ID("SBShift")
+                                .ValueExpr("ValueCode")
+                                .DisplayExpr("ValueDisplay")
+                                .Value(ConstantValues.AllValue)
+                        .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetWorkShiftStatus").LoadParams(new { IsActive = true }).Key("ValueCode"))
+                            )
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="col-md-12">
+                        <div class="pull-right">
+                            @(Html.DevExtreme().Button()
+                            .ID("btnSearch")
+                            .Text("Search")
+                            .OnClick("onbtnSearchClick")
+                            .Type(ButtonType.Success)
+                            .Icon("fa fa-search")
+                            )
+                            @(Html.DevExtreme().Button()
+                            .ID("btnClear")
+                            .Text("Clear")
+                            .OnClick("onbtnClearClick")
+                            .Type(ButtonType.Danger)
+                            .Icon("fa fa-eraser")
+                            )
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form id="grid-container" class="panel-group col-md-12">
+        <div class="well well-sm animated fadeIn">
+            <div class="row padding-bottom-10">
+                <div class="col-md-9">
+                    <h3><i class="fa fa-fw fa-th-list"></i> Assign Work Shift Result List</h3>
+                </div>
+                <div class="col-md-3 text-align-right ">
+                    @(Html.DevExtreme().Button()
+                                .ID("btnAdd")
+                                .Text("Add")
+                                .OnClick("onButtonAddClick")
+                                .Type(ButtonType.Default)
+                                .Disabled(!ViewContext.Controller.HasPermission("MAS040", PermissionName.Add.Value))
+                                .Icon("fa fa-plus-circle")
+                    )
+                </div>
+            </div>
+
+            <div>
+                @(Html.DevExtreme().DataGrid<AssignWorkShiftViewModel>()
+                    .ID("gridContainer")
+                    .DataSource(d => d.Mvc().Controller("AssignWorkShift")
+                                    .LoadAction("SearchAssignWorkShift")
+                                    .Key("EmpCode")
+                                    .LoadParams(new { isFirstLoad = new JS("function() { return isFirstLoad; }")
+                                                    , ProdDateFrom = new JS("getSearchDateFrom")
+                                                    , ProdDateTo = new JS("getSearchDateTo")
+                                                    , srhEmpCode = new JS("getSearchEmpCode")
+                                                    , srhEmpName = new JS("getSearchEmpName")
+                                                    , shiftCode = new JS("getSearchShiftCode") })
+                            )
+                    .AllowColumnResizing(true)
+                    .ColumnMinWidth(40)
+                    .ColumnAutoWidth(true)
+                    .ShowBorders(true)
+                    .ShowRowLines(true)
+                    .Sorting(s => s.Mode(GridSortingMode.None))
+
+                    .Columns(columns =>
+                    {
+                        columns.AddFor(m => m.EmpCode)
+                            .Caption("No.")
+                            .AllowEditing(false)
+                            .CellTemplate(new JS("onCreateRowNum"))
+                            .FormItem(x => x.Visible(false))
+                            .AllowFiltering(false)
+                            .Width(40);
+                        columns.AddFor(m => m.ProdDate)
+                            .DataType(GridColumnDataType.Date)
+                            .Format(ConstantValues.DateFormat);
+                        //columns.AddFor(m => m.EmpCode);
+                        columns.AddFor(m => m.EmpName);
+                        columns.AddFor(m => m.ShiftName);
+                        columns.AddFor(m => m.UpdateBy);
+                        columns.AddFor(m => m.UpdateDate)
+                            .DataType(GridColumnDataType.Date)
+                            .Format(ConstantValues.DateFormat);
+                        columns.Add().Width(70).Alignment(HorizontalAlignment.Center).CellTemplate(@<text>
+                                @Html.DevExtreme().Button().Template("<img title=\"Edit\" src=\""+ @ConstantValues.EditCommandImageSource + "\">").OnClick("function (e) { editButtonClick(data)}").ElementAttr(new { @class = "button-sm" }).Visible(ViewContext.Controller.HasPermission("MAS040", PermissionName.Edit.Value))
+                                @Html.DevExtreme().Button().Template("<img title=\"Delete\" src=\"" + @ConstantValues.DeleteCommandImageSource + "\">").OnClick("function (e) { deleteButtonClick(data)}").ElementAttr(new { @class = "button-sm" }).Visible(ViewContext.Controller.HasPermission("MAS040", PermissionName.Delete.Value))
+                         </text>);
+                    }
+                            )
+                    .Paging(p => p.PageSize(ConstantValues.GRID_PAGE_SIZE))
+                    .HeaderFilter(f => f.Visible(true))
+                    .OnEditorPrepared("onEditorPrepared")
+                )
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--#region Popup  -->
+
+    @*Add Dialog*@
+    <div>
+        @(Html.DevExtreme().Popup()
+                    .ID("saveDialog-popup")
+                    .ElementAttr("class", "popup")
+                    .Width(600)
+                    .Height(280)
+                    .ShowTitle(true)
+                    .Title("Add - Assign Work Shift By Employee")
+                    .Visible(false)
+                    .DragEnabled(true)
+                    .CloseOnOutsideClick(false)
+        )
+
+        @using (Html.DevExtreme().NamedTemplate("saveDialog-template"))
+        {
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Hide Date From <span style="color:red;">*</span></div>
+                <div class="col-md-9">
+                    <div class="col-md-3" style="padding-left: 0px">
+                        @(Html.DevExtreme().DateBoxFor(m => m.ProdDateTo)
+                                        .ID("AddDateFrom")
+                                        .Min(new DateTime(2000, 1, 1))
+                                        .Max(new DateTime(2029, 12, 31))
+                                        .Value(DateTime.Now)
+                                        .DisplayFormat(ConstantValues.DateFormat)
+                                        .Width(132)
+                        )
+                    </div>
+                    <div class="col-md-1 dx-text text-right" style="width: 50px; margin-left: 12px">To</div>
+                    <div class="col-md-3" style="padding-left: 5px">
+                        @(Html.DevExtreme().DateBoxFor(m => m.ProdDateFrom)
+                                        .ID("AddDateTo")
+                                        .Min(new DateTime(2000, 1, 1))
+                                        .Max(new DateTime(2029, 12, 31))
+                                        .Value(DateTime.Now)
+                                        .DisplayFormat(ConstantValues.DateFormat)
+                                        .Width(132)
+                        )
+                    </div>
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Employee <span style="color:red;">*</span></div>
+                <div class="col-md-9">
+                    @(Html.DevExtreme().SelectBoxFor(m => m.EmpCode)
+                                            .ID("AddEmpCode")
+                                            .ValueExpr("EmpCode")
+                                            .DisplayExpr("EmpName")
+                                            .SearchEnabled(true)
+                                    .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetEmployee").LoadParams(new { IsActiveOnly = true })
+                                                            .Key("EmpCode"))
+                                    .DataSourceOptions(d => d.Paginate(true))
+                    )
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Shift <span style="color:red;">*</span></div>
+                <div class="col-md-9">
+                    @(Html.DevExtreme().SelectBoxFor(m => m.ShiftCode)
+                                            .ID("AddShiftCode")
+                                            .ValueExpr("ValueCode")
+                                            .DisplayExpr("ValueDisplay")
+                                            .Width(132)
+                                    .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetWorkShiftStatus").LoadParams(new { IsActive = true })
+                                                            .Key("ValueCode"))
+                                    .DataSourceOptions(d => d.Paginate(true))
+                    )
+                </div>
+            </div>
+
+            <div class="row padding-top-10">
+                <div class="col-md-12" style="text-align: center;">
+                    <div>
+                        @(Html.DevExtreme().Button()
+                                .ID("btnAddSave")
+                                .Text("Save")
+                                .OnClick("saveAddDialog")
+                                .Type(ButtonType.Success)
+                                .Icon("fa fa-save")
+                        )
+                        @(Html.DevExtreme().Button()
+                                .ID("btnAddCancel")
+                                .Text("Cancel")
+                                .OnClick("CloseSaveDialog")
+                                .Type(ButtonType.Danger)
+                                .Icon("fa fa-times")
+                        )
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @*Edit Dialog*@
+    <div>
+        @(Html.DevExtreme().Popup()
+                    .ID("editDialog-popup")
+                    .ElementAttr("class", "popup")
+                    .Width(600)
+                    .Height(280)
+                    .ShowTitle(true)
+                    .Title("Edit - Assign Work Shift By Employee")
+                    .Visible(false)
+                    .DragEnabled(true)
+                    .CloseOnOutsideClick(false)
+        )
+
+        @using (Html.DevExtreme().NamedTemplate("editDialog-template"))
+        {
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Prod Date</div>
+                <div class="col-md-9">
+                    <div class="col-md-5" style="padding-left: 0px">
+                        @(Html.DevExtreme().DateBoxFor(m => m.ProdDate)
+                                        .ID("EditProdDate")
+                                        .DisplayFormat(ConstantValues.DateFormat)
+                                        .Width(132)
+                                        .Disabled(true)
+                        )
+                    </div>
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Employee</div>
+                <div class="col-md-9">
+                    @(Html.DevExtreme().SelectBoxFor(m => m.EmpCode)
+                                            .ID("EditEmpCode")
+                                            .ValueExpr("EmpCode")
+                                            .DisplayExpr("EmpName")
+                                            .Disabled(true)
+                                    .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetEmployee").LoadParams(new { IsActiveOnly = true })
+                                                            .Key("EmpCode"))
+                                    .DataSourceOptions(d => d.Paginate(true))
+                    )
+                </div>
+            </div>
+
+            <div class="row padding-bottom-10">
+                <div class="col-md-3 dx-text text-right">Shift <span style="color:red;">*</span></div>
+                <div class="col-md-9">
+                    @(Html.DevExtreme().SelectBoxFor(m => m.ShiftCode)
+                                            .ID("EditShiftCode")
+                                            .ValueExpr("ValueCode")
+                                            .DisplayExpr("ValueDisplay")
+                                            .Width(132)
+                                    .DataSource(d => d.Mvc().Controller("Common").LoadAction("GetWorkShiftStatus").LoadParams(new { IsActive = true })
+                                                            .Key("ValueCode"))
+                                    .DataSourceOptions(d => d.Paginate(true))
+                    )
+                </div>
+            </div>
+
+            <div class="row padding-top-10">
+                <div class="col-md-12" style="text-align: center;">
+                    <div>
+                        @(Html.DevExtreme().Button()
+                                .ID("btnEditSave")
+                                .Text("Save")
+                                .OnClick("saveEditDialog")
+                                .Type(ButtonType.Success)
+                                .Icon("fa fa-save")
+                        )
+                        @(Html.DevExtreme().Button()
+                                .ID("btnEditCancel")
+                                .Text("Cancel")
+                                .OnClick("CloseEditDialog")
+                                .Type(ButtonType.Danger)
+                                .Icon("fa fa-times")
+                        )
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+<!--#endregion -->
+
+@section script{
+<script  type="text/javascript">
+    var isFirstLoad = true;
+    function onCreateRowNum(cellElement, cellInfo) {
+        cellElement.text((cellInfo.component.pageSize() * cellInfo.component.pageIndex()) + cellInfo.row.rowIndex + 1)
+        //
+    }
+
+    function onbtnSearchClick(e) {
+        isFirstLoad = false;
+        $("#gridContainer").dxDataGrid("refresh");
+    }
+
+    function onbtnClearClick() {
+        isFirstLoad = true;
+        $("#DateFrom").dxDateBox("instance").option("value", new Date());
+        $("#DateTo").dxDateBox("instance").option("value", new Date());
+        $("#txtEmpCode").dxTextBox("instance").option("value", "");
+        $("#txtEmpName").dxTextBox("instance").option("value", "");
+        $("#SBShift").dxSelectBox("instance").option("value", null);
+        $("#gridContainer").dxDataGrid("instance").refresh();
+    }
+
+    function getSearchDateFrom() {
+        return $("#DateFrom").dxDateBox("instance").option("text");
+    }
+
+    function getSearchDateTo() {
+        return $("#DateTo").dxDateBox("instance").option("text");
+    }
+
+    function getSearchEmpCode() {
+        return $("#txtEmpCode").dxTextBox("instance").option("value");
+    }
+
+    function getSearchEmpName() {
+        return $("#txtEmpName").dxTextBox("instance").option("value");
+    }
+
+    function getSearchShiftCode() {
+        return $("#SBShift").dxSelectBox("instance").option("value");
+    }
+
+    function onButtonAddClick(e) {
+        var popup = $("#saveDialog-popup").dxPopup("instance");
+        popup.option("contentTemplate", $("#saveDialog-template"));
+
+        popup.show();
+        e.validationGroup.reset();
+
+        $("#AddDateFrom").dxDateBox("instance").option("value", new Date());
+        $("#AddDateTo").dxDateBox("instance").option("value", new Date());
+        $("#AddEmpCode").dxSelectBox("instance").option("value", null);
+    }
+
+    function CloseSaveDialog() {
+        $("#saveDialog-popup").dxPopup("hide");
+    }
+
+    function saveAddDialog(params) {
+        if (params.validationGroup.validate().isValid) {
+            var result = DevExpress.ui.dialog.confirm("@MessageListResource.C0001", "Confirm Save");
+            result.done(function (dialogResult) {
+                if (dialogResult) {
+                    var criteria = {
+                        ProdDateFrom: $("#AddDateFrom").dxDateBox("instance").option("text"),
+                        ProdDateTo: $("#AddDateTo").dxDateBox("instance").option("text"),
+                        EmpCode: $("#AddEmpCode").dxSelectBox("instance").option("value"),
+                        ShiftCode: $("#AddShiftCode").dxSelectBox("instance").option("value"),
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("InsertAssignWorkShift", "AssignWorkShift")",
+                        dataType: "json",
+                        data: { value: JSON.stringify(criteria) },
+                        success: function (data, status, xhr) {
+                            CloseSaveDialog();
+
+                            if (data.ErrorType == "E") {
+                                app.ui.showNotifyMessage('@ToastType.Error', data.ErrorMessage);
+                            }
+                            if (data.ErrorType == "W") {
+                                app.ui.showNotifyMessage('@ToastType.Warning', data.ErrorMessage);
+                            }
+                            else { //Info Message
+                                app.ui.showNotifyMessage('@ToastType.Success', data.ErrorMessage);
+                            }
+
+                            onbtnSearchClick();
+                        },
+                        error: function (xhr, statu, error) {
+                            var message = app.ui.handleAjaxError(xhr, status, error);
+                            app.ui.showNotifyMessage('@ToastType.Error', message);
+                        }
+                    })
+                }
+            });
+        }
+
+        return false;
+    }
+
+    function editButtonClick(data) {
+        var popup = $("#editDialog-popup").dxPopup("instance");
+        popup.option("contentTemplate", $("#editDialog-template"));
+        popup.show();
+
+        $("#EditProdDate").dxDateBox("instance").option("value", data.ProdDate);
+        $("#EditEmpCode").dxSelectBox("instance").option("value", data.EmpCode);
+        $("#EditShiftCode").dxSelectBox("instance").option("value", data.ShiftCode);
+    }
+
+    function saveEditDialog(params) {
+        if (params.validationGroup.validate().isValid) {
+            var result = DevExpress.ui.dialog.confirm("@MessageListResource.C0001", "Confirm Update");
+            result.done(function (dialogResult) {
+                if (dialogResult) {
+                    var criteria = {
+                        ProdDate: $("#EditProdDate").dxDateBox("instance").option("text"),
+                        EmpCode: $("#EditEmpCode").dxSelectBox("instance").option("value"),
+                        ShiftCode: $("#EditShiftCode").dxSelectBox("instance").option("value"),
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("UpdateAssignWorkShift", "AssignWorkShift")",
+                        dataType: "json",
+                        data: { value: JSON.stringify(criteria) },
+                        success: function (data, status, xhr) {
+                            CloseEditDialog();
+
+                            if (data.ErrorType == "E") {
+                                app.ui.showNotifyMessage('@ToastType.Error', data.ErrorMessage);
+                            }
+                            if (data.ErrorType == "W") {
+                                app.ui.showNotifyMessage('@ToastType.Warning', data.ErrorMessage);
+                            }
+                            else { //Info Message
+                                app.ui.showNotifyMessage('@ToastType.Success', data.ErrorMessage);
+                            }
+
+                            onbtnSearchClick();
+                        },
+                        error: function (xhr, statu, error) {
+                            var message = app.ui.handleAjaxError(xhr, status, error);
+                            app.ui.showNotifyMessage('@ToastType.Error', message);
+                        }
+                    })
+                }
+            });
+        }
+        return false;
+    }
+
+    function CloseEditDialog() {
+        $("#editDialog-popup").dxPopup("hide");
+    }
+
+    function deleteButtonClick(data) {
+        var result = DevExpress.ui.dialog.confirm(format("@MessageListResource.C0002", "Emp no. " + data.EmpCode), "Confirm Delete");
+        result.done(function (dialogResult) {
+            if (dialogResult) {
+                var criteria = {
+                    ProdDate: data.ProdDate,
+                    EmpCode: data.EmpCode,
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("DeleteAssignWorkShift", "AssignWorkShift")",
+                    dataType: "json",
+                    data: { value: JSON.stringify(criteria) },
+                    success: function (data, status, xhr) {
+                        if (data.ErrorType == "E") {
+                            app.ui.showNotifyMessage('@ToastType.Error', data.ErrorMessage);
+                        }
+                        if (data.ErrorType == "W") {
+                            app.ui.showNotifyMessage('@ToastType.Warning', data.ErrorMessage);
+                        }
+                        else { //Info Message
+                            app.ui.showNotifyMessage('@ToastType.Success', data.ErrorMessage);
+                        }
+
+                        onbtnSearchClick();
+                    },
+                    error: function (xhr, statu, error) {
+                        var message = app.ui.handleAjaxError(xhr, status, error);
+                        app.ui.showNotifyMessage('@ToastType.Error', message);
+                    }
+                })
+            }
+        });
+    }
+
+    function format(fmtstr) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        return fmtstr.replace(/\{(\d+)\}/g, function (match, index) {
+            return args[index];
+        });
+    }
+
+    function onEditorPrepared(e) {
+        app.ui.ResetReadOnlyControlBackgroundColor();
+    }
+
+    function onShowing(e) {
+        app.ui.AddBackgroundColorPopupButton();
+    }
+
+</script>
+
+}

@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="TranscationModelStoreContainer" CdmEntityContainer="TransactionEntities">
+    <FunctionImportMapping FunctionImportName="SearchDashboard" FunctionName="TranscationModel.Store.sp_ADS011_SearchDashboard">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.SearchDashboard_Result">
+          <ScalarProperty Name="DivCode" ColumnName="DivCode" />
+          <ScalarProperty Name="DivName" ColumnName="DivName" />
+          <ScalarProperty Name="DeptCode" ColumnName="DeptCode" />
+          <ScalarProperty Name="DeptName" ColumnName="DeptName" />
+          <ScalarProperty Name="SecCode" ColumnName="SecCode" />
+          <ScalarProperty Name="SecName" ColumnName="SecName" />
+          <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+          <ScalarProperty Name="Reason" ColumnName="Reason" />
+          <ScalarProperty Name="TotalByDept" ColumnName="TotalByDept" />
+          <ScalarProperty Name="HCByDept" ColumnName="HCByDept" />
+          <ScalarProperty Name="LeaveByDept" ColumnName="LeaveByDept" />
+          <ScalarProperty Name="PercentByDept" ColumnName="PercentByDept" />
+          <ScalarProperty Name="TotalBySec" ColumnName="TotalBySec" />
+          <ScalarProperty Name="HCBySec" ColumnName="HCBySec" />
+          <ScalarProperty Name="EmpImageFullPath" ColumnName="EmpImageFullPath" />
+          <ScalarProperty Name="OrgLevel" ColumnName="OrgLevel" />
+          <ScalarProperty Name="EmpColumn" ColumnName="EmpColumn" />
+          <ScalarProperty Name="StatusImageFileName" ColumnName="StatusImageFileName" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetDepartmentCombo" FunctionName="TranscationModel.Store.sp_ADS010_GetDepartmentCombo">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.GetDepartmentComboResult">
+          <ScalarProperty Name="DeptCode" ColumnName="DeptCode" />
+          <ScalarProperty Name="DeptCodeDisplay" ColumnName="DeptCodeDisplay" />
+          <ScalarProperty Name="DeptName" ColumnName="DeptName" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetDivisionCombo" FunctionName="TranscationModel.Store.sp_ADS010_GetDivisionCombo">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.GetDivisionComboResult">
+          <ScalarProperty Name="DivCode" ColumnName="DivCode" />
+          <ScalarProperty Name="DivCodeDisplay" ColumnName="DivCodeDisplay" />
+          <ScalarProperty Name="DivName" ColumnName="DivName" />
+          <ScalarProperty Name="GroupCode" ColumnName="GroupCode" />
+          <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetSectionCombo" FunctionName="TranscationModel.Store.sp_ADS010_GetSectionCombo">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.GetSectionComboResult">
+          <ScalarProperty Name="SecCode" ColumnName="SecCode" />
+          <ScalarProperty Name="SecCodeDisplay" ColumnName="SecCodeDisplay" />
+          <ScalarProperty Name="SecName" ColumnName="SecName" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SearchGoOutReason" FunctionName="TranscationModel.Store.sp_ADS020_SearchGoOutReason">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.GoOutReason">
+          <ScalarProperty Name="EmpCode" ColumnName="EmpCode" />
+          <ScalarProperty Name="ProdDate" ColumnName="ProdDate" />
+          <ScalarProperty Name="Reason" ColumnName="Reason" />
+          <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+          <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+          <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="GoOutID" ColumnName="GoOutID" />
+          <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="UpdateUserStatus" FunctionName="TranscationModel.Store.sp_MAS010_UpdateUserStatus">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.UpdateUserStatusResult">
+          <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+          <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+          <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="DeleteHideOrg" FunctionName="TranscationModel.Store.sp_MAS020_DeleteHideOrg">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.DeleteHideOrgResult">
+          <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+          <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+          <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SaveGoOutReason" FunctionName="TranscationModel.Store.sp_ADS020_SaveGoOutReason">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.SaveGoOutReasonResult">
+          <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+          <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+          <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetGoOutReasonID" FunctionName="TranscationModel.Store.sp_ADS020_GetGoOutReason">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.GoOutReason">
+          <ScalarProperty Name="EmpCode" ColumnName="EmpCode" />
+          <ScalarProperty Name="ProdDate" ColumnName="ProdDate" />
+          <ScalarProperty Name="Reason" ColumnName="Reason" />
+          <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+          <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+          <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="GoOutID" ColumnName="GoOutID" />
+          <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="DeleteGoOutReason" FunctionName="TranscationModel.Store.sp_ADS020_DeleteGoOutReason">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.DeleteGoOutReasonResult">
+          <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+          <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+          <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SearchHideOrg" FunctionName="TranscationModel.Store.sp_MAS020_SearchHideOrg">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.HideOrg">
+          <ScalarProperty Name="OrgCode" ColumnName="OrgCode" />
+          <ScalarProperty Name="HideDateFrom" ColumnName="HideDateFrom" />
+          <ScalarProperty Name="HideDateTo" ColumnName="HideDateTo" />
+          <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+          <ScalarProperty Name="DivName" ColumnName="DivName" />
+          <ScalarProperty Name="DeptName" ColumnName="DeptName" />
+          <ScalarProperty Name="SecName" ColumnName="SecName" />
+          <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="DivCodeKey" ColumnName="DivCodeKey" />
+          <ScalarProperty Name="DeptCodeKey" ColumnName="DeptCodeKey" />
+          <ScalarProperty Name="SecCodeKey" ColumnName="SecCodeKey" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SaveHideOrg" FunctionName="TranscationModel.Store.sp_MAS020_SaveHideOrg">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.SaveHideOrgResult">
+          <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+          <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+          <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SearchEmpSetting" FunctionName="TranscationModel.Store.sp_MAS010_SearchEmp">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.EmployeeSetting">
+          <ScalarProperty Name="EmpCode" ColumnName="EmpCode" />
+          <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+          <ScalarProperty Name="EmpStatus" ColumnName="EmpStatus" />
+          <ScalarProperty Name="DisplayStatus" ColumnName="DisplayStatus" />
+          <ScalarProperty Name="UserStatus" ColumnName="UserStatus" />
+          <ScalarProperty Name="TransferDate" ColumnName="TransferDate" />
+          <ScalarProperty Name="DivName" ColumnName="DivName" />
+          <ScalarProperty Name="DeptName" ColumnName="DeptName" />
+          <ScalarProperty Name="SecName" ColumnName="SecName" />
+          <ScalarProperty Name="ResignDate" ColumnName="ResignDate" />
+          <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="UpdateDisplayStatus" FunctionName="TranscationModel.Store.sp_MAS010_UpdateDisplayStatus">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.UpdateDisplayStatusResult">
+          <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+          <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+          <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="ResetPassword" FunctionName="TranscationModel.Store.sp_MAS010_ResetPassword">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.ResetPasswordResult">
+          <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+          <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+          <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SaveFixOrgByEmp" FunctionName="TranscationModel.Store.sp_MAS030_SaveFixOrgByEmp">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.SaveFixOrgByEmpResult">
+          <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+          <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+          <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SearchFixOrgByEmp" FunctionName="TranscationModel.Store.sp_MAS030_SearchFixOrgByEmp">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.FixOrgEmp">
+          <ScalarProperty Name="EmpCode" ColumnName="EmpCode" />
+          <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+          <ScalarProperty Name="EffectiveDateFrom" ColumnName="EffectiveDateFrom" />
+          <ScalarProperty Name="EffectiveDateTo" ColumnName="EffectiveDateTo" />
+          <ScalarProperty Name="OrgCode" ColumnName="OrgCode" />
+          <ScalarProperty Name="DivCodeKey" ColumnName="DivCodeKey" />
+          <ScalarProperty Name="DivName" ColumnName="DivName" />
+          <ScalarProperty Name="DeptCodeKey" ColumnName="DeptCodeKey" />
+          <ScalarProperty Name="DeptName" ColumnName="DeptName" />
+          <ScalarProperty Name="SecCodeKey" ColumnName="SecCodeKey" />
+          <ScalarProperty Name="SecName" ColumnName="SecName" />
+          <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="DeleteFixOrgByEmp" FunctionName="TranscationModel.Store.sp_MAS030_DeleteFixOrgByEmp">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.DeleteFixOrgByEmpResult">
+          <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+          <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+          <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="SearchWorkShiftByEmp" FunctionName="TranscationModel.Store.sp_MAS040_SearchWorkShiftByEmp">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.AssignWorkShiftByEmp">
+          <ScalarProperty Name="ProdDate" ColumnName="ProdDate" />
+          <ScalarProperty Name="EmpCode" ColumnName="EmpCode" />
+          <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+          <ScalarProperty Name="ShiftCode" ColumnName="ShiftCode" />
+          <ScalarProperty Name="ShiftName" ColumnName="ShiftName" />
+          <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="InsertWorkShiftByEmp" FunctionName="TranscationModel.Store.sp_MAS040_InsertWorkShiftByEmp">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.InsertWorkShiftByEmpResult">
+          <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+          <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+          <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="UpdateWorkShiftByEmp" FunctionName="TranscationModel.Store.sp_MAS040_UpdateWorkShiftByEmp">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.UpdateWorkShiftByEmpResult">
+          <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+          <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+          <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="DeleteWorkShiftByEmp" FunctionName="TranscationModel.Store.sp_MAS040_DeleteWorkShiftByEmp">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="TranscationModel.DeleteWorkShiftByEmpResult">
+          <ScalarProperty Name="ErrorCode" ColumnName="ErrorCode" />
+          <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+          <ScalarProperty Name="ErrorType" ColumnName="ErrorType" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="CommonModelStoreContainer" CdmEntityContainer="CommonEntities">
+    <FunctionImportMapping FunctionImportName="GetProductionDate" FunctionName="CommonModel.Store.sp_Common_GetProductionDate" />
+    <FunctionImportMapping FunctionImportName="GetEmpCombo" FunctionName="CommonModel.Store.sp_Common_GetEmpCombo">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="CommonModel.EmpComboResult">
+          <ScalarProperty Name="EmpName" ColumnName="EmpName" />
+          <ScalarProperty Name="EmpCode" ColumnName="EmpCode" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetMiscCombo" FunctionName="CommonModel.Store.sp_Common_GetMiscCombo">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="CommonModel.MiscCombo">
+          <ScalarProperty Name="ValueCode" ColumnName="ValueCode" />
+          <ScalarProperty Name="ValueDisplay" ColumnName="ValueDisplay" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetDepartmentCombo" FunctionName="CommonModel.Store.sp_Common_GetDepartmentCombo">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="CommonModel.DepartmentCombo">
+          <ScalarProperty Name="DeptCode" ColumnName="DeptCode" />
+          <ScalarProperty Name="DeptName" ColumnName="DeptName" />
+          <ScalarProperty Name="DeptCodeKey" ColumnName="DeptCodeKey" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetDivisionCombo" FunctionName="CommonModel.Store.sp_Common_GetDivisionCombo">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="CommonModel.DivisionCombo">
+          <ScalarProperty Name="DivCode" ColumnName="DivCode" />
+          <ScalarProperty Name="DivName" ColumnName="DivName" />
+          <ScalarProperty Name="GroupCode" ColumnName="GroupCode" />
+          <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+          <ScalarProperty Name="DivCodeKey" ColumnName="DivCodeKey" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetSectionCombo" FunctionName="CommonModel.Store.sp_Common_GetSectionCombo">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="CommonModel.SectionCombo">
+          <ScalarProperty Name="SecCode" ColumnName="SecCode" />
+          <ScalarProperty Name="SecName" ColumnName="SecName" />
+          <ScalarProperty Name="SecCodeKey" ColumnName="SecCodeKey" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+  </EntityContainerMapping>
+</Mapping>

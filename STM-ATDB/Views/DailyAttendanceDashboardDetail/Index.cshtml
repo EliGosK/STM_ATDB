@@ -1,0 +1,368 @@
+﻿@using STM.ATDB.MvcWeb.Models
+@using STM.ATDB.MvcWeb.App_Helpers
+@using STM.ATDB.MvcWeb.Properties
+
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+
+    string id = "id";
+
+    if (ViewBag.id != null)
+    {
+        id = (string)ViewBag.id;
+    }
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=10">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Attendance Dashboard</title>
+    <link rel="icon" type="image/png" href="~/Content/images/stm-logo.png" />
+    <!--[if IE]>
+    <link rel="shortcut icon" href="~/Content/images/stm_logo.ico" type="image/vnd.microsoft.icon" />
+    <![endif]-->
+    @*<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />*@
+
+    @Styles.Render("~/Content/bundle")
+    @Styles.Render("~/Content/DevExtremeBundle")
+    @Scripts.Render("~/Scripts/bundle")
+    @Scripts.Render("~/Scripts/DevExtremeBundle")
+</head>
+
+<body style="background-color:whitesmoke !important; padding:0px !important;">
+    @*@{ Html.RenderPartial("_Header"); }*@
+    @*<div id="main" role="main" style="width:100%; padding:0px !important; margin:0px !important; border:none !important;">
+        <div id="content" class="container-fluid no-gutter" style="padding:0px !important; margin:0px !important; border:none !important;">
+            <div id="form-container" class="panel-group col-md-12 no-gutter" style="padding:0px !important; margin:0px !important; border:none !important;">*@
+                <form id="search-container" class="col-md-12" style="font-family:'Arial Rounded MT Bold' !important;">
+                    @*<div class="panel-group col-md-12 well well-sm animated fadeIn" style="background-color:whitesmoke !important; padding:0px !important; margin:0px !important; border:none !important;">*@
+                        <div id="contentA" style="display:normal; font-family:'Arial Rounded MT Bold' !important;">Loading...</div>
+                    @*</div>*@
+                </form>
+            @*</div>
+        </div>
+    </div>*@
+    @{ Html.RenderPartial("_UIResponse"); }
+
+    <div id="notifications" style="display:none"></div>
+    <div id="ajax-notifications" style="display:none"></div>
+
+    @*@{ Html.RenderPartial("_Scripts", RenderSection("script", false)); }*@
+</body>
+
+</html>
+
+<style>
+    .Fix_Font {
+        /*Must set this style at <div class="row"> nearest text data (if set at upper level, will not effect) */
+        font-family:'Arial Rounded MT Bold' !important;
+    }
+
+    .Table_Main {
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+
+    .Header_Row {
+        margin: 0px !important;
+        padding: 0px !important
+    }
+
+    .Header_Name {
+        color: #00114B !important;
+        font-weight: bold !important;
+        font-size: 34px !important;
+    }
+
+    .Clock_Total {
+        margin-right: 5px;
+        float: right;
+    }
+    
+    .Clock {        
+        color: #00114B;
+        font-weight:normal;
+        font-size: 17px;
+    }
+
+    .Header_Total {
+        float: right;
+    }
+
+    .Header_Total_Label {
+        color: #00114B;
+        font-family: JasmineUPC;
+        font-weight: bold;
+        font-size: 24px;
+    }
+
+    .Header_Total {
+        color: #9F0000;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .Dept_Row {
+    }
+
+    .Dept_Table {
+        border: 2px solid blue !important;
+        padding: 0px !important; /*OK*/
+        margin-bottom: 8px !important; /*OK*/
+    }
+
+    .Dept_Header_Row {
+        margin-bottom: 0px !important;
+    }
+
+    .Dept_Header_Col_Left {
+        padding-left: 5px !important; /*OK*/
+    }
+
+    .Dept_Header_Col_Right {
+        padding-right: 15px !important; /*OK*/
+    }
+
+    .Dept_Toggle {
+        vertical-align: central !important; /*OK*/
+    }
+
+    .Dept_Label_Header_Left {
+        color: #000261;
+        font-weight: bold;
+        font-size: 20px;
+        padding-left: 3px !important;
+        padding-right: 10px !important;
+    }
+
+    .Dept_Label {
+        color: #00114B;
+        font-family: JasmineUPC;
+        font-weight: bold;
+        font-size: 24px;
+    }
+
+    .Dept_Total {
+        color: #9F0000;
+        font-weight: bold;
+        font-size: 17px;
+        text-decoration: underline;
+    }
+
+    .Dept_Percent {
+        color: #9F0000;
+        font-weight: bold;
+        font-size: 17px;
+    }
+
+    .Dept_Label_Header_Right {
+        float: right;
+    }
+
+    .Dept_Come{
+        color: #009407;
+        font-weight: bold;
+        font-size: 17px;
+        text-decoration: underline;
+    }
+
+    .Dept_Leave{
+        color: #FF4200;
+        font-weight: bold;
+        font-size: 17px;
+        text-decoration: underline;
+    }
+
+    .Sec_Toggle {
+        vertical-align: central !important;
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+
+    .Sec_Header_Row {
+        margin-bottom: 0px !important;
+    }
+
+    .Sec_Header_Col {
+        padding-left: 40px !important;
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+    }
+
+    .Sec_Label_Header {
+        color: #0011B2 !important;
+        font-weight: bold !important;
+        font-size: 18px !important;
+    }
+
+    .Sec_Label_Total {
+        color: #9F0000 !important;
+        font-weight: bold !important;
+        font-size: 16px !important;
+        margin-left: 10px !important;
+    }
+
+    .Emp_Row {
+        margin-left: 10px !important;
+        margin-right: 10px !important;
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
+        padding: 0px !important;
+    }
+
+    .Emp_Col {
+        display: inline-flex !important;
+        padding: 0px !important;
+        margin-top: 0px !important;
+        margin-bottom: 5px !important;
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+    }
+
+    .Emp_Table {
+        width:100% !important;
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+
+    .Emp_Img {
+        padding: 0px !important;
+        margin: 0px !important;
+        width: 30px !important;
+    }
+
+    .Emp_Name {
+        font-size: 14px !important;
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+
+    .Emp_Name_Fix_Width {
+        display: block !important;
+        width: 160px !important;
+    }
+
+    .Emp_Status {
+        width: 25px !important;
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+
+    .Emp_Reason {
+        font-size: 14px !important;
+        width: 90px !important;
+        padding: 0px !important;
+        margin: 0px !important;
+    }
+
+    .button-info {
+        margin: 10px;
+    }
+
+    input.PanelToggleUp {
+        height: 18px;
+        width: 18px;
+        background-image: url("../Content/images/Button/ButtonToggle-Up-normal.png");
+        background-repeat: repeat-y;
+        border-style: none;
+        background-color: transparent;
+        padding: 0;
+    }
+
+    input.PanelToggleDown {
+        height: 18px;
+        width: 18px;
+        background-image: url("../Content/images/Button/ButtonToggle-Down-normal.png");
+        background-repeat: repeat-y;
+        border-style: none;
+        background-color: transparent;
+        padding: 0;
+    }
+</style>
+
+<script>
+    //function requestFullScreen(element) {
+    //    // Supports most browsers and their versions.
+    //    var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+    //    if (requestMethod) { // Native full screen.
+    //        requestMethod.call(element);
+    //    } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+    //        var wscript = new ActiveXObject("WScript.Shell");
+    //        if (wscript !== null) {
+    //            wscript.SendKeys("{F11}");
+    //        }
+    //    }
+    //}
+
+    var elem = document.body; // Make the body go full screen.
+    //requestFullScreen(elem);
+
+    (function () {
+        //var delay = 1000*60*0.3;
+
+        var delay = 1;
+        var state = 0;
+        (function next() {
+
+            //alert('interval');
+            state = 1 - state;
+            var src = '#contentA';
+            var id2 = ('@id');
+
+            @*$.get('@Url.Action("CallDisplay", "DailyAttendanceDashboardDetail")', {
+                id: id2
+            }, function (response) {
+                $('#contentA').empty();
+                //alert('result');
+                $("#contentA").html(response);
+            });*@
+
+            $.ajax({
+                url: "/DailyAttendanceDashboardDetail/CallDisplay",
+                type: "POST",
+                data: app.addAntiForgeryToken({ id: id2 }),
+                success: function (response) {
+                    $('#contentA').empty();
+                    //alert('result');
+                    $("#contentA").html(response);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    app.ui.showNotifyMessage('@ToastType.Error', errorThrown);
+                }
+            });
+
+            //delay(milisec) = 1000 x seccond 
+            delay = 1000 * 60;
+
+            setTimeout(next, delay);
+        })();
+    })();
+
+    $(function () {
+        $(document).on("click", "[id^=button\\-]", function () {
+            var n = $(this).attr("id").split("-").pop();
+            $("[id^=toggle\\-div\\-" + n + "]").toggle();
+
+            if ($("[id^=toggle\\-div\\-" + n + "]").is(":visible")) {
+                $(this).attr('class', 'PanelToggleUp')
+            } else {
+                $(this).attr('class', 'PanelToggleDown')
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        //alert('XCXX')
+    });
+
+</script>

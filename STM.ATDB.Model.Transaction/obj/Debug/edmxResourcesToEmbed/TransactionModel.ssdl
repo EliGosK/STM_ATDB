@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TranscationModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <Function Name="sp_ADS010_GetDepartmentCombo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProdDate" Type="date" Mode="In" />
+    <Parameter Name="DivCode" Type="varchar" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_ADS010_GetDivisionCombo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProdDate" Type="date" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_ADS010_GetSectionCombo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProdDate" Type="date" Mode="In" />
+    <Parameter Name="DeptCode" Type="varchar" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_ADS011_SearchDashboard" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DivCode" Type="varchar" Mode="In" />
+    <Parameter Name="DeptCode" Type="varchar" Mode="In" />
+    <Parameter Name="SecCode" Type="varchar" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+    <Parameter Name="DivName" Type="varchar" Mode="InOut" />
+    <Parameter Name="WorkHC" Type="varchar" Mode="InOut" />
+    <Parameter Name="TotalHC" Type="varchar" Mode="InOut" />
+    <Parameter Name="WorkPercent" Type="varchar" Mode="InOut" />
+    <Parameter Name="MaxColumn" Type="int" Mode="InOut" />
+  </Function>
+  <Function Name="sp_ADS020_DeleteGoOutReason" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="GoOutID" Type="int" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_ADS020_GetGoOutReason" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="GoOutID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_ADS020_SaveGoOutReason" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Mode" Type="char" Mode="In" />
+    <Parameter Name="GoOutID" Type="int" Mode="In" />
+    <Parameter Name="ProdDate" Type="date" Mode="In" />
+    <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+    <Parameter Name="Reason" Type="varchar" Mode="In" />
+    <Parameter Name="StartTime" Type="datetime" Mode="In" />
+    <Parameter Name="EndTime" Type="datetime" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_ADS020_SearchGoOutReason" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProdDateFrom" Type="date" Mode="In" />
+    <Parameter Name="ProdDateTo" Type="date" Mode="In" />
+    <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+    <Parameter Name="EmpName" Type="varchar" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_MAS010_ResetPassword" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="EmpCodeXML" Type="xml" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_MAS010_SearchEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="SearchEmpCode" Type="varchar" Mode="In" />
+    <Parameter Name="SearchEmpName" Type="varchar" Mode="In" />
+    <Parameter Name="DivCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="DeptCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="SecCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="EmpStatus" Type="varchar" Mode="In" />
+    <Parameter Name="UserStatus" Type="varchar" Mode="In" />
+    <Parameter Name="DisplayStatus" Type="varchar" Mode="In" />
+    <Parameter Name="IsViewActiveOrg" Type="bit" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_MAS010_UpdateDisplayStatus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="EmpCodeXML" Type="xml" Mode="In" />
+    <Parameter Name="DisplayStatus" Type="varchar" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_MAS010_UpdateUserStatus" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="EmpCodeXML" Type="xml" Mode="In" />
+    <Parameter Name="UserStatus" Type="varchar" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_MAS020_DeleteHideOrg" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="OrgCode" Type="varchar" Mode="In" />
+    <Parameter Name="HideDateFrom" Type="date" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_MAS020_SaveHideOrg" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Mode" Type="char" Mode="In" />
+    <Parameter Name="HideDateFrom" Type="date" Mode="In" />
+    <Parameter Name="HideDateTo" Type="date" Mode="In" />
+    <Parameter Name="OrgCode" Type="varchar" Mode="In" />
+    <Parameter Name="DivCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="DeptCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="SecCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_MAS020_SearchHideOrg" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProdDateFrom" Type="date" Mode="In" />
+    <Parameter Name="ProdDateTo" Type="date" Mode="In" />
+    <Parameter Name="DivCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="DeptCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="SecCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="OrgCode" Type="varchar" Mode="In" />
+    <Parameter Name="HideDateFrom" Type="date" Mode="In" />
+  </Function>
+  <Function Name="sp_MAS030_DeleteFixOrgByEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+    <Parameter Name="EffectiveDateFrom" Type="date" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_MAS030_SaveFixOrgByEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Mode" Type="char" Mode="In" />
+    <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+    <Parameter Name="EffectiveDateFrom" Type="date" Mode="In" />
+    <Parameter Name="EffectiveDateTo" Type="date" Mode="In" />
+    <Parameter Name="DivCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="DeptCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="SecCodeKey" Type="varchar" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_MAS030_SearchFixOrgByEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProdDateFrom" Type="date" Mode="In" />
+    <Parameter Name="ProdDateTo" Type="date" Mode="In" />
+    <Parameter Name="SearchEmpCode" Type="varchar" Mode="In" />
+    <Parameter Name="SearchEmpName" Type="varchar" Mode="In" />
+    <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+    <Parameter Name="EffectiveDateFrom" Type="date" Mode="In" />
+  </Function>
+  <Function Name="sp_MAS040_DeleteWorkShiftByEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProdDate" Type="date" Mode="In" />
+    <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_MAS040_InsertWorkShiftByEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProdDateFrom" Type="date" Mode="In" />
+    <Parameter Name="ProdDateTo" Type="date" Mode="In" />
+    <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+    <Parameter Name="ShiftCode" Type="varchar" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_MAS040_SearchWorkShiftByEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProdDateFrom" Type="date" Mode="In" />
+    <Parameter Name="ProdDateTo" Type="date" Mode="In" />
+    <Parameter Name="SearchEmpCode" Type="varchar" Mode="In" />
+    <Parameter Name="SearchEmpName" Type="varchar" Mode="In" />
+    <Parameter Name="ShiftCode" Type="varchar" Mode="In" />
+    <Parameter Name="ProdDate" Type="date" Mode="In" />
+    <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_MAS040_UpdateWorkShiftByEmp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="ProdDate" Type="date" Mode="In" />
+    <Parameter Name="EmpCode" Type="varchar" Mode="In" />
+    <Parameter Name="ShiftCode" Type="varchar" Mode="In" />
+    <Parameter Name="UserCode" Type="varchar" Mode="In" />
+  </Function>
+  <EntityContainer Name="TranscationModelStoreContainer" />
+</Schema>
